@@ -1,6 +1,6 @@
 
 *** Running vivado
-    with args -log and3_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source and3_wrapper.tcl
+    with args -log logic_tb.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source logic_tb.tcl
 
 
 
@@ -8,13 +8,16 @@
   **** SW Build 5076996 on Wed May 22 18:37:14 MDT 2024
   **** IP Build 5075265 on Wed May 22 21:45:21 MDT 2024
   **** SharedData Build 5076995 on Wed May 22 18:29:18 MDT 2024
-  **** Start of session at: Thu Oct 24 18:54:52 2024
+  **** Start of session at: Thu Nov  7 11:02:00 2024
     ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
     ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 
-source and3_wrapper.tcl -notrace
-create_project: Time (s): cpu = 00:00:07 ; elapsed = 00:00:08 . Memory (MB): peak = 502.781 ; gain = 201.938
-Command: synth_design -top and3_wrapper -part xc7z010iclg225-1L
+source logic_tb.tcl -notrace
+create_project: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 501.332 ; gain = 201.219
+Command: read_checkpoint -auto_incremental -incremental C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-01/VLSI-01.srcs/utils_1/imports/synth_1/and3_wrapper.dcp
+INFO: [Vivado 12-5825] Read reference checkpoint from C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-01/VLSI-01.srcs/utils_1/imports/synth_1/and3_wrapper.dcp for incremental synthesis
+INFO: [Vivado 12-7989] Please ensure there are no constraint changes
+Command: synth_design -top logic_tb -part xc7z010iclg225-1L
 Starting synth_design
 Attempting to get a license for feature 'Synthesis' and/or device 'xc7z010i'
 INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z010i'
@@ -22,72 +25,206 @@ INFO: [Device 21-403] Loading part xc7z010iclg225-1L
 INFO: [Device 21-9227] Part: xc7z010iclg225-1L does not have CEAM library.
 INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
 INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
-INFO: [Synth 8-7075] Helper process launched with PID 19232
+INFO: [Synth 8-7075] Helper process launched with PID 14456
 ---------------------------------------------------------------------------------
-Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 1354.109 ; gain = 447.234
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:05 . Memory (MB): peak = 1355.547 ; gain = 445.840
 ---------------------------------------------------------------------------------
-INFO: [Synth 8-638] synthesizing module 'and3_wrapper' [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/and3_wrapper.vhd:13]
-INFO: [Synth 8-638] synthesizing module 'xil_defaultlib_and3' [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/and3.vhd:14]
-INFO: [Synth 8-256] done synthesizing module 'xil_defaultlib_and3' (0#1) [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/and3.vhd:14]
-INFO: [Synth 8-256] done synthesizing module 'and3_wrapper' (0#1) [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/and3_wrapper.vhd:13]
-WARNING: [Synth 8-7129] Port switches[7] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[6] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[5] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[4] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[3] in module and3_wrapper is either unconnected or has no load
+INFO: [Synth 8-638] synthesizing module 'logic_tb' [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:8]
+INFO: [Synth 8-638] synthesizing module 'logic' [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/logic.vhd:19]
+INFO: [Synth 8-256] done synthesizing module 'logic' (0#1) [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/logic.vhd:19]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:44]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:51]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:58]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:65]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:72]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:79]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:86]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:93]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:100]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:107]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:114]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:121]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:128]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:135]
+WARNING: [Synth 8-312] ignoring unsynthesizable construct: wait statement with no conditon [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:142]
+INFO: [Synth 8-256] done synthesizing module 'logic_tb' (0#1) [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/sim/logic_tb.vhd:8]
 ---------------------------------------------------------------------------------
-Finished RTL Elaboration : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1463.152 ; gain = 556.277
+Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1464.719 ; gain = 555.012
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1463.152 ; gain = 556.277
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1464.719 ; gain = 555.012
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:07 ; elapsed = 00:00:07 . Memory (MB): peak = 1463.152 ; gain = 556.277
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 1464.719 ; gain = 555.012
 ---------------------------------------------------------------------------------
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1463.152 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1464.719 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 
 Processing XDC Constraints
 Initializing timing engine
 Parsing XDC File [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc]
+WARNING: [Vivado 12-584] No ports matched 'clk'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:2]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:2]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'clk'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:3]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:3]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'clk'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:4]
+CRITICAL WARNING: [Vivado 12-4739] create_clock:No valid object(s) found for '-objects [get_ports clk]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:4]
+Resolution: Check if the specified object(s) exists in the current design. If it does, ensure that the correct design hierarchy was specified for the object. If you are working with clocks, make sure create_clock was used to create the clock object before it is referenced.
+WARNING: [Vivado 12-584] No ports matched 'switches[0]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:7]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:7]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[0]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:8]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:8]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[1]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:9]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:9]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[1]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:10]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:10]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[2]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:11]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:11]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[2]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:12]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:12]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[3]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:13]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:13]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[3]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:14]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:14]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[4]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:15]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:15]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[4]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:16]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:16]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[5]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:17]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:17]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[5]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:18]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:18]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[6]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:19]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:19]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[6]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:20]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:20]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[7]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:21]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:21]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'switches[7]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:22]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:22]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[0]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:25]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:25]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[0]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:26]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:26]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[1]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:27]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:27]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[1]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:28]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:28]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[2]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:29]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:29]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[2]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:30]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:30]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[3]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:31]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:31]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[3]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:32]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:32]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[4]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:33]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:33]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[4]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:34]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:34]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[5]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:35]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:35]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[5]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:36]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:36]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[6]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:37]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:37]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[6]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:38]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:38]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[7]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:39]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:39]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
+WARNING: [Vivado 12-584] No ports matched 'leds[7]'. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:40]
+CRITICAL WARNING: [Common 17-55] 'set_property' expects at least one object. [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc:40]
+Resolution: If [get_<value>] was used to populate the object, check to make sure this command returns at least one valid object.
 Finished Parsing XDC File [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc]
-INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/constraints/constraints.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/and3_wrapper_propImpl.xdc].
-Resolution: To avoid this warning, move constraints listed in [.Xil/and3_wrapper_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
 Completed Processing XDC Constraints
 
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1531.605 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1487.848 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1531.605 ; gain = 0.000
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1487.848 ; gain = 0.000
 ---------------------------------------------------------------------------------
-Finished Constraint Validation : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Constraint Validation : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Loading Part and Timing Information
 ---------------------------------------------------------------------------------
 Loading part: xc7z010iclg225-1L
 ---------------------------------------------------------------------------------
-Finished Loading Part and Timing Information : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying 'set_property' XDC Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Start Preparing Guide Design
 ---------------------------------------------------------------------------------
+CRITICAL WARNING: [Synth 8-6895] The reference checkpoint C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-01/VLSI-01.srcs/utils_1/imports/synth_1/and3_wrapper.dcp is not suitable for use with incremental synthesis for this design. Please regenerate the checkpoint for this design with -incremental_synth switch in the same Vivado session that synth_design has been run. Synthesis will continue with the default flow
+---------------------------------------------------------------------------------
+Finished Doing Graph Differ : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1487.848 ; gain = 578.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Preparing Guide Design : Time (s): cpu = 00:00:11 ; elapsed = 00:00:12 . Memory (MB): peak = 1487.848 ; gain = 578.141
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:11 ; elapsed = 00:00:13 . Memory (MB): peak = 1487.848 ; gain = 578.141
+---------------------------------------------------------------------------------
+
+
+Incremental Synthesis Report Summary:
+
+1. Incremental synthesis run: no
+
+   Reason for not running incremental synthesis : 
+
+
+INFO: [Synth 8-7130] Flow is switching to default flow due to incremental criteria not met. If you would like to alter this behaviour and have the flow terminate instead, please set the following parameter config_implementation {autoIncr.Synth.RejectBehavior Terminate}
 ---------------------------------------------------------------------------------
 Start RTL Component Statistics 
 ---------------------------------------------------------------------------------
 Detailed RTL Component Info : 
-+---Registers : 
-	                8 Bit    Registers := 1     
++---XORs : 
+	   2 Input      1 Bit         XORs := 1     
+	   3 Input      1 Bit         XORs := 1     
 ---------------------------------------------------------------------------------
 Finished RTL Component Statistics 
 ---------------------------------------------------------------------------------
@@ -104,31 +241,26 @@ Finished Part Resource Summary
 Start Cross Boundary and Area Optimization
 ---------------------------------------------------------------------------------
 WARNING: [Synth 8-7080] Parallel synthesis criteria is not met
-WARNING: [Synth 8-7129] Port switches[7] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[6] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[5] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[4] in module and3_wrapper is either unconnected or has no load
-WARNING: [Synth 8-7129] Port switches[3] in module and3_wrapper is either unconnected or has no load
 ---------------------------------------------------------------------------------
-Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Applying XDC Timing Constraints
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Timing Optimization
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Timing Optimization : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Timing Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Technology Mapping
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Technology Mapping : Time (s): cpu = 00:00:20 ; elapsed = 00:00:21 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Technology Mapping : Time (s): cpu = 00:00:17 ; elapsed = 00:00:19 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start IO Insertion
@@ -146,37 +278,37 @@ Start Final Netlist Cleanup
 Finished Final Netlist Cleanup
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished IO Insertion : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished IO Insertion : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Instances
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Instances : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Rebuilding User Hierarchy
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Ports
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Ports : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Handling Custom Attributes
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Handling Custom Attributes : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Renaming Generated Nets
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
-Finished Renaming Generated Nets : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
 ---------------------------------------------------------------------------------
 Start Writing Synthesis Report
@@ -189,35 +321,30 @@ Report BlackBoxes:
 +-+--------------+----------+
 
 Report Cell Usage: 
-+------+-----+------+
-|      |Cell |Count |
-+------+-----+------+
-|1     |BUFG |     1|
-|2     |LUT3 |     1|
-|3     |FDRE |     4|
-|4     |IBUF |     4|
-|5     |OBUF |     8|
-+------+-----+------+
++-+-----+------+
+| |Cell |Count |
++-+-----+------+
++-+-----+------+
 ---------------------------------------------------------------------------------
-Finished Writing Synthesis Report : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 ---------------------------------------------------------------------------------
-Synthesis finished with 0 errors, 0 critical warnings and 6 warnings.
-Synthesis Optimization Runtime : Time (s): cpu = 00:00:15 ; elapsed = 00:00:23 . Memory (MB): peak = 1531.605 ; gain = 556.277
-Synthesis Optimization Complete : Time (s): cpu = 00:00:23 ; elapsed = 00:00:25 . Memory (MB): peak = 1531.605 ; gain = 624.730
+Synthesis finished with 0 errors, 1 critical warnings and 1 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:14 ; elapsed = 00:00:21 . Memory (MB): peak = 1487.848 ; gain = 555.012
+Synthesis Optimization Complete : Time (s): cpu = 00:00:21 ; elapsed = 00:00:22 . Memory (MB): peak = 1487.848 ; gain = 578.141
 INFO: [Project 1-571] Translating synthesized netlist
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1531.605 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1487.848 ; gain = 0.000
 INFO: [Project 1-570] Preparing netlist for logic optimization
 INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
-Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1531.605 ; gain = 0.000
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 1487.848 ; gain = 0.000
 INFO: [Project 1-111] Unisim Transformation Summary:
 No Unisim elements were transformed.
 
-Synth Design complete | Checksum: 9ec1f100
+Synth Design complete | Checksum: aee2f812
 INFO: [Common 17-83] Releasing license: Synthesis
-18 Infos, 11 Warnings, 0 Critical Warnings and 0 Errors encountered.
+20 Infos, 51 Warnings, 36 Critical Warnings and 0 Errors encountered.
 synth_design completed successfully
-synth_design: Time (s): cpu = 00:00:32 ; elapsed = 00:00:35 . Memory (MB): peak = 1531.605 ; gain = 1028.824
-Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1531.605 ; gain = 0.000
-INFO: [Common 17-1381] The checkpoint 'C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-01/VLSI-01.runs/synth_1/and3_wrapper.dcp' has been generated.
-INFO: [Vivado 12-24828] Executing command : report_utilization -file and3_wrapper_utilization_synth.rpt -pb and3_wrapper_utilization_synth.pb
-INFO: [Common 17-206] Exiting Vivado at Thu Oct 24 18:55:37 2024...
+synth_design: Time (s): cpu = 00:00:24 ; elapsed = 00:00:34 . Memory (MB): peak = 1487.848 ; gain = 981.465
+INFO: [runtcl-6] Synthesis results are not added to the cache due to CRITICAL_WARNING
+INFO: [Common 17-1381] The checkpoint 'C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-01/VLSI-01.runs/synth_1/logic_tb.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file logic_tb_utilization_synth.rpt -pb logic_tb_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Thu Nov  7 11:02:42 2024...

@@ -1,107 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="impl_1" LaunchPart="xc7z010iclg225-1L" LaunchTime="1729788889">
-  <File Type="ROUTE-PWR" Name="and3_wrapper_power_routed.rpt"/>
-  <File Type="PA-TCL" Name="and3_wrapper.tcl"/>
-  <File Type="ROUTE-PWR-SUM" Name="and3_wrapper_power_summary_routed.pb"/>
-  <File Type="REPORTS-TCL" Name="and3_wrapper_reports.tcl"/>
-  <File Type="OPT-RQA-PB" Name="and3_wrapper_rqa_opted.pb"/>
-  <File Type="BITSTR-MMI" Name="and3_wrapper.mmi"/>
-  <File Type="OPT-METHODOLOGY-DRC" Name="and3_wrapper_methodology_drc_opted.rpt"/>
-  <File Type="INIT-TIMING" Name="and3_wrapper_timing_summary_init.rpt"/>
-  <File Type="OPT-TIMING" Name="and3_wrapper_timing_summary_opted.rpt"/>
-  <File Type="OPT-DCP" Name="and3_wrapper_opt.dcp"/>
-  <File Type="OPT-DRC" Name="and3_wrapper_drc_opted.rpt"/>
-  <File Type="OPT-HWDEF" Name="and3_wrapper.hwdef"/>
-  <File Type="PWROPT-DCP" Name="and3_wrapper_pwropt.dcp"/>
-  <File Type="PWROPT-DRC" Name="and3_wrapper_drc_pwropted.rpt"/>
-  <File Type="PWROPT-TIMING" Name="and3_wrapper_timing_summary_pwropted.rpt"/>
-  <File Type="PLACE-DCP" Name="and3_wrapper_placed.dcp"/>
-  <File Type="PLACE-IO" Name="and3_wrapper_io_placed.rpt"/>
-  <File Type="PLACE-CLK" Name="and3_wrapper_clock_utilization_placed.rpt"/>
-  <File Type="PLACE-UTIL" Name="and3_wrapper_utilization_placed.rpt"/>
-  <File Type="PLACE-UTIL-PB" Name="and3_wrapper_utilization_placed.pb"/>
-  <File Type="PLACE-CTRL" Name="and3_wrapper_control_sets_placed.rpt"/>
-  <File Type="PLACE-SIMILARITY" Name="and3_wrapper_incremental_reuse_placed.rpt"/>
-  <File Type="PLACE-PRE-SIMILARITY" Name="and3_wrapper_incremental_reuse_pre_placed.rpt"/>
-  <File Type="BG-BIN" Name="and3_wrapper.bin"/>
-  <File Type="PLACE-TIMING" Name="and3_wrapper_timing_summary_placed.rpt"/>
-  <File Type="ROUTE-PWR-RPX" Name="and3_wrapper_power_routed.rpx"/>
-  <File Type="PLACE-RQA-PB" Name="and3_wrapper_rqa_placed.pb"/>
-  <File Type="POSTPLACE-PWROPT-DCP" Name="and3_wrapper_postplace_pwropt.dcp"/>
-  <File Type="BITSTR-MSK" Name="and3_wrapper.msk"/>
-  <File Type="POSTPLACE-PWROPT-TIMING" Name="and3_wrapper_timing_summary_postplace_pwropted.rpt"/>
-  <File Type="PHYSOPT-DCP" Name="and3_wrapper_physopt.dcp"/>
-  <File Type="PHYSOPT-DRC" Name="and3_wrapper_drc_physopted.rpt"/>
-  <File Type="BITSTR-RBT" Name="and3_wrapper.rbt"/>
-  <File Type="PHYSOPT-TIMING" Name="and3_wrapper_timing_summary_physopted.rpt"/>
-  <File Type="ROUTE-ERROR-DCP" Name="and3_wrapper_routed_error.dcp"/>
-  <File Type="ROUTE-DCP" Name="and3_wrapper_routed.dcp"/>
-  <File Type="ROUTE-BLACKBOX-DCP" Name="and3_wrapper_routed_bb.dcp"/>
-  <File Type="ROUTE-DRC" Name="and3_wrapper_drc_routed.rpt"/>
-  <File Type="ROUTE-DRC-PB" Name="and3_wrapper_drc_routed.pb"/>
-  <File Type="ROUTE-DRC-RPX" Name="and3_wrapper_drc_routed.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC" Name="and3_wrapper_methodology_drc_routed.rpt"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="and3_wrapper_methodology_drc_routed.rpx"/>
-  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="and3_wrapper_methodology_drc_routed.pb"/>
-  <File Type="ROUTE-RQS-PB" Name="and3_wrapper_rqs_routed.pb"/>
-  <File Type="ROUTE-STATUS" Name="and3_wrapper_route_status.rpt"/>
-  <File Type="ROUTE-STATUS-PB" Name="and3_wrapper_route_status.pb"/>
-  <File Type="ROUTE-TIMINGSUMMARY" Name="and3_wrapper_timing_summary_routed.rpt"/>
-  <File Type="ROUTE-TIMING-PB" Name="and3_wrapper_timing_summary_routed.pb"/>
-  <File Type="ROUTE-TIMING-RPX" Name="and3_wrapper_timing_summary_routed.rpx"/>
-  <File Type="ROUTE-SIMILARITY" Name="and3_wrapper_incremental_reuse_routed.rpt"/>
-  <File Type="ROUTE-CLK" Name="and3_wrapper_clock_utilization_routed.rpt"/>
-  <File Type="ROUTE-BUS-SKEW" Name="and3_wrapper_bus_skew_routed.rpt"/>
-  <File Type="ROUTE-BUS-SKEW-PB" Name="and3_wrapper_bus_skew_routed.pb"/>
-  <File Type="ROUTE-BUS-SKEW-RPX" Name="and3_wrapper_bus_skew_routed.rpx"/>
-  <File Type="POSTROUTE-PHYSOPT-DCP" Name="and3_wrapper_postroute_physopt.dcp"/>
-  <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="and3_wrapper_postroute_physopt_bb.dcp"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="and3_wrapper_timing_summary_postroute_physopted.rpt"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="and3_wrapper_timing_summary_postroute_physopted.pb"/>
-  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="and3_wrapper_timing_summary_postroute_physopted.rpx"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="and3_wrapper_bus_skew_postroute_physopted.rpt"/>
-  <File Type="BG-BIT" Name="and3_wrapper.bit"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-PB" Name="and3_wrapper_bus_skew_postroute_physopted.pb"/>
-  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="and3_wrapper_bus_skew_postroute_physopted.rpx"/>
-  <File Type="BITSTR-NKY" Name="and3_wrapper.nky"/>
-  <File Type="BITSTR-BMM" Name="and3_wrapper_bd.bmm"/>
-  <File Type="PDI-FILE" Name="and3_wrapper.pdi"/>
-  <File Type="BOOT-PDI-FILE" Name="and3_wrapper_boot.pdi"/>
-  <File Type="PL-PDI-FILE" Name="and3_wrapper_pld.pdi"/>
-  <File Type="RCFI_FILE" Name="and3_wrapper.rcfi"/>
-  <File Type="CFI_FILE" Name="and3_wrapper.cfi"/>
-  <File Type="RNPI_FILE" Name="and3_wrapper.rnpi"/>
-  <File Type="NPI_FILE" Name="and3_wrapper.npi"/>
-  <File Type="RBD_FILE" Name="and3_wrapper.rbd"/>
+<GenRun Id="impl_1" LaunchPart="xc7z010iclg225-1L" LaunchTime="1730973717">
+  <File Type="ROUTE-PWR" Name="logic_tb_power_routed.rpt"/>
+  <File Type="PA-TCL" Name="logic_tb.tcl"/>
+  <File Type="ROUTE-PWR-SUM" Name="logic_tb_power_summary_routed.pb"/>
+  <File Type="REPORTS-TCL" Name="logic_tb_reports.tcl"/>
+  <File Type="OPT-RQA-PB" Name="logic_tb_rqa_opted.pb"/>
+  <File Type="BITSTR-MMI" Name="logic_tb.mmi"/>
+  <File Type="OPT-METHODOLOGY-DRC" Name="logic_tb_methodology_drc_opted.rpt"/>
+  <File Type="INIT-TIMING" Name="logic_tb_timing_summary_init.rpt"/>
+  <File Type="OPT-TIMING" Name="logic_tb_timing_summary_opted.rpt"/>
+  <File Type="OPT-DCP" Name="logic_tb_opt.dcp"/>
+  <File Type="OPT-DRC" Name="logic_tb_drc_opted.rpt"/>
+  <File Type="OPT-HWDEF" Name="logic_tb.hwdef"/>
+  <File Type="PWROPT-DCP" Name="logic_tb_pwropt.dcp"/>
+  <File Type="PWROPT-DRC" Name="logic_tb_drc_pwropted.rpt"/>
+  <File Type="PWROPT-TIMING" Name="logic_tb_timing_summary_pwropted.rpt"/>
+  <File Type="PLACE-DCP" Name="logic_tb_placed.dcp"/>
+  <File Type="PLACE-IO" Name="logic_tb_io_placed.rpt"/>
+  <File Type="PLACE-CLK" Name="logic_tb_clock_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL" Name="logic_tb_utilization_placed.rpt"/>
+  <File Type="PLACE-UTIL-PB" Name="logic_tb_utilization_placed.pb"/>
+  <File Type="PLACE-CTRL" Name="logic_tb_control_sets_placed.rpt"/>
+  <File Type="PLACE-SIMILARITY" Name="logic_tb_incremental_reuse_placed.rpt"/>
+  <File Type="PLACE-PRE-SIMILARITY" Name="logic_tb_incremental_reuse_pre_placed.rpt"/>
+  <File Type="BG-BIN" Name="logic_tb.bin"/>
+  <File Type="PLACE-TIMING" Name="logic_tb_timing_summary_placed.rpt"/>
+  <File Type="ROUTE-PWR-RPX" Name="logic_tb_power_routed.rpx"/>
+  <File Type="PLACE-RQA-PB" Name="logic_tb_rqa_placed.pb"/>
+  <File Type="POSTPLACE-PWROPT-DCP" Name="logic_tb_postplace_pwropt.dcp"/>
+  <File Type="BITSTR-MSK" Name="logic_tb.msk"/>
+  <File Type="POSTPLACE-PWROPT-TIMING" Name="logic_tb_timing_summary_postplace_pwropted.rpt"/>
+  <File Type="PHYSOPT-DCP" Name="logic_tb_physopt.dcp"/>
+  <File Type="PHYSOPT-DRC" Name="logic_tb_drc_physopted.rpt"/>
+  <File Type="BITSTR-RBT" Name="logic_tb.rbt"/>
+  <File Type="PHYSOPT-TIMING" Name="logic_tb_timing_summary_physopted.rpt"/>
+  <File Type="ROUTE-ERROR-DCP" Name="logic_tb_routed_error.dcp"/>
+  <File Type="ROUTE-DCP" Name="logic_tb_routed.dcp"/>
+  <File Type="ROUTE-BLACKBOX-DCP" Name="logic_tb_routed_bb.dcp"/>
+  <File Type="ROUTE-DRC" Name="logic_tb_drc_routed.rpt"/>
+  <File Type="ROUTE-DRC-PB" Name="logic_tb_drc_routed.pb"/>
+  <File Type="ROUTE-DRC-RPX" Name="logic_tb_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC" Name="logic_tb_methodology_drc_routed.rpt"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-RPX" Name="logic_tb_methodology_drc_routed.rpx"/>
+  <File Type="ROUTE-METHODOLOGY-DRC-PB" Name="logic_tb_methodology_drc_routed.pb"/>
+  <File Type="ROUTE-RQS-PB" Name="logic_tb_rqs_routed.pb"/>
+  <File Type="ROUTE-STATUS" Name="logic_tb_route_status.rpt"/>
+  <File Type="ROUTE-STATUS-PB" Name="logic_tb_route_status.pb"/>
+  <File Type="ROUTE-TIMINGSUMMARY" Name="logic_tb_timing_summary_routed.rpt"/>
+  <File Type="ROUTE-TIMING-PB" Name="logic_tb_timing_summary_routed.pb"/>
+  <File Type="ROUTE-TIMING-RPX" Name="logic_tb_timing_summary_routed.rpx"/>
+  <File Type="ROUTE-SIMILARITY" Name="logic_tb_incremental_reuse_routed.rpt"/>
+  <File Type="ROUTE-CLK" Name="logic_tb_clock_utilization_routed.rpt"/>
+  <File Type="ROUTE-BUS-SKEW" Name="logic_tb_bus_skew_routed.rpt"/>
+  <File Type="ROUTE-BUS-SKEW-PB" Name="logic_tb_bus_skew_routed.pb"/>
+  <File Type="ROUTE-BUS-SKEW-RPX" Name="logic_tb_bus_skew_routed.rpx"/>
+  <File Type="POSTROUTE-PHYSOPT-DCP" Name="logic_tb_postroute_physopt.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-BLACKBOX-DCP" Name="logic_tb_postroute_physopt_bb.dcp"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING" Name="logic_tb_timing_summary_postroute_physopted.rpt"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-PB" Name="logic_tb_timing_summary_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-TIMING-RPX" Name="logic_tb_timing_summary_postroute_physopted.rpx"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW" Name="logic_tb_bus_skew_postroute_physopted.rpt"/>
+  <File Type="BG-BIT" Name="logic_tb.bit"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-PB" Name="logic_tb_bus_skew_postroute_physopted.pb"/>
+  <File Type="POSTROUTE-PHYSOPT-BUS-SKEW-RPX" Name="logic_tb_bus_skew_postroute_physopted.rpx"/>
+  <File Type="BITSTR-NKY" Name="logic_tb.nky"/>
+  <File Type="BITSTR-BMM" Name="logic_tb_bd.bmm"/>
+  <File Type="PDI-FILE" Name="logic_tb.pdi"/>
+  <File Type="BOOT-PDI-FILE" Name="logic_tb_boot.pdi"/>
+  <File Type="PL-PDI-FILE" Name="logic_tb_pld.pdi"/>
+  <File Type="RCFI_FILE" Name="logic_tb.rcfi"/>
+  <File Type="CFI_FILE" Name="logic_tb.cfi"/>
+  <File Type="RNPI_FILE" Name="logic_tb.rnpi"/>
+  <File Type="NPI_FILE" Name="logic_tb.npi"/>
+  <File Type="RBD_FILE" Name="logic_tb.rbd"/>
   <File Type="BITSTR-LTX" Name="debug_nets.ltx"/>
-  <File Type="BITSTR-LTX" Name="and3_wrapper.ltx"/>
-  <File Type="BITSTR-SYSDEF" Name="and3_wrapper.sysdef"/>
-  <File Type="BG-BGN" Name="and3_wrapper.bgn"/>
-  <File Type="BG-DRC" Name="and3_wrapper.drc"/>
-  <File Type="RDI-RDI" Name="and3_wrapper.vdi"/>
+  <File Type="BITSTR-LTX" Name="logic_tb.ltx"/>
+  <File Type="BITSTR-SYSDEF" Name="logic_tb.sysdef"/>
+  <File Type="BG-BGN" Name="logic_tb.bgn"/>
+  <File Type="BG-DRC" Name="logic_tb.drc"/>
+  <File Type="RDI-RDI" Name="logic_tb.vdi"/>
   <File Type="WBT-USG" Name="usage_statistics_webtalk.html"/>
-  <File Type="ROUTE-RQS" Name="and3_wrapper_routed.rqs"/>
-  <File Type="POSTROUTE-PHYSOPT-RQS" Name="and3_wrapper_postroute_physopted.rqs"/>
+  <File Type="ROUTE-RQS" Name="logic_tb_routed.rqs"/>
+  <File Type="POSTROUTE-PHYSOPT-RQS" Name="logic_tb_postroute_physopted.rqs"/>
   <File Type="ROUTE-RQS-RPT" Name="route_report_qor_suggestions_0.rpt"/>
   <File Type="POSTROUTE-PHYSOPT-RQS-RPT" Name="postroute_physopt_report_qor_suggestions_0.rpt"/>
   <FileSet Name="sources" Type="DesignSrcs" RelSrcDir="$PSRCDIR/sources_1" RelGenDir="$PGENDIR/sources_1">
     <Filter Type="Srcs"/>
+    <File Path="$PPRDIR/../VLSI-Files/source/logic.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../VLSI-Files/sim/logic_tb.vhd">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <File Path="$PPRDIR/../VLSI-Files/source/and3.vhd">
       <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
     <File Path="$PPRDIR/../VLSI-Files/source/and3_wrapper.vhd">
       <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
+    <File Path="$PPRDIR/../VLSI-Files/source/logic_wrapper.vhd">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
     <Config>
       <Option Name="DesignMode" Val="RTL"/>
-      <Option Name="TopModule" Val="and3_wrapper"/>
-      <Option Name="TopAutoSet" Val="TRUE"/>
+      <Option Name="TopModule" Val="logic_tb"/>
     </Config>
   </FileSet>
   <FileSet Name="constrs_in" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1" RelGenDir="$PGENDIR/constrs_1">
@@ -118,14 +138,20 @@
   </FileSet>
   <FileSet Name="utils" Type="Utils" RelSrcDir="$PSRCDIR/utils_1" RelGenDir="$PGENDIR/utils_1">
     <Filter Type="Utils"/>
+    <File Path="$PSRCDIR/utils_1/imports/synth_1/and3_wrapper.dcp">
+      <FileInfo>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedInSteps" Val="synth_1"/>
+        <Attr Name="AutoDcp" Val="1"/>
+      </FileInfo>
+    </File>
     <Config>
       <Option Name="TopAutoSet" Val="TRUE"/>
     </Config>
   </FileSet>
   <Strategy Version="1" Minor="2">
-    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2024">
-      <Desc>Default settings for Implementation.</Desc>
-    </StratHandle>
+    <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2024"/>
     <Step Id="init_design"/>
     <Step Id="opt_design"/>
     <Step Id="power_opt_design"/>
