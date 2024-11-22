@@ -1,0 +1,13 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../../VLSI-Files/vhdl/isa_riscv.vhd" \
+"../../../../../VLSI-Files/vhdl/op_add.vhd" \
+"../../../../../VLSI-Files/vhdl/op_sub.vhd" \
+"../../../../../VLSI-Files/vhdl/op_and.vhd" \
+"../../../../../VLSI-Files/vhdl/op_or.vhd" \
+"../../../../../VLSI-Files/vhdl/op_xor.vhd" \
+"../../../../../VLSI-Files/vhdl/alu.vhd" \
+"../../../../../VLSI-Files/vhdl/alu_tb.vhd" \
+
+# Do not sort compile order
+nosort
