@@ -2,6 +2,12 @@ library IEEE;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 
+use work.misc.ALL;
+
+LIBRARY UNISIM;
+USE UNISIM.vcomponents.ALL;
+
+
 entity register_file_timing_wrapper is
 	generic (
 		word_size : integer := 32;
@@ -15,17 +21,24 @@ entity register_file_timing_wrapper is
 		data_b : out std_logic_vector(word_size-1 downto 0);
 		data_c : in  std_logic_vector(word_size-1 downto 0);
 		w_en   : in  std_logic;
-		clk    : in  std_logic
+		clk_100 : in  std_logic
 	);
 end entity register_file_timing_wrapper;
 
 architecture behav of register_file_timing_wrapper is
 
-	signal r_addr_a, r_addr_b, r_addr_c : std_logic_vector(log2(size)-1) downto 0);
+	signal r_addr_a, r_addr_b, r_addr_c : std_logic_vector(log2(size)-1 downto 0);
 	signal r_data_a, r_data_b, r_data_c : std_logic_vector(word_size-1 downto 0);
 	signal r_w_en : std_logic;
+	signal clk : std_logic;
 
 begin
+    BUFG_ins : BUFG
+    port map (
+      O => clk,
+      I => clk_100
+    );
+
 
 	rf: entity work.register_file
 		generic map (
