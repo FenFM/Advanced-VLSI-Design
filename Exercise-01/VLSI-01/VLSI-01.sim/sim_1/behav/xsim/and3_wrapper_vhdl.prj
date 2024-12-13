@@ -1,7 +1,0 @@
-# compile vhdl design source files
-vhdl xil_defaultlib  \
-"../../../../../VLSI-Files/source/and3.vhd" \
-"../../../../../VLSI-Files/source/and3_wrapper.vhd" \
-
-# Do not sort compile order
-nosort

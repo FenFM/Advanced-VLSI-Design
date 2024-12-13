@@ -1,4 +1,0 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/and3.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'and3'
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-01/VLSI-Files/source/and3_wrapper.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'and3_wrapper'

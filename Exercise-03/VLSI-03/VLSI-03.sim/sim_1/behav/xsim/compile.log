@@ -1,7 +1,0 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-03/VLSI-Files/vhdl/alu.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'alu'
-INFO: [VRFC 10-163] Analyzing VHDL file "C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-03/VLSI-Files/vhdl/alu_tb.vhd" into library xil_defaultlib
-INFO: [VRFC 10-3107] analyzing entity 'alu_tb'
-WARNING: [VRFC 10-9374] signal 'bits' is used in a subtype-indication or type-definition [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-03/VLSI-Files/vhdl/alu_tb.vhd:15]
-WARNING: [VRFC 10-9374] signal 'bits' is used in a subtype-indication or type-definition [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-03/VLSI-Files/vhdl/alu_tb.vhd:16]
-WARNING: [VRFC 10-3092] actual expression for generic 'bits' cannot reference a signal [C:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-03/VLSI-Files/vhdl/alu_tb.vhd:22]
