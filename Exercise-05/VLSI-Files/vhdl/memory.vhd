@@ -16,7 +16,7 @@ entity memory is
 		data_read  : out std_logic_vector(word_size-1 downto 0);         -- o_read_32_data
 		addr_write : in  std_logic_vector(log2( mem_size )-1 downto 0);  -- i_write_32_addr
 		addr_read  : in  std_logic_vector(log2( mem_size )-1 downto 0);  -- i_read_32_addr
-		write_en   : in  std_logic;		                                 -- i_write_32_wren
+		write_en   : in  std_logic;                                      -- i_write_32_wren
 		read_en    : in  std_logic                                       -- i_read_32_rden
 	);
 end entity memory;
@@ -42,7 +42,7 @@ begin
 	end process writing;
 
 
-	reading : process( addr_read )
+	reading : process( read_en, addr_read )
 	begin
 	   if read_en = '1' then
 	       data_read <= s_data_reg_vec( s_addr_read );
