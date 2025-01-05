@@ -19,9 +19,10 @@ architecture structure of cpu is
     signal s_pc_dout : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
     -- signals for the alu
-    signal s_alu_operand_b : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_alu_result    : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_alu_zero_flag : std_logic_vector( 3 downto 0 );
+    signal s_alu_operand_b     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_alu_result        : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_alu_zero_flag     : std_logic;
+    signal s_alu_overflow_flag : std_logic;
 
     -- signal for the instruction memory
     signal s_instruction_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0) ;
@@ -55,21 +56,22 @@ begin
     alu_ins : entity work.alu
     generic map ( bit_width  =>  C_BIT_WIDTH )
     port map (
-        i_alu_operand_a  =>  s_register_file_read_a_data,
-        i_alu_operand_b  =>  s_alu_operand_b,
-        i_alu_op         =>  ,
-        o_alu_result     =>  s_alu_result,
-        o_alu_zero_flag  =>  s_alu_zero_flag
+        i_alu_operand_a      =>  s_register_file_read_a_data,
+        i_alu_operand_b      =>  s_alu_operand_b,
+        i_alu_op             =>  ,
+        o_alu_result         =>  s_alu_result,
+        o_alu_zero_flag      =>  s_alu_zero_flag,
+        o_alu_overflow_flag  =>  s_alu_overflow_flag
     );
 
 
-    alu_mux_ins : entity work.mux_switch
-    generci map( bit_width  =>  C_BIT_WIDTH )
+    alu_mux_ins : entity work.mux_switch_2
+    generic map( bit_width  =>  C_BIT_WIDTH )
     port map (
-        i_muxer  =>  ,
-        i_din_a  =>  s_register_file_read_b_data,
-        i_din_b  =>  ,
-        o_dout   =>  s_alu_operand_b
+        s  =>  ,
+        a  =>  s_register_file_read_b_data,
+        b  =>  ,
+        o  =>  s_alu_operand_b
     )
 
 
@@ -122,13 +124,13 @@ begin
     );
 
 
-    mem_to_reg_mux_ins : entity work.mux_switch
-    generci map( bit_width  =>  C_BIT_WIDTH )
+    mem_to_reg_mux_ins : entity work.mux_switch_2
+    generic map( bit_width  =>  C_BIT_WIDTH )
     port map (
-        i_muxer  =>  ,
-        i_din_a  =>  s_pc_dout,
-        i_din_b  =>  s_data_memory_read_data,
-        o_dout   =>  s_register_write_data
+        s  =>  ,
+        a  =>  s_pc_dout,
+        b  =>  s_data_memory_read_data,
+        o  =>  s_register_write_data
     )
 
 

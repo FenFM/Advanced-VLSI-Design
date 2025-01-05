@@ -21,30 +21,20 @@ end one_bit_alu;
 architecture behavioral of one_bit_alu is
     signal a_muxed, b_muxed : std_logic;
     signal add_res : std_logic;
---    signal sub_res : std_logic;    
     signal and_res : std_logic;
     signal or_res  : std_logic;
     signal xor_res : std_logic;
-    
-    signal add_reg : unsigned( 1 downto 0 );
-    signal a_reg, b_reg, carry_in_reg : std_logic_vector( 1 downto 0 );
 
 
 begin
-    a_reg( 0 ) <= a_muxed;
-    a_reg( 1 ) <= '0';
-    b_reg( 0 ) <= b_muxed;
-    b_reg( 1 ) <= '0';
-    carry_in_reg( 0 ) <= carry_in;
-    carry_in_reg( 1 ) <= '0';
-
-
     a_mux : process( a, a_invert )
     begin
         case a_invert is
             when '0' =>
                 a_muxed <= a;
             when '1' =>
+                a_muxed <= not a;
+            when others =>
                 a_muxed <= not a;
         end case;
     end process a_mux;
@@ -57,13 +47,27 @@ begin
                 b_muxed <= b;
             when '1' =>
                 b_muxed <= not b;
+            when others =>
+                b_muxed <= not b;
         end case;
-    end process b_mux;    
-
-
-    add_reg   <= unsigned( a_reg ) + unsigned( b_reg ) + unsigned( carry_in_reg );
-    add_res   <= add_reg( 0 );
-    carry_out <= add_reg( 1 );
+    end process b_mux;
+    
+    
+    addition : process( a_muxed, b_muxed, carry_in )
+        variable a_temp, b_temp, carry_in_temp : unsigned( 0 downto 0 );
+        variable add_temp : unsigned( 1 downto 0 );
+    begin
+        a_temp( 0 ) := a_muxed;
+        b_temp( 0 ) := b_muxed;
+        carry_in_temp( 0 ) := carry_in;
+        
+        add_temp := to_unsigned( to_integer( a_temp ) + to_integer( b_temp ) + to_integer( carry_in_temp ) , 2 );
+        add_res   <= add_temp( 0 );
+        carry_out <= add_temp( 1 );
+    end process addition;
+    
+--    add_res   <= ( a_muxed xor b_muxed xor carry_in ) or ( a_muxed and b_muxed and carry_in );
+--    carry_out <= ( a_muxed and ( b_muxed xor carry_in )) or (( a_muxed xor b_muxed ) and carry_in ) or ( a_muxed and b_muxed and carry_in );
     
     and_res <= a_muxed and b_muxed;
     or_res  <= a_muxed or  b_muxed;
@@ -83,6 +87,8 @@ begin
                 result <= add_res;         
             when 4 =>
                 result <= less;
+            when others =>
+                result <= '0';
         end case;
     end process;
     

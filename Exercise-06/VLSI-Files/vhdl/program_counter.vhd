@@ -24,7 +24,7 @@ end entity program_counter;
 
 architecture behavior of program_counter is
     type alu is record
-        pc_counter : signed( bit_width-1 downto 0 );
+        pc_counter : unsigned( bit_width-1 downto 0 );
     end record;
     signal r, rin : alu;
 
@@ -37,7 +37,7 @@ begin
     s_branch_zero <= i_branch and i_alu_zero_flag;
 
 
-    reg : process ( clk, rst, i_pc_wren )
+    reg : process ( clk, rst )
     begin
         if rst = '1' then
             r.pc_counter <= (others => '0');
@@ -57,7 +57,7 @@ begin
         v.pc_counter := r.pc_counter + pc_offset;
 
         if i_pc_src = '1' and s_branch_zero = '1' then
-            v.pc_counter := v.pc_counter + i_sign_shift;
+            v.pc_counter := v.pc_counter + unsigned( i_sign_shift );
         end if;
 
         rin <= v;
