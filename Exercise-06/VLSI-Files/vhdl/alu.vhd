@@ -8,12 +8,12 @@ use work.isa_riscv.ALL;
 entity alu is
 	generic ( bit_width : integer := 8 );
 	port (
-		i_alu_operand_a     : in  std_logic_vector( bit_width-1 downto 0 );
-		i_alu_operand_b     : in  std_logic_vector( bit_width-1 downto 0 );
-		i_alu_op            : in  std_logic_vector( 3 downto 0 );
-		o_alu_result        : out std_logic_vector( bit_width-1 downto 0 );
-        o_alu_zero_flag     : out std_logic;
-        o_alu_overflow_flag : out std_logic
+		i_operand_a     : in  std_logic_vector( bit_width-1 downto 0 );
+		i_operand_b     : in  std_logic_vector( bit_width-1 downto 0 );
+		i_operation     : in  std_logic_vector( 3 downto 0 );
+		o_result        : out std_logic_vector( bit_width-1 downto 0 );
+        o_zero_flag     : out std_logic;
+        o_overflow_flag : out std_logic
 	);
 end entity alu;
 
@@ -29,15 +29,15 @@ architecture behav of alu is
 
 
 begin  
-    o_alu_result <= s_one_bit_alu_result;
+    o_result <= s_one_bit_alu_result;
 
-    mux_operation : process( i_alu_op )
+    mux_operation : process( i_operation )
     begin
         s_one_bit_alu_carry_in( 0 ) <= '0';
         s_a_invert <= '0';
         s_b_invert <= '0'; 
     
-        case i_alu_op is
+        case i_operation is
             when "0000" =>  -- and
                 s_one_bit_alu_operation <= 0;
         
@@ -61,7 +61,7 @@ begin
                 
             when others => -- set outputs to 0
                 s_one_bit_alu_operation <= 0;
---                o_alu_result <= ( others => '0' );
+--                o_result <= ( others => '0' );
                 
         end case;        
     end process mux_operation;
@@ -70,8 +70,8 @@ begin
     one_bit_alu_gen : for i in 0 to bit_width-1 generate
         one_bit_alu_ins : entity work.one_bit_alu
         port map(
-        a          =>  i_alu_operand_a( i ),
-        b          =>  i_alu_operand_b( i ),
+        a          =>  i_operand_a( i ),
+        b          =>  i_operand_b( i ),
         a_invert   =>  s_a_invert,
         b_invert   =>  s_b_invert,
         operation  =>  s_one_bit_alu_operation,
@@ -90,13 +90,13 @@ begin
         for i in 0 to bit_width-1 loop
             temp := temp or s_one_bit_alu_result( i );
         end loop;
-        o_alu_zero_flag <= not temp;
+        o_zero_flag <= not temp;
     end process zero_flag_control;
 
     
     s_one_bit_alu_carry_in( bit_width-1 downto 1 ) <= s_one_bit_alu_carry_out( bit_width-2 downto 0 );
     s_one_bit_alu_less( 0 ) <= s_one_bit_alu_result( bit_width-1 );
     s_one_bit_alu_less( bit_width-1 downto 1 ) <= ( others => '0' );
-    o_alu_overflow_flag <= s_one_bit_alu_carry_out( bit_width-1 );
+    o_overflow_flag <= s_one_bit_alu_carry_out( bit_width-1 );
 
 end behav;

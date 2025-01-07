@@ -17,6 +17,7 @@ end entity cpu;
 architecture structure of cpu is
     -- signal for the program counter
     signal s_pc_dout : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_src  : std_logic;
 
     -- signals for the alu
     signal s_alu_operand_b     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -35,33 +36,50 @@ architecture structure of cpu is
     signal s_register_file_read_b_data : std_logic_vector( C_REG_SIZE-1 downto 0 );
     signal s_register_write_data       : std_logic_vector( C_REG_SIZE-1 downto 0 );
 
+    -- signals for the control unit
+    signal s_cu_pc_src   : std_logic;
+    signal s_cu_alu_op   : std_logic;
+    signal s_cu_alu_src  : std_logic;
+    signal s_cu_reg_wren : std_logic;
+    signal s_cu_mem_wren : std_logic;
+    signal s_cu_mem_rden : std_logic;
+
 
 begin
+    control_unit_ins : entity work.cotrol_unit
+    port map(
+        o_pc_src    =>  s_cu_pc_src,
+        o_alu_op    =>  s_cu_alu_op,
+        o_alu_src   =>  s_cu_alu_src,
+        o_reg_wren  =>  s_cu_reg_wren,
+        o_mem_wren  =>  s_cu_mem_wren,
+        o_mem_rden  =>  s_cu_mem_rden
+    );
+
     program_counter_ins : entity work.program_counter
-    generic map (
+    generic map(
         bit_width  =>  C_BIT_WIDTH,
         pc_offset  =>  C_PC_OFFSET
     )
-    port map (
-        clk              =>  clk,
-        rst              =>  rst,
-        i_sign_shift     =>  ,
-        i_pc_src         =>  ,
-        i_branch         =>  ,
-        i_alu_zero_flag  =>  s_alu_zero_flag,
-        o_pc_dout        =>  s_pc_dout
+    port map(
+        clk           =>  clk,
+        rst           =>  rst,
+        i_sign_shift  =>  ,
+        i_pc_src      =>  s_cu_pc_src,
+        o_pc_dout     =>  s_pc_dout
     );
+    s_pc_src <= s_alu_zero_flag and s_branch;
 
 
     alu_ins : entity work.alu
     generic map ( bit_width  =>  C_BIT_WIDTH )
     port map (
-        i_alu_operand_a      =>  s_register_file_read_a_data,
-        i_alu_operand_b      =>  s_alu_operand_b,
-        i_alu_op             =>  ,
-        o_alu_result         =>  s_alu_result,
-        o_alu_zero_flag      =>  s_alu_zero_flag,
-        o_alu_overflow_flag  =>  s_alu_overflow_flag
+        i_operand_a      =>  s_register_file_read_a_data,
+        i_operand_b      =>  s_alu_operand_b,
+        i_operation      =>  s_cu_alu_op,
+        o_result         =>  s_alu_result,
+        o_zero_flag      =>  s_alu_zero_flag,
+        o_overflow_flag  =>  s_alu_overflow_flag
     );
 
 
@@ -76,57 +94,57 @@ begin
 
 
     instruction_memory_ins : entity work.memory
-    generic map (
+    generic map(
         word_size  =>  C_BIT_WIDTH,
         mem_size   =>  C_IM_MEM_SIZE
     )
-    port map (
-        clk                  =>  clk,
-        i_memory_write_data  =>  ,        
-        i_memory_write_addr  =>  s_pc_dout, 
-        i_memory_write_wren  =>  ,
-        o_memory_read_data   =>  s_instruction_memory_read_data,       
-        i_memory_read_addr   =>  ,
-        i_memory_read_rden   =>                                       
+    port map(
+        clk           =>  clk,
+        i_write_data  =>  ,        
+        i_write_addr  =>  s_pc_dout, 
+        i_write_wren  =>  ,
+        o_read_data   =>  s_instruction_memory_read_data,       
+        i_read_addr   =>  ,
+        i_read_rden   =>                                       
     );
 
 
     data_memory_ins : entity work.memory
-    generic map (
+    generic map(
         word_size  =>  C_BIT_WIDTH,
         mem_size   =>  C_DM_MEM_SIZE
     )
     port map (
-        clk                  =>  clk,
-        i_memory_write_data  =>  s_register_file_read_b_data,        
-        i_memory_write_addr  =>  s_alu_result, 
-        i_memory_write_wren  =>  ,
-        o_memory_read_data   =>  s_data_memory_read_data,       
-        i_memory_read_addr   =>  ,
-        i_memory_read_rden   =>                                       
+        clk           =>  clk,
+        i_write_data  =>  s_register_file_read_b_data,        
+        i_write_addr  =>  s_alu_result, 
+        i_write_wren  =>  ,
+        o_read_data   =>  s_data_memory_read_data,       
+        i_read_addr   =>  ,
+        i_read_rden   =>                                       
     );
 
 
     register_file_ins : entity work.register_file
-    generic map (
+    generic map(
         word_size  =>  C_REG_WORD_SIZE,
         reg_size   =>  C_REG_SIZE      
     );
     port map (
-        clk                     =>  clk,
-        i_register_write_data   =>  s_register_write_data,
-        i_register_write_addr   =>  s_instruction_memory_read_data,
-        i_register_write_wren   =>  ,
-        o_register_read_a_data  =>  s_register_file_read_a_data,
-        i_register_read_a_addr  =>  s_instruction_memory_read_data,
-        o_register_read_b_data  =>  s_register_file_read_b_data,
-        i_register_read_b_addr  =>  s_instruction_memory_read_data
+        clk            =>  clk,
+        i_write_data   =>  s_register_write_data,
+        i_write_addr   =>  s_instruction_memory_read_data,
+        i_write_wren   =>  ,
+        o_read_a_data  =>  s_register_file_read_a_data,
+        i_read_a_addr  =>  s_instruction_memory_read_data,
+        o_read_b_data  =>  s_register_file_read_b_data,
+        i_read_b_addr  =>  s_instruction_memory_read_data
     );
 
 
     mem_to_reg_mux_ins : entity work.mux_switch_2
     generic map( bit_width  =>  C_BIT_WIDTH )
-    port map (
+    port map(
         s  =>  ,
         a  =>  s_pc_dout,
         b  =>  s_data_memory_read_data,

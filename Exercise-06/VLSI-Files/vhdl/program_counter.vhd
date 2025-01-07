@@ -12,11 +12,9 @@ entity program_counter is
     port (
         clk : in  std_logic;
         rst : in  std_logic;
-        i_sign_shift    : in  std_logic_vector( bit_width-1 downto 0 );
-        i_pc_src        : in  std_logic;
-        i_branch        : in  std_logic;
-        i_alu_zero_flag : in  std_logic;
-        o_pc_dout       : out std_logic_vector( bit_width-1 downto 0 )
+        i_sign_shift : in  std_logic_vector( bit_width-1 downto 0 );
+        i_pc_src     : in  std_logic;
+        o_pc_dout    : out std_logic_vector( bit_width-1 downto 0 )
     );
 
 end entity program_counter;
@@ -28,13 +26,11 @@ architecture behavior of program_counter is
     end record;
     signal r, rin : alu;
 
-    signal s_branch_zero : std_logic; -- needs to be implemented
+    signal s_branch_zero : std_logic;
 
 
 begin
     o_pc_dout <= std_logic_vector( r.pc_counter );
-    
-    s_branch_zero <= i_branch and i_alu_zero_flag;
 
 
     reg : process ( clk, rst )
@@ -49,15 +45,15 @@ begin
     end process reg;
 
 
-    comb : process ( r, i_pc_src, s_branch_zero )
+    comb : process ( r, i_pc_src )
         variable v : alu;
     begin
         v := r;
 
-        v.pc_counter := r.pc_counter + pc_offset;
-
-        if i_pc_src = '1' and s_branch_zero = '1' then
-            v.pc_counter := v.pc_counter + unsigned( i_sign_shift );
+        if i_pc_src = '1' then
+            v.pc_counter := r.pc_counter + unsigned( i_sign_shift );
+        else
+            v.pc_counter := r.pc_counter + pc_offset;
         end if;
 
         rin <= v;
