@@ -16,10 +16,11 @@ end entity cpu;
 
 architecture structure of cpu is
     -- signal for the program counter
-    signal s_pc_dout : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_src  : std_logic;
+    signal s_pc_dout     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_branch_zero : std_logic;
 
     -- signals for the alu
+    signal s_alu_operand_a     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_operand_b     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_result        : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_zero_flag     : std_logic;
@@ -38,7 +39,8 @@ architecture structure of cpu is
 
     -- signals for the control unit
     signal s_cu_pc_src   : std_logic;
-    signal s_cu_alu_op   : std_logic;
+    signal s_cu_branch   : std_logic;
+    signal s_cu_alu_op   : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_cu_alu_src  : std_logic;
     signal s_cu_reg_wren : std_logic;
     signal s_cu_mem_wren : std_logic;
@@ -46,9 +48,10 @@ architecture structure of cpu is
 
 
 begin
-    control_unit_ins : entity work.cotrol_unit
+    control_unit_ins : entity work.control_unit
     port map(
         o_pc_src    =>  s_cu_pc_src,
+        o_branch    =>  s_cu_branch,
         o_alu_op    =>  s_cu_alu_op,
         o_alu_src   =>  s_cu_alu_src,
         o_reg_wren  =>  s_cu_reg_wren,
@@ -62,25 +65,27 @@ begin
         pc_offset  =>  C_PC_OFFSET
     )
     port map(
-        clk           =>  clk,
-        rst           =>  rst,
-        i_sign_shift  =>  ,
-        i_pc_src      =>  s_cu_pc_src,
-        o_pc_dout     =>  s_pc_dout
+        clk            =>  clk,
+        rst            =>  rst,
+        i_sign_shift   =>  ,
+        i_pc_src       =>  s_cu_pc_src,
+        i_branch_zero  =>  s_branch_zero,
+        o_pc_dout      =>  s_pc_dout
     );
-    s_pc_src <= s_alu_zero_flag and s_branch;
+     s_branch_zero <= s_alu_zero_flag and s_cu_branch;
 
 
     alu_ins : entity work.alu
     generic map ( bit_width  =>  C_BIT_WIDTH )
     port map (
-        i_operand_a      =>  s_register_file_read_a_data,
+        i_operand_a      =>  s_alu_operand_a,
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_cu_alu_op,
         o_result         =>  s_alu_result,
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag
     );
+    s_alu_operand_a <= s_register_file_read_a_data
 
 
     alu_mux_ins : entity work.mux_switch_2
