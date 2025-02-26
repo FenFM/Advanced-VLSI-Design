@@ -17,8 +17,9 @@ end entity cpu;
 
 architecture structure of cpu is
     -- signal for the program counter
+    signal s_pc_src      : std_logic;
     signal s_branch_zero : std_logic;
-    signal s_sign_shift  : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_imm_gen_out : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
     -- signals for the alu
     signal s_alu_operand_a     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -47,29 +48,34 @@ architecture structure of cpu is
     signal s_register_file_read_a_data : std_logic_vector( C_REG_SIZE-1 downto 0 );
     signal s_register_file_read_b_data : std_logic_vector( C_REG_SIZE-1 downto 0 );
     signal s_register_write_data       : std_logic_vector( C_REG_SIZE-1 downto 0 );
+    signal s_register_file_write_addr  : std_logic_vector( 4 downto 0 );
+    signal s_register_file_read_a_addr : std_logic_vector( 4 downto 0 );
+    signal s_register_file_read_b_addr : std_logic_vector( 4 downto 0 );
 
     -- signals for the control unit
-    signal s_cu_pc_src     : std_logic;
     signal s_cu_branch     : std_logic;
-    signal s_cu_alu_op     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_cu_branch_f   : std_logic;
+    signal s_cu_alu_op     : std_logic_vector( 1 downto 0 );
     signal s_cu_alu_src    : std_logic;
     signal s_cu_reg_wren   : std_logic;
     signal s_cu_mem_wren   : std_logic;
     signal s_cu_mem_rden   : std_logic;
     signal s_cu_mem_to_reg : std_logic;
+    signal s_alu_operation : std_logic_vector( 3 downto 0 );
 
 
 begin
     CU : entity work.control_unit
     port map(
-        o_pc_src      =>  s_cu_pc_src,
-        o_branch      =>  s_cu_branch,
-        o_alu_op      =>  s_cu_alu_op,
-        o_alu_src     =>  s_cu_alu_src,
-        o_reg_wren    =>  s_cu_reg_wren,
-        o_mem_wren    =>  s_cu_mem_wren,
-        o_mem_rden    =>  s_cu_mem_rden,
-        o_mem_to_reg  =>  s_cu_mem_to_reg
+        i_instruction  =>  s_instruction_memory_read_data,
+        o_branch       =>  s_cu_branch,
+        o_branch_f     =>  s_cu_branch_f,
+        o_alu_op       =>  s_cu_alu_op,
+        o_alu_src      =>  s_cu_alu_src,
+        o_reg_wren     =>  s_cu_reg_wren,
+        o_mem_wren     =>  s_cu_mem_wren,
+        o_mem_rden     =>  s_cu_mem_rden,
+        o_mem_to_reg   =>  s_cu_mem_to_reg
     );
 
     PC : entity work.program_counter
@@ -79,14 +85,14 @@ begin
         pc_offset  =>  C_PC_OFFSET
     )
     port map(
-        clk            =>  clk,
-        rst            =>  rst,
-        i_sign_shift   =>  s_sign_shift,
-        i_pc_src       =>  s_cu_pc_src,
-        i_branch_zero  =>  s_branch_zero,
-        o_pc_dout      =>  s_instruction_memory_read_addr
+        clk                =>  clk,
+        rst                =>  rst,
+        i_immediate        =>  s_imm_gen_out,
+        i_pc_src           =>  s_pc_src,
+        i_pc_force_branch  =>  s_cu_branch_f,
+        o_pc_dout          =>  s_instruction_memory_read_addr
     );
-     s_branch_zero <= s_alu_zero_flag and s_cu_branch;
+    s_pc_src <= s_alu_zero_flag and s_cu_branch;
     
     
     IM : entity work.memory
@@ -103,22 +109,28 @@ begin
         i_read_addr   =>  s_instruction_memory_read_addr,
         i_read_rden   =>  s_instruction_memory_read_rden                                     
     );
-         
+ 
      
-    JC : entity work.jump_control
+    IG : entity work.imm_gen
     generic map( C_BIT_WIDTH )
     port map(
         din   =>  s_instruction_memory_read_data,
-        dout  =>  s_sign_shift
+        dout  =>  s_imm_gen_out
     );
 
+    ALU_IN : entity work.alu_control_unit
+    port map(
+        i_instruction      =>  s_instruction_memory_read_data,
+        i_alu_instruction  =>  s_cu_alu_op,
+        o_alu_operation    =>  s_alu_operation
+    );
 
     ALU : entity work.alu
     generic map ( C_BIT_WIDTH )
     port map (
         i_operand_a      =>  s_alu_operand_a,
         i_operand_b      =>  s_alu_operand_b,
-        i_operation      =>  s_cu_alu_op,
+        i_operation      =>  s_alu_operation,
         o_result         =>  s_alu_result,
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag
@@ -131,7 +143,7 @@ begin
     port map (
         s  =>  s_cu_alu_src,
         a  =>  s_register_file_read_b_data,
-        b  =>  s_sign_shift,
+        b  =>  s_imm_gen_out,
         o  =>  s_alu_operand_b
     );
 
@@ -156,17 +168,20 @@ begin
     generic map(
         word_size  =>  C_REG_WORD_SIZE,
         reg_size   =>  C_REG_SIZE      
-    );
+    )
     port map (
         clk            =>  clk,
         i_write_data   =>  s_register_write_data,
-        i_write_addr   =>  s_instruction_memory_read_data,
+        i_write_addr   =>  s_register_file_write_addr,
         i_write_wren   =>  s_cu_reg_wren,
         o_read_a_data  =>  s_register_file_read_a_data,
-        i_read_a_addr  =>  s_instruction_memory_read_data,
+        i_read_a_addr  =>  s_register_file_read_a_addr,        
         o_read_b_data  =>  s_register_file_read_b_data,
-        i_read_b_addr  =>  s_instruction_memory_read_data
+        i_read_b_addr  =>  s_register_file_read_b_addr
     );
+    s_register_file_read_a_addr <= s_instruction_memory_read_data( 19 downto 15 );
+    s_register_file_read_b_addr <= s_instruction_memory_read_data( 24 downto 20 );
+    s_register_file_write_addr  <= s_instruction_memory_read_data( 11 downto  7 );
 
 
     MEM_to_REG_MUX : entity work.mux_switch_2

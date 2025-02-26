@@ -13,12 +13,12 @@ entity program_counter is
     );
 
     port (
-        clk : in  std_logic;
-        rst : in  std_logic;
-        i_sign_shift  : in  std_logic_vector( bit_width-1 downto 0 );
-        i_pc_src      : in  std_logic;
-        i_branch_zero : in  std_logic;
-        o_pc_dout     : out std_logic_vector( log2(mem_size)-1 downto 0 )
+        clk               : in  std_logic;
+        rst               : in  std_logic;
+        i_immediate       : in  std_logic_vector( 31 downto 0 );
+        i_pc_src          : in  std_logic;
+        i_pc_force_branch : in std_logic;
+        o_pc_dout         : out std_logic_vector( log2(mem_size)-1 downto 0 )
     );
 
 end entity program_counter;
@@ -49,13 +49,13 @@ begin
     end process reg;
 
 
-    comb : process ( r, i_pc_src, i_branch_zero )
+    comb : process ( r, i_pc_src )
         variable v : alu;
     begin
         v := r;
 
-        if i_pc_src = '1' or i_branch_zero = '1' then
-            v.pc_counter := r.pc_counter + unsigned( i_sign_shift );
+        if i_pc_src = '1' or i_pc_force_branch = '1' then
+            v.pc_counter := r.pc_counter + unsigned( i_immediate );
         else
             v.pc_counter := r.pc_counter + pc_offset;
         end if;

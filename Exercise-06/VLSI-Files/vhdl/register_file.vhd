@@ -49,7 +49,7 @@ begin
     end process register_in;
     
     
-    register_out : process( i_register_a_addr, i_register_b_addr )
+    register_out : process( i_read_a_addr, i_read_b_addr)
     begin
         o_read_a_data <= s_register_data_vec( s_register_read_a_addr );
         o_read_b_data <= s_register_data_vec( s_register_read_b_addr );

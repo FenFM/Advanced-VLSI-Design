@@ -1,0 +1,56 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
+use work.isa_riscv.ALL;
+
+
+entity alu_control_unit is
+    port(
+        i_instruction     : in  std_logic_vector( 31 downto 0 );
+        i_alu_instruction : in  std_logic_vector(  1 downto 0 );
+        o_alu_operation   : out std_logic_vector(  3 downto 0 )
+    );
+end alu_control_unit;
+
+
+architecture behavior of alu_control_unit is
+
+
+begin
+    ALU_OP : process( i_instruction, i_alu_instruction )
+    begin
+        case i_alu_instruction is
+            when "10" =>  -- R-type operations
+                case i_instruction( 14 downto 12 ) is
+                    when "000"  =>  
+                        case i_instruction( 30 ) is
+                            when '0'  =>  o_alu_operation <= opcode_ADD;
+                            when '1'  =>  o_alu_operation <= opcode_SUB;
+                        end case;
+                    when "001"  =>  o_alu_operation <= opcode_SLL;
+                    when "010"  =>  o_alu_operation <= opcode_SLT;
+                    when "011"  =>  o_alu_operation <= opcode_SLTU;
+                    when "100"  =>  o_alu_operation <= opcode_XOR;
+                    when "101"  =>  
+                        case i_instruction( 30 ) is
+                            when '0'  =>  o_alu_operation <= opcode_SRL;
+                            when '1'  =>  o_alu_operation <= opcode_SRA;
+                        end case;
+                    when "110"  =>  o_alu_operation <= opcode_OR;
+                    when "111"  =>  o_alu_operation <= opcode_AND;         
+                end case;
+
+            when "00" =>  -- lw and sw
+            
+
+            when "01" =>  -- BEQ
+
+
+            when "11" =>  -- pass through input b
+                o_alu_operation <= opcode_PASS;
+
+
+        end case;
+    end process ALU_OP;
+
+end behavior;
