@@ -5,7 +5,7 @@ use work.isa_riscv.ALL;
 
 
 entity alu is
-	generic ( bit_width : integer := 8 );
+	generic ( bit_width : integer := 32 );
 	port (
 		i_operation     : in  std_logic_vector( 3 downto 0 );
 		i_operand_a     : in  std_logic_vector( bit_width-1 downto 0 );
@@ -30,7 +30,7 @@ architecture behavior of alu is
 
 
 begin
-    o_result <= s_result;
+    o_result    <= s_result;
 
     -- addition
     add_res <= std_logic_vector( signed( '0' & i_operand_a ) + signed( '0' & i_operand_b ));
@@ -52,6 +52,9 @@ begin
     
     -- mul for testing only
 --    mul_res <= std_logic_vector( signed( i_operand_a( bit_width/2-1 downto 0 )) * signed( i_operand_b( bit_width/2-1 downto 0 )));
+
+    -- zero flag
+    o_zero_flag <= not ( or s_result );
 
 
     operation_mux_switch : process( i_operation )
@@ -83,19 +86,6 @@ begin
             
         end case;
     end process operation_mux_switch;
-
-
-    zero_flag_control : process ( s_result )
-        variable temp : std_logic;
-    begin
-        temp := '0';
-        
-        for i in 0 to bit_width-1 loop
-            temp := temp or s_result( i );
-        end loop;
-        
-        o_zero_flag <= not temp;
-    end process zero_flag_control;
     
 
 end behavior;

@@ -9,15 +9,17 @@ entity control_unit is
         bit_width : integer := 8
     );
     port(
-        i_instruction : in  std_logic_vector( 31 downto 0 );
-        o_branch      : out std_logic;
-        o_branch_f    : out std_logic;                        -- forced branch
-        o_alu_op      : out std_logic_vector( 1 downto 0 );
-        o_alu_src     : out std_logic;
-        o_reg_wren    : out std_logic;
-        o_mem_wren    : out std_logic;
-        o_mem_rden    : out std_logic;
-        o_mem_to_reg  : out std_logic
+        i_instruction  : in  std_logic_vector( 31 downto 0 );
+        o_con_jump     : out std_logic;
+        o_uncon_jump   : out std_logic;
+        o_jarl_jump    : out std_logic;
+        o_alu_op       : out std_logic_vector(  1 downto 0 );
+        o_alu_src      : out std_logic;
+        o_reg_wren     : out std_logic;
+        o_mem_wren     : out std_logic;
+        o_mem_rden     : out std_logic;
+        o_mem_to_reg   : out std_logic;
+        o_pc_to_reg    : out std_logic
     );
 end entity;
 
@@ -49,96 +51,79 @@ begin
     -- set all output signals based on instruction
     set_output_flags : process( i_instruction( 6 downto 0 ) )
     begin
+        o_con_jump    <=  '0';
+        o_uncon_jump  <=  '0';
+        o_jarl_jump   <=  '0';
+        o_alu_op      <= "--";
+        o_alu_src     <=  '0';
+        o_reg_wren    <=  '0';
+        o_mem_wren    <=  '0';
+        o_mem_rden    <=  '0';
+        o_mem_to_reg  <=  '0';
+        o_pc_to_reg   <=  '0';
+
         case op_code is
             when IMM     =>  -- register-immediate instructions
-                o_branch     <=  '0';
-                o_branch_f   <=  '0';
                 o_alu_op     <= "10";
                 o_alu_src    <=  '1';
                 o_reg_wren   <=  '1';
-                o_mem_wren   <=  '0';
-                o_mem_rden   <=  '0';
-                o_mem_to_reg <=  '0';
 
             when LUI     =>  -- load upper immediate
-                o_branch     <=  '0';
-                o_branch_f   <=  '0';
                 o_alu_op     <= "11";
                 o_alu_src    <=  '1';
                 o_reg_wren   <=  '1';
-                o_mem_wren   <=  '0';
-                o_mem_rden   <=  '0';
-                o_mem_to_reg <=  '0';
 
-            when AUIPC   =>  -- load upper immediate to program counter
-                o_branch     <=  '0';
-                o_branch_f   <=  '1';
-                o_alu_op     <= "XX";
-                o_alu_src    <=  'X';
-                o_reg_wren   <=  '0';
-                o_mem_wren   <=  '0';
-                o_mem_rden   <=  '0';
-                o_mem_to_reg <=  '0';
+            when AUIPC   =>  -- add upper immediate to program counter
+                o_uncon_jump <=  '1';
+                o_reg_wren   <=  '1';
             
             when OP      =>  -- register-register instructions
-                o_branch     <=  '0';
-                o_branch_f   <=  '0';
                 o_alu_op     <= "10";
-                o_alu_src    <=  '0';
                 o_reg_wren   <=  '1';
-                o_mem_wren   <=  '0';
-                o_mem_rden   <=  '0';
-                o_mem_to_reg <=  '0';
 
             when JAL     =>  -- jump and link
-                o_branch     <=  '';
-                o_branch_f   <=  '';
-                o_alu_op     <= "  ";
-                o_alu_src    <=  '';
-                o_reg_wren   <=  '';
-                o_mem_wren   <=  '';
-                o_mem_rden   <=  '';
-                o_mem_to_reg <=  '';
+                o_uncon_jump  <=  '1';
+                o_reg_wren    <=  '1';
+                o_pc_to_reg   <=  '1';
 
             when JARL    =>
-                o_branch     <= '';
-                o_branch_f   <=  '';
-                o_alu_op     <= "  ";
-                o_alu_src    <= '';
-                o_reg_wren   <= '';
-                o_mem_wren   <= '';
-                o_mem_rden   <= '';
-                o_mem_to_reg <= '';
+                o_jarl_jump   <=  '1';
+                o_reg_wren    <=  '1';
+                o_pc_to_reg   <=  '1';
 
             when BRANCH  =>
-                o_branch     <= '';
-                o_branch_f   <=  '';
-                o_alu_op     <= "  ";
-                o_alu_src    <= '';
-                o_reg_wren   <= '';
-                o_mem_wren   <= '';
-                o_mem_rden   <= '';
-                o_mem_to_reg <= '';
+                o_con_jump    <=  '';
+                o_uncon_jump  <=  '';
+                o_alu_op      <= "";
+                o_alu_src     <=  '';
+                o_reg_wren    <=  '';
+                o_mem_wren    <=  '';
+                o_mem_rden    <=  '';
+                o_mem_to_reg  <=  '';
+                o_pc_to_reg   <=  '';
 
             when LOAD    =>
-                o_branch     <= '';
-                o_branch_f   <=  '';
-                o_alu_op     <= "  ";
-                o_alu_src    <= '';
-                o_reg_wren   <= '';
-                o_mem_wren   <= '';
-                o_mem_rden   <= '';
-                o_mem_to_reg <= '';
+                o_con_jump    <=  '';
+                o_uncon_jump  <=  '';
+                o_alu_op      <= "";
+                o_alu_src     <=  '';
+                o_reg_wren    <=  '';
+                o_mem_wren    <=  '';
+                o_mem_rden    <=  '';
+                o_mem_to_reg  <=  '';
+                o_pc_to_reg   <=  '';
 
             when STORE   =>
-                o_branch     <= '';
-                o_branch_f   <=  '';
-                o_alu_op     <= "  ";
-                o_alu_src    <= '';
-                o_reg_wren   <= '';
-                o_mem_wren   <= '';
-                o_mem_rden   <= '';
-                o_mem_to_reg <= '';
+                o_con_jump    <=  '';
+                o_uncon_jump  <=  '';
+                o_alu_op      <= "";
+                o_alu_src     <=  '';
+                o_reg_wren    <=  '';
+                o_mem_wren    <=  '';
+                o_mem_rden    <=  '';
+                o_mem_to_reg  <=  '';
+                o_pc_to_reg   <=  '';
+
         end case;
     end process set_output_flags;
 

@@ -60,7 +60,7 @@ begin
                 dout <= din(31 downto 12) & cu;
                 
             when others             =>
-                dout <= ( others => 'X' );
+                dout <= ( others => '-' );
 
         end case;
     end process;

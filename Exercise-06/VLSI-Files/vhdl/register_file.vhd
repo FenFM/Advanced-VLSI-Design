@@ -36,6 +36,8 @@ architecture behavioral of register_file is
     
 
 begin
+    s_register_data_vec( 0 ) <= ( others => '0' );
+
     s_register_read_a_addr <= to_integer( unsigned( i_read_a_addr ) );
     s_register_read_b_addr <= to_integer( unsigned( i_read_b_addr ) );
     s_register_write_addr  <= to_integer( unsigned( i_write_addr  ) );
