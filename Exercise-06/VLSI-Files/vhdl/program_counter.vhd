@@ -20,7 +20,6 @@ entity program_counter is
         i_jump       : in  std_logic;
         i_jarl_jump  : in  std_logic;
         o_adder_one  : out std_logic_vector( log2(mem_size)-1 downto 0 );
-        o_adder_two  : out std_logic_vector( log2(mem_size)-1 downto 0 );
         o_pc         : out std_logic_vector( log2(mem_size)-1 downto 0 );
     );
 
@@ -41,7 +40,6 @@ architecture behavior of program_counter is
 begin
     o_pc_dout   <= std_logic_vector( r.pc_counter );
     o_adder_one <= std_logic_vector( r.s_adder_one );
-    o_adder_two <= std_logic_vector( r.s_adder_two );
 
     s_adder_one   <= r.pc_counter + pc_offset;
     s_adder_two   <= r.pc_counter + signed( i_immediate );
@@ -63,12 +61,12 @@ begin
     comb : process ( r, i_jump )
         variable v : alu;
     begin
-        v := r;
-
         if i_jump = '0' and i_jarl_jump = '0' then
             v.pc_counter := s_adder_one;
+
         elsif i_jump = '1' then
             v.pc_counter := s_adder_two;
+
         elsif i_jarl_jump = '1' then
             v.pc_counter := s_adder_three;
         end if;

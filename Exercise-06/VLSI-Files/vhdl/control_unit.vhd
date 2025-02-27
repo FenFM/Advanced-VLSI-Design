@@ -55,7 +55,7 @@ begin
         o_uncon_jump  <=  '0';
         o_jarl_jump   <=  '0';
         o_alu_op      <= "--";
-        o_alu_src     <=  '0';
+        o_alu_src     <=  '-';
         o_reg_wren    <=  '0';
         o_mem_wren    <=  '0';
         o_mem_rden    <=  '0';
@@ -79,6 +79,7 @@ begin
             
             when OP      =>  -- register-register instructions
                 o_alu_op     <= "10";
+                o_alu_src    <=  '0';
                 o_reg_wren   <=  '1';
 
             when JAL     =>  -- jump and link
@@ -86,43 +87,27 @@ begin
                 o_reg_wren    <=  '1';
                 o_pc_to_reg   <=  '1';
 
-            when JARL    =>
+            when JARL    =>  -- jump and link register
                 o_jarl_jump   <=  '1';
                 o_reg_wren    <=  '1';
                 o_pc_to_reg   <=  '1';
 
-            when BRANCH  =>
-                o_con_jump    <=  '';
-                o_uncon_jump  <=  '';
-                o_alu_op      <= "";
-                o_alu_src     <=  '';
-                o_reg_wren    <=  '';
-                o_mem_wren    <=  '';
-                o_mem_rden    <=  '';
-                o_mem_to_reg  <=  '';
-                o_pc_to_reg   <=  '';
+            when BRANCH  =>  -- conditional branches
+                o_con_jump    <=  '1';
+                o_alu_op      <= "01";
+                o_alu_src     <=  '0';
 
-            when LOAD    =>
-                o_con_jump    <=  '';
-                o_uncon_jump  <=  '';
-                o_alu_op      <= "";
-                o_alu_src     <=  '';
-                o_reg_wren    <=  '';
-                o_mem_wren    <=  '';
-                o_mem_rden    <=  '';
-                o_mem_to_reg  <=  '';
-                o_pc_to_reg   <=  '';
+            when LOAD    =>  -- load upper immediate
+                o_alu_op      <= "00";
+                o_alu_src     <=  '1';
+                o_reg_wren    <=  '1';
+                o_mem_rden    <=  '1';
+                o_mem_to_reg  <=  '1';
 
-            when STORE   =>
-                o_con_jump    <=  '';
-                o_uncon_jump  <=  '';
-                o_alu_op      <= "";
-                o_alu_src     <=  '';
-                o_reg_wren    <=  '';
-                o_mem_wren    <=  '';
-                o_mem_rden    <=  '';
-                o_mem_to_reg  <=  '';
-                o_pc_to_reg   <=  '';
+            when STORE   =>  -- store data in memory
+                o_alu_op      <= "00";
+                o_alu_src     <=  '1';
+                o_mem_wren    <=  '1';
 
         end case;
     end process set_output_flags;

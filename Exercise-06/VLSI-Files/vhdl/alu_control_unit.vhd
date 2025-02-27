@@ -8,7 +8,8 @@ entity alu_control_unit is
     port(
         i_instruction     : in  std_logic_vector( 31 downto 0 );
         i_alu_instruction : in  std_logic_vector(  1 downto 0 );
-        o_alu_operation   : out std_logic_vector(  3 downto 0 )
+        o_alu_operation   : out std_logic_vector(  3 downto 0 );
+        o_inverse_zero    : out std_logic
     );
 end alu_control_unit;
 
@@ -19,6 +20,8 @@ architecture behavior of alu_control_unit is
 begin
     ALU_OP : process( i_instruction, i_alu_instruction )
     begin
+        o_inverse_zero <= '0';
+
         case i_alu_instruction is
             when "10" =>  -- R-type operations
                 case i_instruction( 14 downto 12 ) is
@@ -40,16 +43,39 @@ begin
                     when "111"  =>  o_alu_operation <= opcode_AND;         
                 end case;
 
-            when "00" =>  -- lw and sw
-            
 
-            when "01" =>  -- BEQ
+            when "00" =>  -- LW and SW
+                o_alu_operation <= opcode_ADD;
+
+
+            when "01" =>  -- BRANCH
+                case i_instruction( 14 downto 12 ) is
+                    when func_BEQ  =>  -- if equal
+                        o_alu_operation <= opcode_SUB;
+
+                    when func_BNE  =>  -- if not equal
+                        o_alu_operation <= opcode_SUB;
+                        o_inverse_zero  <= '1';
+
+                    when func_BLT  =>  -- if rs1 < rs2  (signed)
+                        o_alu_operation <= opcode_SLT;
+                        o_inverse_zero  <= '1';
+
+                    when func_BGE  =>  -- if rs1 >= rs2 (signed)
+                        o_alu_operation <= opcode_SLT;
+                    
+                    when func_BLTU =>  -- if rs1 < rs2  (unsigned)
+                        o_alu_operation <= opcode_SLTU;
+                        o_inverse_zero  <= '1';
+
+                    when func_BGEU =>  -- if rs1 >= rs2 (unsigned)
+                        o_alu_operation <= opcode_SLTU;
+                end case;
 
 
             when "11" =>  -- pass through input b
                 o_alu_operation <= opcode_PASS;
-
-
+                
         end case;
     end process ALU_OP;
 

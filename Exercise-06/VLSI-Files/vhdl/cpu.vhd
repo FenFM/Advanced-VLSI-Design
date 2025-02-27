@@ -28,6 +28,7 @@ architecture structure of cpu is
     signal s_alu_result        : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_zero_flag     : std_logic;
     signal s_alu_overflow_flag : std_logic;
+    signal s_inverse_zero      : std_logic;
 
     -- signals for the instruction memory
     signal s_instruction_memory_write_data : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
@@ -97,10 +98,10 @@ begin
         clk          =>  clk,
         rst          =>  rst,
         i_immediate  =>  s_immediate,
+        i_reg_a      =>  s_register_file_read_a_data,
         i_jump       =>  s_pc_jump,
         i_jarl_jump  =>  s_cu_jarl_jump,
         o_adder_one  =>  s_pc_adder_one,
-        o_adder_two  =>  s_pc_adder_two,
         o_pc         =>  s_instruction_memory_read_addr
     );
     s_pc_jump <= (s_alu_zero_flag and s_cu_con_jump) or s_cu_uncon_jump;
@@ -134,7 +135,8 @@ begin
     port map(
         i_instruction      =>  s_instruction_memory_read_data,
         i_alu_instruction  =>  s_cu_alu_op,
-        o_alu_operation    =>  s_alu_operation
+        o_alu_operation    =>  s_alu_operation,
+        o_inverse_zero     =>  s_inverse_zero
     );
 
 
@@ -144,6 +146,7 @@ begin
         i_operand_a      =>  s_alu_operand_a,
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_alu_operation,
+        i_inverse_zero   =>  s_inverse_zero,
         o_result         =>  s_alu_result,
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag
