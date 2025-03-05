@@ -32,11 +32,11 @@ architecture behav of memory is
 
 
 begin
-	s_mem_read_addr  <= to_integer( unsigned( i_read_addr ) );
+--	s_mem_read_addr  <= to_integer( unsigned( i_read_addr ) );
 	s_mem_write_addr <= to_integer( unsigned( i_write_addr ) );
 
  
-	writing : process( clk )
+	writing : process( clk, i_write_wren, s_mem_write_addr, i_write_data )
 	begin
 		if rising_edge( clk ) and i_write_wren = '1' then
 			s_data_reg_vec( s_mem_write_addr ) <= i_write_data;
@@ -44,12 +44,21 @@ begin
 	end process writing;
 
 
-	reading : process( i_read_rden, i_read_addr )
+--	reading : process( i_read_rden, s_mem_read_addr )
+--	begin
+--	   if i_read_rden = '1' then
+--	       o_read_data <= s_data_reg_vec( s_mem_read_addr );
+--	   end if;
+--	end process reading;
+
+
+	reading : process( i_read_rden, s_mem_read_addr, i_read_addr )
 	begin
 	   if i_read_rden = '1' then
-	       o_read_data <= s_data_reg_vec( s_mem_read_addr );
+	       s_mem_read_addr <= to_integer( unsigned( i_read_addr ) );
 	   end if;
 	end process reading;
 
+    o_read_data <= s_data_reg_vec( s_mem_read_addr );
 
 end behav;

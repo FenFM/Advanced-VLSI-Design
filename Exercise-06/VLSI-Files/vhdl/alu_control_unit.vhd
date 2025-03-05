@@ -27,8 +27,9 @@ begin
                 case i_instruction( 14 downto 12 ) is
                     when "000"  =>  
                         case i_instruction( 30 ) is
-                            when '0'  =>  o_alu_operation <= opcode_ADD;
-                            when '1'  =>  o_alu_operation <= opcode_SUB;
+                            when '0'    =>  o_alu_operation <= opcode_ADD;
+                            when '1'    =>  o_alu_operation <= opcode_SUB;
+                            -- when others =>  o_alu_operation <= "----";
                         end case;
                     when "001"  =>  o_alu_operation <= opcode_SLL;
                     when "010"  =>  o_alu_operation <= opcode_SLT;
@@ -36,11 +37,13 @@ begin
                     when "100"  =>  o_alu_operation <= opcode_XOR;
                     when "101"  =>  
                         case i_instruction( 30 ) is
-                            when '0'  =>  o_alu_operation <= opcode_SRL;
-                            when '1'  =>  o_alu_operation <= opcode_SRA;
+                            when '0'    =>  o_alu_operation <= opcode_SRL;
+                            when '1'    =>  o_alu_operation <= opcode_SRA;
+                            -- when others =>  o_alu_operation <= "----";
                         end case;
                     when "110"  =>  o_alu_operation <= opcode_OR;
-                    when "111"  =>  o_alu_operation <= opcode_AND;         
+                    when "111"  =>  o_alu_operation <= opcode_AND;
+                    when others =>  o_alu_operation <= "----";      
                 end case;
 
 
@@ -70,6 +73,9 @@ begin
 
                     when func_BGEU =>  -- if rs1 >= rs2 (unsigned)
                         o_alu_operation <= opcode_SLTU;
+                        
+                    when others =>
+                        o_alu_operation <= opcode_SUB;
                 end case;
 
 

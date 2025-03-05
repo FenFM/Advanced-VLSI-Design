@@ -36,7 +36,7 @@ architecture behavioral of register_file is
     
 
 begin
-    s_register_data_vec( 0 ) <= ( others => '0' );
+--    s_register_data_vec( 0 ) <= ( others => '0' );
 
     s_register_read_a_addr <= to_integer( unsigned( i_read_a_addr ) );
     s_register_read_b_addr <= to_integer( unsigned( i_read_b_addr ) );
@@ -48,6 +48,7 @@ begin
         if rising_edge( clk ) and  i_write_wren = '1' then
             s_register_data_vec( s_register_write_addr ) <= i_write_data;
         end if;
+--        s_register_data_vec( 0 ) <= ( others => '0' );
     end process register_in;
     
     

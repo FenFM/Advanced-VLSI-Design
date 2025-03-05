@@ -37,11 +37,12 @@ begin
             when op_BRANCH  =>  op_code <= BRANCH;  --  B-type
             when op_LOAD    =>  op_code <= LOAD;    --  I-type
             when op_STORE   =>  op_code <= STORE;   --  S-type
+            when others     =>  op_code <= IMM;
         end case;
     end process set_op_code;
 
 
-    process( din )
+    process( din, op_code )
     begin
         case op_code is
             when IMM | JARL | LOAD  =>  -- I-type

@@ -43,13 +43,13 @@ begin
             when op_BRANCH  =>  op_code <= BRANCH;  --  B-type
             when op_LOAD    =>  op_code <= LOAD;    --  I-type
             when op_STORE   =>  op_code <= STORE;   --  S-type
---          when others     =>  op_code <= IMM;
+          when others     =>  op_code <= IMM;
         end case;
     end process set_op_code;
 
 
     -- set all output signals based on instruction
-    set_output_flags : process( i_instruction( 6 downto 0 ) )
+    set_output_flags : process( op_code )
     begin
         o_con_jump    <=  '0';
         o_uncon_jump  <=  '0';

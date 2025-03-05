@@ -21,10 +21,10 @@ end entity alu;
 architecture behavior of alu is
     signal s_result : std_logic_vector( bit_width-1 downto 0 );
 
-    signal signed_a   : signed( bit_width-1 downto 0 );
-    signal signed_b   : signed( bit_width-1 downto 0 );
-    signal unsigned_a : unsigned( bit_width-1 downto 0 );
-    signal unsigned_b : unsigned( bit_width-1 downto 0 );
+    signal signed_a, signed_b     : signed( bit_width-1 downto 0 );
+    signal unsigned_a, unsigned_b : unsigned( bit_width-1 downto 0 );
+    signal signed_int_a, unsigned_int_a : integer;
+    signal signed_int_b, unsigned_int_b : integer;
 
     signal add_res  : std_logic_vector( bit_width   downto 0 );
     signal sub_res  : std_logic_vector( bit_width-1 downto 0 );
@@ -41,10 +41,14 @@ architecture behavior of alu is
 begin
     o_result <= s_result;
 
-    signed_a   <= signed( i_operand_a );
-    signed_b   <= signed( i_operand_b );
-    unsigned_a <= unsigned( i_operand_a );
-    unsigned_b <= unsigned( i_operand_b );
+    signed_a       <= signed( i_operand_a );
+    signed_b       <= signed( i_operand_b );
+    unsigned_a     <= unsigned( i_operand_a );
+    unsigned_b     <= unsigned( i_operand_b );
+    signed_int_a   <= to_integer( signed_a );
+    signed_int_b   <= to_integer( signed_b );
+    unsigned_int_a <= to_integer( unsigned_a );
+    unsigned_int_b <= to_integer( unsigned_b );
 
     -- zero flag
     o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
@@ -77,10 +81,10 @@ begin
     sra_res <= std_logic_vector( shift_right( signed_a, to_integer( unsigned_b ) ));
 
     -- set less than
-    process( i_operation, i_operand_a, i_operand_b )
+    process( signed_int_a, signed_int_b )
         variable temp : std_logic_vector( 30 downto 0 ) := ( others => '0' );
     begin
-        if to_integer( signed_a ) < to_integer( signed_b ) then
+        if signed_int_a < signed_int_b then
             slt_res <= temp & '1';
         else
             slt_res <= temp & '0';
@@ -88,10 +92,10 @@ begin
     end process;
 
     -- set less than unsigned
-    process( i_operation, i_operand_a, i_operand_b )
+    process( unsigned_int_a, unsigned_int_b )
         variable temp : std_logic_vector( 30 downto 0 ) := ( others => '0' );
     begin
-        if to_integer( unsigned_a ) < to_integer( unsigned_b ) then
+        if unsigned_int_a < unsigned_int_b then
             sltu_res <= temp & '1';
         else
             sltu_res <= temp & '0';
@@ -100,7 +104,7 @@ begin
     end process;
     
 
-    operation_mux_switch : process( i_operation )
+    operation_mux_switch : process( i_operation, i_operand_a, i_operand_b )
     begin
         case i_operation is
             when opcode_ADD =>

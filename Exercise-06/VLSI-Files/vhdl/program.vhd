@@ -4,7 +4,7 @@ use IEEE.numeric_std.ALL;
 
 package	program is
 
-	constant instr_mem_size : integer := 128;
+	constant instr_mem_size : integer := 64;
 	type t_program_array is array (natural range <>) of std_logic_vector(31 downto 0);
 	constant instr_mem_init : t_program_array(instr_mem_size-1 downto 0) := (
 		0 => x"00100293",
@@ -18,7 +18,7 @@ package	program is
 		8 => x"000382b3",
 		9 => x"fff10113",
 		10 => x"fedff06f",
-		11 => x"0202a623"
+		11 => x"0202a623",
 		others => (others => '0'));
 
 	function get_instruction(address : integer) return std_logic_vector;

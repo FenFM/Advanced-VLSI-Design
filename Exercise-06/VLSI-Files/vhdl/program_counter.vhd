@@ -15,12 +15,12 @@ entity program_counter is
     port(
         clk          : in  std_logic;
         rst          : in  std_logic;
-        i_immediate  : in  std_logic_vector( 31 downto 0 );
-        i_reg_a      : in  std_logic_vector( 31 downto 0 );
+        i_immediate  : in  std_logic_vector( log2(mem_size)-1 downto 0 );
+        i_reg_a      : in  std_logic_vector( log2(mem_size)-1 downto 0 );
         i_jump       : in  std_logic;
-        i_jarl_jump  : in  std_logic;
+        i_jarl_jump  : in  std_logic;        
         o_adder_one  : out std_logic_vector( log2(mem_size)-1 downto 0 );
-        o_pc         : out std_logic_vector( log2(mem_size)-1 downto 0 );
+        o_pc         : out std_logic_vector( log2(mem_size)-1 downto 0 )
     );
 
 end entity program_counter;
@@ -38,8 +38,8 @@ architecture behavior of program_counter is
 
 
 begin
-    o_pc_dout   <= std_logic_vector( r.pc_counter );
-    o_adder_one <= std_logic_vector( r.s_adder_one );
+    o_pc        <= std_logic_vector( r.pc_counter );
+    o_adder_one <= std_logic_vector( s_adder_one );
 
     s_adder_one   <= r.pc_counter + pc_offset;
     s_adder_two   <= r.pc_counter + signed( i_immediate );
@@ -58,9 +58,11 @@ begin
     end process reg;
 
 
-    comb : process ( r, i_jump )
+    comb : process ( r, i_jump, i_jarl_jump, s_adder_one, s_adder_two, s_adder_three )
         variable v : alu;
     begin
+        v := r;
+    
         if i_jump = '0' and i_jarl_jump = '0' then
             v.pc_counter := s_adder_one;
 
