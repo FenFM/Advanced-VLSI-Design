@@ -1,7 +1,9 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
+use work.generic_header.ALL;
 use work.isa_riscv.ALL;
+use work.misc.ALL;
 
 
 entity imm_gen is
@@ -17,10 +19,16 @@ architecture behavior of imm_gen is
     type op_code_type is (IMM, LUI, AUIPC, OP, JAL, JARL, BRANCH, LOAD, STORE);
     signal op_code : op_code_type;
 
-    constant ci : std_logic_vector( 31 downto 12 ) := ( others => '0' );
-    constant cb : std_logic_vector( 31 downto 13 ) := ( others => '0' );
-    constant cj : std_logic_vector( 31 downto 21 ) := ( others => '0' );
-    constant cu : std_logic_vector( 11 downto  0 ) := ( others => '0' );
+    constant con_store_pos : std_logic_vector( 31 downto 12 ) := ( others => '0' );
+    constant con_store_neg : std_logic_vector( 31 downto 12 ) := ( others => '1' );
+
+    constant con_branch_pos : std_logic_vector( 31 downto 13 ) := ( others => '0' );
+    constant con_branch_neg : std_logic_vector( 31 downto 13 ) := ( others => '1' );
+
+    constant con_jal_pos : std_logic_vector( 31 downto 21 ) := ( others => '0' );
+    constant con_jal_neg : std_logic_vector( 31 downto 21 ) := ( others => '1' );
+
+    constant con_lui : std_logic_vector( 11 downto  0 ) := ( others => '0' );
 
 
 begin
@@ -45,21 +53,42 @@ begin
     process( din, op_code )
     begin
         case op_code is
-            when IMM | JARL | LOAD  =>  -- I-type
-                dout <= ci & din(31 downto 20);
-            
+            when IMM | LOAD | JARL  =>  -- I-type
+                if din(31) = '0' then
+                    dout <= con_store_pos & din(31 downto 20);
+                else
+                    dout <= con_store_neg & din(31 downto 20);
+                end if;
+
+
             when STORE              =>  -- S-type
-                dout <= ci & din(31 downto 25) & din(11 downto 7);
+                if din(31) = '0' then
+                    dout <= con_store_pos & din(31 downto 25) & din(11 downto 7);
+                else
+                    dout <= con_store_neg & din(31 downto 25) & din(11 downto 7);
+                end if;
+
 
             when BRANCH             =>  -- B-type
-                dout <= cb & din(31) & din(7) & din(30 downto 25) & din(11 downto 8) & '0'; 
+                if din(31) = '0' then
+                    dout <= con_branch_pos & din(31) & din(7) & din(30 downto 25) & din(11 downto 8) & '0'; 
+                else
+                    dout <= con_branch_neg & din(31) & din(7) & din(30 downto 25) & din(11 downto 8) & '0'; 
+                end if;
+
 
             when JAL                =>  -- J-type
-                dout <= cj & din(31) & din(19 downto 12) & din(20) & din(30 downto 21) & '0';
+                if din(31) = '0' then
+                    dout <= con_jal_pos & din(31) & din(19 downto 12) & din(20) & din(30 downto 21) & '0'; 
+                else 
+                    dout <= con_jal_neg & din(31) & din(19 downto 12) & din(20) & din(30 downto 21) & '0'; 
+                end if;
+
 
             when LUI | AUIPC        =>  -- U-type
-                dout <= din(31 downto 12) & cu;
-                
+                dout <= din(31 downto 12) & con_lui;
+
+
             when others             =>
                 dout <= ( others => '-' );
 

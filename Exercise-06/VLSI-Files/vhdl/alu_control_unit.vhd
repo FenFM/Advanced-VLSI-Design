@@ -29,7 +29,7 @@ begin
                         case i_instruction( 30 ) is
                             when '0'    =>  o_alu_operation <= opcode_ADD;
                             when '1'    =>  o_alu_operation <= opcode_SUB;
-                            -- when others =>  o_alu_operation <= "----";
+                            when others =>  o_alu_operation <= "----";
                         end case;
                     when "001"  =>  o_alu_operation <= opcode_SLL;
                     when "010"  =>  o_alu_operation <= opcode_SLT;
@@ -39,7 +39,7 @@ begin
                         case i_instruction( 30 ) is
                             when '0'    =>  o_alu_operation <= opcode_SRL;
                             when '1'    =>  o_alu_operation <= opcode_SRA;
-                            -- when others =>  o_alu_operation <= "----";
+                            when others =>  o_alu_operation <= "----";
                         end case;
                     when "110"  =>  o_alu_operation <= opcode_OR;
                     when "111"  =>  o_alu_operation <= opcode_AND;
@@ -80,6 +80,9 @@ begin
 
 
             when "11" =>  -- pass through input b
+                o_alu_operation <= opcode_PASS;
+                
+            when others =>
                 o_alu_operation <= opcode_PASS;
                 
         end case;

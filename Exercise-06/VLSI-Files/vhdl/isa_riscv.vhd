@@ -42,6 +42,7 @@ package	isa_riscv is
 	constant op_BRANCH : std_logic_vector(6 downto 0) := "1100011";
 	constant op_LOAD   : std_logic_vector(6 downto 0) := "0000011";
 	constant op_STORE  : std_logic_vector(6 downto 0) := "0100011";
+--	constant op_NOP    : std_logic_vector(6 downto 0) := "0100011";
 
 end isa_riscv;
 

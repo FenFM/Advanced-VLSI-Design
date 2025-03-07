@@ -17,12 +17,14 @@ end entity mux_switch_2;
 architecture structure of mux_switch_2 is
 
 begin
-    process( s )
+    process( s, a, b )
     begin
         case s is
             when '0' =>
                 o <= a;
             when '1' =>
+                o <= b;
+            when others =>
                 o <= a;
         end case;
     end process;

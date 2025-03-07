@@ -43,7 +43,7 @@ begin
             when op_BRANCH  =>  op_code <= BRANCH;  --  B-type
             when op_LOAD    =>  op_code <= LOAD;    --  I-type
             when op_STORE   =>  op_code <= STORE;   --  S-type
-          when others     =>  op_code <= IMM;
+          when others       =>  op_code <= IMM;
         end case;
     end process set_op_code;
 
@@ -88,6 +88,8 @@ begin
                 o_pc_to_reg   <=  '1';
 
             when JARL    =>  -- jump and link register
+                o_alu_op      <= "10";
+                o_alu_src     <=  '1';
                 o_jarl_jump   <=  '1';
                 o_reg_wren    <=  '1';
                 o_pc_to_reg   <=  '1';

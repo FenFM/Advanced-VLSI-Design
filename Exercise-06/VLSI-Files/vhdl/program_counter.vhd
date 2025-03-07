@@ -8,19 +8,19 @@ use work.misc.ALL;
 entity program_counter is
     generic(
         bit_width : integer := 32;
-        mem_size  : integer := 128;
         pc_offset : integer := 4
     );
 
     port(
         clk          : in  std_logic;
         rst          : in  std_logic;
-        i_immediate  : in  std_logic_vector( log2(mem_size)-1 downto 0 );
-        i_reg_a      : in  std_logic_vector( log2(mem_size)-1 downto 0 );
+        i_immediate  : in  std_logic_vector( bit_width-1 downto 0 );
+        i_reg_a      : in  std_logic_vector( bit_width-1 downto 0 );
         i_jump       : in  std_logic;
-        i_jarl_jump  : in  std_logic;        
-        o_adder_one  : out std_logic_vector( log2(mem_size)-1 downto 0 );
-        o_pc         : out std_logic_vector( log2(mem_size)-1 downto 0 )
+        i_jarl_jump  : in  std_logic;
+        i_jarl_value : in  std_logic_vector( bit_width-1 downto 0 );
+        o_adder_one  : out std_logic_vector( bit_width-1 downto 0 );
+        o_pc         : out std_logic_vector( bit_width-1 downto 0 )
     );
 
 end entity program_counter;
@@ -28,13 +28,12 @@ end entity program_counter;
 
 architecture behavior of program_counter is
     type alu is record
-        pc_counter : signed( log2(mem_size)-1 downto 0 );
+        pc_counter : signed( bit_width-1 downto 0 );
     end record;
     signal r, rin : alu;
 
-    signal s_adder_one   : signed( log2(mem_size)-1 downto 0 );
-    signal s_adder_two   : signed( log2(mem_size)-1 downto 0 );
-    signal s_adder_three : signed( log2(mem_size)-1 downto 0 );
+    signal s_adder_one   : signed( bit_width-1 downto 0 );
+    signal s_adder_two   : signed( bit_width-1 downto 0 );
 
 
 begin
@@ -43,7 +42,6 @@ begin
 
     s_adder_one   <= r.pc_counter + pc_offset;
     s_adder_two   <= r.pc_counter + signed( i_immediate );
-    s_adder_three <= signed( i_reg_a ) + signed( i_immediate );
 
 
     reg : process ( clk, rst )
@@ -58,7 +56,7 @@ begin
     end process reg;
 
 
-    comb : process ( r, i_jump, i_jarl_jump, s_adder_one, s_adder_two, s_adder_three )
+    comb : process ( r, i_jump, i_jarl_jump, s_adder_one, s_adder_two )
         variable v : alu;
     begin
         v := r;
@@ -70,7 +68,7 @@ begin
             v.pc_counter := s_adder_two;
 
         elsif i_jarl_jump = '1' then
-            v.pc_counter := s_adder_three;
+            v.pc_counter := signed( i_jarl_value( bit_width-1 downto 1 ) & '0' );
         end if;
 
         rin <= v;

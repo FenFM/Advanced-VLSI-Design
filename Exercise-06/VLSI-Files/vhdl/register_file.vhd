@@ -36,6 +36,7 @@ architecture behavioral of register_file is
     
 
 begin
+    -- this does not work for some reason, but a workaround was found
 --    s_register_data_vec( 0 ) <= ( others => '0' );
 
     s_register_read_a_addr <= to_integer( unsigned( i_read_a_addr ) );
@@ -45,17 +46,25 @@ begin
 
     register_in : process( clk )
     begin
-        if rising_edge( clk ) and  i_write_wren = '1' then
+        if rising_edge( clk ) and i_write_wren = '1' and s_register_write_addr /= 0 then
             s_register_data_vec( s_register_write_addr ) <= i_write_data;
         end if;
---        s_register_data_vec( 0 ) <= ( others => '0' );
     end process register_in;
     
     
-    register_out : process( i_read_a_addr, i_read_b_addr)
+    register_out : process( s_register_read_a_addr, s_register_read_b_addr, s_register_data_vec )
     begin
-        o_read_a_data <= s_register_data_vec( s_register_read_a_addr );
-        o_read_b_data <= s_register_data_vec( s_register_read_b_addr );
+        if s_register_read_a_addr /= 0 then
+            o_read_a_data <= s_register_data_vec( s_register_read_a_addr );
+        else
+            o_read_a_data <= ( others => '0' );
+        end if;
+
+        if s_register_read_b_addr /= 0 then
+            o_read_b_data <= s_register_data_vec( s_register_read_b_addr );
+        else
+            o_read_b_data <= ( others => '0' );
+        end if;
     end process register_out;
 
 

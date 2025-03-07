@@ -104,7 +104,7 @@ begin
     end process;
     
 
-    operation_mux_switch : process( i_operation, i_operand_a, i_operand_b )
+    operation_mux_switch : process( all )
     begin
         case i_operation is
             when opcode_ADD =>

@@ -4,7 +4,7 @@ use IEEE.numeric_std.ALL;
 
 package	program is
 
-	constant instr_mem_size : integer := 64;
+	constant instr_mem_size : integer := 128;
 	type t_program_array is array (natural range <>) of std_logic_vector(31 downto 0);
 	constant instr_mem_init : t_program_array(instr_mem_size-1 downto 0) := (
 		0 => x"00100293",
