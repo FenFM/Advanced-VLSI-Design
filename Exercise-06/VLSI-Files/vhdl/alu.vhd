@@ -21,10 +21,13 @@ end entity alu;
 architecture behavior of alu is
     signal s_result : std_logic_vector( bit_width-1 downto 0 );
 
-    signal signed_a, signed_b     : signed( bit_width-1 downto 0 );
-    signal unsigned_a, unsigned_b : unsigned( bit_width-1 downto 0 );
-    signal signed_int_a, unsigned_int_a : integer;
-    signal signed_int_b, unsigned_int_b : integer;
+    signal signed_a, signed_b             : signed( bit_width-1 downto 0 );
+    signal unsigned_a, unsigned_b         : unsigned( bit_width-1 downto 0 );
+    signal signed_int_a, signed_int_b     : integer range -((2**(bit_width-1))-1) to ((2**(bit_width-1))-1);
+    signal unsigned_int_a, unsigned_int_b : integer range 0 to (2**bit_width)-1;
+
+    signal std_b_cut  : std_logic_vector( 4 downto 0 );
+    signal sll_uint_b : integer range 0 to 31;
 
     signal add_res  : std_logic_vector( bit_width   downto 0 );
     signal sub_res  : std_logic_vector( bit_width-1 downto 0 );
@@ -50,6 +53,9 @@ begin
     unsigned_int_a <= to_integer( unsigned_a );
     unsigned_int_b <= to_integer( unsigned_b );
 
+    std_b_cut  <= i_operand_b( 4 downto 0 );
+    sll_uint_b <= to_integer( unsigned( std_b_cut ));
+
     -- zero flag
     o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
 
@@ -72,13 +78,13 @@ begin
     xor_res <= i_operand_a xor i_operand_b;
 
     -- shift left logical
-    sll_res <= std_logic_vector( shift_left( unsigned_a, to_integer( unsigned_b ) ));
+    sll_res <= std_logic_vector( shift_left ( unsigned_a, sll_uint_b ));
 
     -- shift right logical
-    srl_res <= std_logic_vector( shift_right( unsigned_a, to_integer( unsigned_b ) ));
+    srl_res <= std_logic_vector( shift_right( unsigned_a, sll_uint_b ));
 
     -- shift right arithmetic
-    sra_res <= std_logic_vector( shift_right( signed_a, to_integer( unsigned_b ) ));
+    sra_res <= std_logic_vector( shift_right(   signed_a, sll_uint_b ));
 
     -- set less than
     process( signed_int_a, signed_int_b )
