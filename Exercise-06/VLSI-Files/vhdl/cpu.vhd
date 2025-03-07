@@ -12,24 +12,26 @@ entity cpu is
     port(
         clk : in std_logic;
         rst : in std_logic;
+
         i_instruction_memory_write_data : in  std_logic_vector( C_BIT_WIDTH-1 downto 0 );
         i_instruction_memory_write_addr : in  std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
         i_instruction_memory_write_wren : in  std_logic;
+
         o_instruction_memory_read_data  : out std_logic_vector( C_BIT_WIDTH-1 downto 0 );
         o_data_memory_read_data         : out std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-        o_register_file_read_data       : out std_logic_vector( C_BIT_WIDTH-1 downto 0 )
+        o_register_file_read_a_data     : out std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+        o_register_file_read_b_data     : out std_logic_vector( C_BIT_WIDTH-1 downto 0 )
     );
 end entity cpu;
 
 
 architecture structure of cpu is
     -- signal for the program counter
-    signal s_pc_jump         : std_logic;
-    signal s_immediate       : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_adder_one    : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_adder_one_32 : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_adder_two    : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_count_value  : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_jump      : std_logic;
+    signal s_immediate    : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_adder_one : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_value     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_value_sr  : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
     -- signals for the alu
     signal s_alu_operand_a     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -40,9 +42,9 @@ architecture structure of cpu is
     signal s_inverse_zero      : std_logic;
 
     -- signals for the instruction memory
-    signal s_instruction_memory_write_data : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_instruction_memory_write_addr : std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
-    signal s_instruction_memory_write_wren : std_logic;    
+--    signal s_instruction_memory_write_data : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+--    signal s_instruction_memory_write_addr : std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
+--    signal s_instruction_memory_write_wren : std_logic;    
     signal s_instruction_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
     signal s_instruction_memory_read_addr  : std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
     signal s_instruction_memory_read_rden  : std_logic;  
@@ -103,17 +105,18 @@ begin
         pc_offset  =>  C_PC_OFFSET
     )
     port map(
-        clk          =>  clk,
-        rst          =>  rst,
-        i_immediate  =>  s_immediate,
-        i_reg_a      =>  s_register_file_read_a_data,
-        i_jump       =>  s_pc_jump,
-        i_jarl_jump  =>  s_cu_jarl_jump,
-        i_jarl_value =>  s_alu_result,
-        o_adder_one  =>  s_pc_adder_one,
-        o_pc         =>  s_pc_count_value 
+        clk           =>  clk,
+        rst           =>  rst,
+        i_immediate   =>  s_immediate,
+        i_reg_a       =>  s_register_file_read_a_data,
+        i_jump        =>  s_pc_jump,
+        i_jarl_jump   =>  s_cu_jarl_jump,
+        i_jarl_value  =>  s_alu_result,
+        o_adder_one   =>  s_pc_adder_one,
+        o_pc          =>  s_pc_value 
     );
-    s_pc_jump <= (s_alu_zero_flag and s_cu_con_jump) or s_cu_uncon_jump;
+    s_pc_jump     <= (s_alu_zero_flag and s_cu_con_jump) or s_cu_uncon_jump;
+    s_pc_value_sr <= std_logic_vector(shift_right(signed(s_pc_value), 1));
     
     
     IM : entity work.memory
@@ -123,22 +126,18 @@ begin
     )
     port map(
         clk           =>  clk,
-        i_write_data  =>  s_instruction_memory_write_data,        
-        i_write_addr  =>  s_instruction_memory_write_addr, 
+        i_write_data  =>  i_instruction_memory_write_data,        
+        i_write_addr  =>  i_instruction_memory_write_addr, 
         i_write_wren  =>  i_instruction_memory_write_wren,
-        o_read_data   =>  s_instruction_memory_read_data,       
+        o_read_data   =>  s_instruction_memory_read_data,
         i_read_addr   =>  s_instruction_memory_read_addr,
         i_read_rden   =>  s_instruction_memory_read_rden                                     
     );
-    s_instruction_memory_write_data <= i_instruction_memory_write_data;
-    s_instruction_memory_write_addr <= i_instruction_memory_write_addr;
-    s_instruction_memory_write_wren <= i_instruction_memory_write_wren;     
-    
-    o_instruction_memory_read_data  <= s_instruction_memory_read_data;
-    
-    s_instruction_memory_read_rden  <= '1';
-    s_instruction_memory_read_addr  <= s_pc_count_value( log2(C_DM_MEM_SIZE)-1 downto 0 );
+    s_instruction_memory_read_addr <= s_pc_value_sr( log2(C_IM_MEM_SIZE)-1 downto 0 );
+    s_instruction_memory_read_rden <= '1';
+    o_instruction_memory_read_data <= s_instruction_memory_read_data;
  
+
      
     IG : entity work.imm_gen
     generic map( C_BIT_WIDTH )
@@ -216,7 +215,8 @@ begin
     s_register_file_read_a_addr <= s_instruction_memory_read_data( 19 downto 15 );
     s_register_file_read_b_addr <= s_instruction_memory_read_data( 24 downto 20 );
     s_register_file_write_addr  <= s_instruction_memory_read_data( 11 downto  7 );
-    o_register_file_read_data   <= s_register_file_read_a_data;
+    o_register_file_read_a_data <= s_register_file_read_a_data;
+    o_register_file_read_b_data <= s_register_file_read_a_data;
 
 
     MEM_to_REG_MUX : entity work.mux_switch_2

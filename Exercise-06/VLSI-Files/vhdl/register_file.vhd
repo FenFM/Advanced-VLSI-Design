@@ -44,7 +44,7 @@ begin
     s_register_write_addr  <= to_integer( unsigned( i_write_addr  ) );
     
 
-    register_in : process( clk )
+    register_in : process( clk, i_write_wren, i_write_data, s_register_write_addr )
     begin
         if rising_edge( clk ) and i_write_wren = '1' and s_register_write_addr /= 0 then
             s_register_data_vec( s_register_write_addr ) <= i_write_data;

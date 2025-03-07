@@ -8,7 +8,7 @@ package generic_header is
     constant C_BIT_WIDTH : integer := 32;
     
     -- constant for program_counter 
-    constant C_PC_OFFSET : integer :=  1;
+    constant C_PC_OFFSET : integer :=  2;
 
     -- constant for the instruction memory
     constant C_IM_MEM_SIZE : integer := 128;

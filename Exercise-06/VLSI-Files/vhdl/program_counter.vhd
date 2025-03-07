@@ -8,7 +8,7 @@ use work.misc.ALL;
 entity program_counter is
     generic(
         bit_width : integer := 32;
-        pc_offset : integer := 4
+        pc_offset : integer := 2
     );
 
     port(
@@ -56,7 +56,7 @@ begin
     end process reg;
 
 
-    comb : process ( r, i_jump, i_jarl_jump, s_adder_one, s_adder_two )
+    comb : process ( r, i_jump, i_jarl_jump, i_jarl_value, s_adder_one, s_adder_two )
         variable v : alu;
     begin
         v := r;
