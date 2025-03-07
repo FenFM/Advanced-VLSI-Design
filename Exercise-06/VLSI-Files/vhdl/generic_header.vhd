@@ -11,7 +11,7 @@ package generic_header is
     constant C_PC_OFFSET : integer :=  2;
 
     -- constant for the instruction memory
-    constant C_IM_MEM_SIZE : integer := 128;
+    constant C_IM_MEM_SIZE : integer := 64;
 
     -- constant for data_memory
     constant C_DM_MEM_SIZE : integer := 128;

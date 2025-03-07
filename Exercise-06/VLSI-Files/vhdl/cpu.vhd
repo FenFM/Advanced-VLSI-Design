@@ -74,6 +74,7 @@ architecture structure of cpu is
     signal s_cu_jarl_jump  : std_logic;
     signal s_cu_alu_op     : std_logic_vector( 1 downto 0 );
     signal s_cu_alu_src    : std_logic;
+    signal s_cu_alu_pass   : std_logic;
     signal s_cu_reg_wren   : std_logic;
     signal s_cu_mem_wren   : std_logic;
     signal s_cu_mem_rden   : std_logic;
@@ -91,6 +92,7 @@ begin
         o_jarl_jump    =>  s_cu_jarl_jump,
         o_alu_op       =>  s_cu_alu_op,
         o_alu_src      =>  s_cu_alu_src,
+        o_alu_pass     =>  s_cu_alu_pass,
         o_reg_wren     =>  s_cu_reg_wren,
         o_mem_wren     =>  s_cu_mem_wren,
         o_mem_rden     =>  s_cu_mem_rden,
@@ -108,7 +110,6 @@ begin
         clk           =>  clk,
         rst           =>  rst,
         i_immediate   =>  s_immediate,
-        i_reg_a       =>  s_register_file_read_a_data,
         i_jump        =>  s_pc_jump,
         i_jarl_jump   =>  s_cu_jarl_jump,
         i_jarl_value  =>  s_alu_result,
@@ -163,6 +164,7 @@ begin
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_alu_operation,
         i_inverse_zero   =>  s_inverse_zero,
+        i_alu_pass       =>  s_cu_alu_pass,
         o_result         =>  s_alu_result,
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag

@@ -79,11 +79,27 @@ begin
                 end case;
 
 
-            when "11" =>  -- pass through input b
-                o_alu_operation <= opcode_PASS;
+            when "11" =>  -- I-type operations
+                case i_instruction( 14 downto 12 ) is
+                    when "000"  =>  o_alu_operation <= opcode_ADD;
+                    when "001"  =>  o_alu_operation <= opcode_SLL;
+                    when "010"  =>  o_alu_operation <= opcode_SLT;
+                    when "011"  =>  o_alu_operation <= opcode_SLTU;
+                    when "100"  =>  o_alu_operation <= opcode_XOR;
+                    when "101"  =>  
+                        case i_instruction( 30 ) is
+                            when '0'    =>  o_alu_operation <= opcode_SRL;
+                            when '1'    =>  o_alu_operation <= opcode_SRA;
+                            when others =>  o_alu_operation <= "----";
+                        end case;
+                    when "110"  =>  o_alu_operation <= opcode_OR;
+                    when "111"  =>  o_alu_operation <= opcode_AND;
+                    when others =>  o_alu_operation <= "----";      
+                end case;
+
                 
             when others =>
-                o_alu_operation <= opcode_PASS;
+                o_alu_operation <= opcode_ADD;
                 
         end case;
     end process ALU_OP;

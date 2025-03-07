@@ -15,7 +15,6 @@ entity program_counter is
         clk          : in  std_logic;
         rst          : in  std_logic;
         i_immediate  : in  std_logic_vector( bit_width-1 downto 0 );
-        i_reg_a      : in  std_logic_vector( bit_width-1 downto 0 );
         i_jump       : in  std_logic;
         i_jarl_jump  : in  std_logic;
         i_jarl_value : in  std_logic_vector( bit_width-1 downto 0 );
@@ -32,8 +31,8 @@ architecture behavior of program_counter is
     end record;
     signal r, rin : alu;
 
-    signal s_adder_one   : signed( bit_width-1 downto 0 );
-    signal s_adder_two   : signed( bit_width-1 downto 0 );
+    signal s_adder_one : signed( bit_width-1 downto 0 );
+    signal s_adder_two : signed( bit_width-1 downto 0 );
 
 
 begin

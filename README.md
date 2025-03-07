@@ -12,3 +12,6 @@ My repository for the Advanced VLSI Design / Advanced CPU Design course at my Un
 - In the top-left: click on `File`, then `Project`, then `Open`
 - Open the `VLSI-xy.xpr` file in:
   `\Advanced-VLSI-Design\Exercise-01\VLSI-xy`
+
+  ### CPU-Design
+  

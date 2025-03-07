@@ -52,23 +52,22 @@ begin
 
 	sim: process
 	begin
-
 		rst <= '1';
 		
 		-- load instruction memory
 		s_instruction_memory_write_wren <= '1';
-		for i in 0 to (C_IM_MEM_SIZE/2)-1 loop
-            s_instruction_memory_write_addr <= std_logic_vector( to_unsigned( i, log2(C_IM_MEM_SIZE)) ) ;
+		wait for clk_period;
+        for i in 0 to (C_IM_MEM_SIZE)-1 loop
+            s_instruction_memory_write_addr <= std_logic_vector( to_unsigned( i, log2(C_IM_MEM_SIZE)));
+            wait for clk_period;  -- don't ask me why this has to be here, I don't get it either
             s_instruction_memory_write_data <= get_instruction( i );
-            wait for clk_period;
 		end loop;
 		s_instruction_memory_write_wren <= '0';
 		
 		wait for 4*clk_period;
-		
 		rst <= '0';
 		
-		for j in 0 to 200 loop
+		for j in 0 to C_IM_MEM_SIZE+1 loop
 		  wait for clk_period;
 		end loop;
 		

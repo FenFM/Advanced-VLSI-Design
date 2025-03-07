@@ -15,6 +15,7 @@ entity control_unit is
         o_jarl_jump    : out std_logic;
         o_alu_op       : out std_logic_vector(  1 downto 0 );
         o_alu_src      : out std_logic;
+        o_alu_pass     : out std_logic;
         o_reg_wren     : out std_logic;
         o_mem_wren     : out std_logic;
         o_mem_rden     : out std_logic;
@@ -56,6 +57,7 @@ begin
         o_jarl_jump   <=  '0';
         o_alu_op      <= "--";
         o_alu_src     <=  '-';
+        o_alu_pass    <=  '0';
         o_reg_wren    <=  '0';
         o_mem_wren    <=  '0';
         o_mem_rden    <=  '0';
@@ -64,13 +66,13 @@ begin
 
         case op_code is
             when IMM     =>  -- register-immediate instructions
-                o_alu_op     <= "10";
+                o_alu_op     <= "11";
                 o_alu_src    <=  '1';
                 o_reg_wren   <=  '1';
 
             when LUI     =>  -- load upper immediate
-                o_alu_op     <= "11";
                 o_alu_src    <=  '1';
+                o_alu_pass   <=  '1';
                 o_reg_wren   <=  '1';
 
             when AUIPC   =>  -- add upper immediate to program counter
