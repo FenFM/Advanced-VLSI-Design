@@ -14,13 +14,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="774 ps"></ZoomStartTime>
-      <ZoomEndTime time="818 ps"></ZoomEndTime>
-      <Cursor1Time time="790 ps"></Cursor1Time>
+      <ZoomStartTime time="650 ps"></ZoomStartTime>
+      <ZoomEndTime time="1,531 ps"></ZoomEndTime>
+      <Cursor1Time time="1,001 ps"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="237"></NameColumnWidth>
-      <ValueColumnWidth column_width="150"></ValueColumnWidth>
+      <ValueColumnWidth column_width="145"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="18" />
    <wvobject fp_name="/cpu_tb/clk" type="logic">
@@ -87,6 +87,7 @@
       <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec" type="array">
          <obj_property name="ElementShortName">s_register_data_vec[0:31][31:0]</obj_property>
          <obj_property name="ObjectShortName">s_register_data_vec[0:31][31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[0]" type="array">
             <obj_property name="ElementShortName">[0][31:0]</obj_property>
             <obj_property name="ObjectShortName">[0][31:0]</obj_property>
@@ -120,7 +121,7 @@
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[6]" type="array">
             <obj_property name="ElementShortName">[6][31:0]</obj_property>
             <obj_property name="ObjectShortName">[6][31:0]</obj_property>
-            <obj_property name="Radix">BINARYRADIX</obj_property>
+            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[7]" type="array">
             <obj_property name="ElementShortName">[7][31:0]</obj_property>
@@ -175,77 +176,62 @@
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[17]" type="array">
             <obj_property name="ElementShortName">[17][31:0]</obj_property>
             <obj_property name="ObjectShortName">[17][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[18]" type="array">
             <obj_property name="ElementShortName">[18][31:0]</obj_property>
             <obj_property name="ObjectShortName">[18][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[19]" type="array">
             <obj_property name="ElementShortName">[19][31:0]</obj_property>
             <obj_property name="ObjectShortName">[19][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[20]" type="array">
             <obj_property name="ElementShortName">[20][31:0]</obj_property>
             <obj_property name="ObjectShortName">[20][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[21]" type="array">
             <obj_property name="ElementShortName">[21][31:0]</obj_property>
             <obj_property name="ObjectShortName">[21][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[22]" type="array">
             <obj_property name="ElementShortName">[22][31:0]</obj_property>
             <obj_property name="ObjectShortName">[22][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[23]" type="array">
             <obj_property name="ElementShortName">[23][31:0]</obj_property>
             <obj_property name="ObjectShortName">[23][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[24]" type="array">
             <obj_property name="ElementShortName">[24][31:0]</obj_property>
             <obj_property name="ObjectShortName">[24][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[25]" type="array">
             <obj_property name="ElementShortName">[25][31:0]</obj_property>
             <obj_property name="ObjectShortName">[25][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[26]" type="array">
             <obj_property name="ElementShortName">[26][31:0]</obj_property>
             <obj_property name="ObjectShortName">[26][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[27]" type="array">
             <obj_property name="ElementShortName">[27][31:0]</obj_property>
             <obj_property name="ObjectShortName">[27][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[28]" type="array">
             <obj_property name="ElementShortName">[28][31:0]</obj_property>
             <obj_property name="ObjectShortName">[28][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[29]" type="array">
             <obj_property name="ElementShortName">[29][31:0]</obj_property>
             <obj_property name="ObjectShortName">[29][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[30]" type="array">
             <obj_property name="ElementShortName">[30][31:0]</obj_property>
             <obj_property name="ObjectShortName">[30][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
          <wvobject fp_name="/cpu_tb/uut/RF/s_register_data_vec[31]" type="array">
             <obj_property name="ElementShortName">[31][31:0]</obj_property>
             <obj_property name="ObjectShortName">[31][31:0]</obj_property>
-            <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
          </wvobject>
       </wvobject>
    </wvobject>
@@ -264,14 +250,6 @@
          <obj_property name="ElementShortName">rst</obj_property>
          <obj_property name="ObjectShortName">rst</obj_property>
       </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/PC/i_jump" type="logic">
-         <obj_property name="ElementShortName">i_jump</obj_property>
-         <obj_property name="ObjectShortName">i_jump</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/PC/i_jarl_jump" type="logic">
-         <obj_property name="ElementShortName">i_jarl_jump</obj_property>
-         <obj_property name="ObjectShortName">i_jarl_jump</obj_property>
-      </wvobject>
       <wvobject fp_name="/cpu_tb/uut/PC/i_immediate" type="array">
          <obj_property name="ElementShortName">i_immediate[31:0]</obj_property>
          <obj_property name="ObjectShortName">i_immediate[31:0]</obj_property>
@@ -285,11 +263,6 @@
       <wvobject fp_name="/cpu_tb/uut/PC/s_adder_two" type="array">
          <obj_property name="ElementShortName">s_adder_two[31:0]</obj_property>
          <obj_property name="ObjectShortName">s_adder_two[31:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/PC/i_jarl_value" type="array">
-         <obj_property name="ElementShortName">i_jarl_value[31:0]</obj_property>
-         <obj_property name="ObjectShortName">i_jarl_value[31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/PC/o_pc" type="array">
@@ -354,10 +327,6 @@
          <obj_property name="ElementShortName">dout[31:0]</obj_property>
          <obj_property name="ObjectShortName">dout[31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/IG/op_code" type="other">
-         <obj_property name="ElementShortName">op_code</obj_property>
-         <obj_property name="ObjectShortName">op_code</obj_property>
       </wvobject>
    </wvobject>
    <wvobject type="divider" fp_name="divider328">
@@ -524,18 +493,6 @@
          <obj_property name="ElementShortName">i_instruction[31:0]</obj_property>
          <obj_property name="ObjectShortName">i_instruction[31:0]</obj_property>
       </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/CU/o_con_jump" type="logic">
-         <obj_property name="ElementShortName">o_con_jump</obj_property>
-         <obj_property name="ObjectShortName">o_con_jump</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/CU/o_uncon_jump" type="logic">
-         <obj_property name="ElementShortName">o_uncon_jump</obj_property>
-         <obj_property name="ObjectShortName">o_uncon_jump</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/CU/o_jarl_jump" type="logic">
-         <obj_property name="ElementShortName">o_jarl_jump</obj_property>
-         <obj_property name="ObjectShortName">o_jarl_jump</obj_property>
-      </wvobject>
       <wvobject fp_name="/cpu_tb/uut/CU/o_alu_op" type="array">
          <obj_property name="ElementShortName">o_alu_op[1:0]</obj_property>
          <obj_property name="ObjectShortName">o_alu_op[1:0]</obj_property>
@@ -556,18 +513,6 @@
       <wvobject fp_name="/cpu_tb/uut/CU/o_mem_rden" type="logic">
          <obj_property name="ElementShortName">o_mem_rden</obj_property>
          <obj_property name="ObjectShortName">o_mem_rden</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/CU/o_mem_to_reg" type="logic">
-         <obj_property name="ElementShortName">o_mem_to_reg</obj_property>
-         <obj_property name="ObjectShortName">o_mem_to_reg</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/CU/o_pc_to_reg" type="logic">
-         <obj_property name="ElementShortName">o_pc_to_reg</obj_property>
-         <obj_property name="ObjectShortName">o_pc_to_reg</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/CU/op_code" type="other">
-         <obj_property name="ElementShortName">op_code</obj_property>
-         <obj_property name="ObjectShortName">op_code</obj_property>
       </wvobject>
    </wvobject>
 </wave_config>

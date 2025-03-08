@@ -131,9 +131,6 @@ begin
             
             when opcode_XOR =>
                 s_result <= xor_res;
-            
---            when opcode_PASS =>
---                s_result <= i_operand_b;
 
             when opcode_SLL =>
                 s_result <= sll_res;
@@ -153,11 +150,12 @@ begin
             when others =>
                 s_result <= ( others => '0' );
 
-            if i_alu_pass = '1' then
-                s_result <= i_operand_b;
-            end if;
-            
         end case;
+
+        if i_alu_pass = '1' then
+            s_result <= i_operand_b;
+        end if;
+
     end process operation_mux_switch;
     
 

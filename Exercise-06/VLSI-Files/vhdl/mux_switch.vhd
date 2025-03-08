@@ -20,12 +20,9 @@ begin
     process( s, a, b )
     begin
         case s is
-            when '0' =>
-                o <= a;
-            when '1' =>
-                o <= b;
-            when others =>
-                o <= a;
+            when '0' =>     o <= a;
+            when '1' =>     o <= b;
+            when others =>  o <= a;
         end case;
     end process;
 
