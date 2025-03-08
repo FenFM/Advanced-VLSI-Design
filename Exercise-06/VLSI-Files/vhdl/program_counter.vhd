@@ -31,12 +31,12 @@ architecture behavior of program_counter is
     constant jalr_jump  : std_logic_vector( 1 downto 0 ) := "11";  -- JALR jump
 
     type alu is record
-        pc_counter : signed( bit_width-1 downto 0 );
+        pc_counter : unsigned( bit_width-1 downto 0 );
     end record;
     signal r, rin : alu;
 
-    signal s_adder_one : signed( bit_width-1 downto 0 );
-    signal s_adder_two : signed( bit_width-1 downto 0 );
+    signal s_adder_one  : unsigned( bit_width-1 downto 0 );
+    signal s_adder_two  : unsigned( bit_width-1 downto 0 );
 
 
 begin
@@ -44,8 +44,8 @@ begin
     o_adder_one <= std_logic_vector( s_adder_one );
     o_adder_two <= std_logic_vector( s_adder_two );
 
-    s_adder_one   <= r.pc_counter + pc_offset;
-    s_adder_two   <= r.pc_counter + signed( i_immediate );
+    s_adder_one <= r.pc_counter + pc_offset;
+    s_adder_two <= unsigned( signed( r.pc_counter ) + signed( i_immediate ) );
 
 
     reg : process ( clk, rst )
@@ -72,7 +72,7 @@ begin
                                      v.pc_counter := s_adder_two;
                                  end if;
             when uncon_jump  =>  v.pc_counter := s_adder_two;
-            when jalr_jump   =>  v.pc_counter := signed(i_jalr_value( bit_width-1 downto 1 ) & '0');
+            when jalr_jump   =>  v.pc_counter := unsigned(i_jalr_value( bit_width-1 downto 1 ) & '0');
             when others      =>  
         end case;
 

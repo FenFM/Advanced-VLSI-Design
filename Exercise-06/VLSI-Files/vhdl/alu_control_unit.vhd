@@ -9,6 +9,7 @@ entity alu_control_unit is
         i_instruction     : in  std_logic_vector( 31 downto 0 );
         i_alu_instruction : in  std_logic_vector(  1 downto 0 );
         o_alu_operation   : out std_logic_vector(  3 downto 0 );
+        o_store_align     : out std_logic_vector(  2 downto 0 );
         o_inverse_zero    : out std_logic
     );
 end alu_control_unit;
@@ -21,6 +22,7 @@ begin
     ALU_OP : process( i_instruction, i_alu_instruction )
     begin
         o_inverse_zero <= '0';
+        o_store_align  <= "010";
 
         case i_alu_instruction is
             when "10" =>  -- R-type operations
@@ -49,12 +51,14 @@ begin
 
             when "00" =>  -- LW and SW
                 o_alu_operation <= opcode_ADD;
+                o_store_align   <= i_instruction( 14 downto 12 );
 
 
             when "01" =>  -- BRANCH
                 case i_instruction( 14 downto 12 ) is
                     when func_BEQ  =>  -- if equal
                         o_alu_operation <= opcode_SUB;
+                        o_inverse_zero <= '0';
 
                     when func_BNE  =>  -- if not equal
                         o_alu_operation <= opcode_SUB;
@@ -66,6 +70,7 @@ begin
 
                     when func_BGE  =>  -- if rs1 >= rs2 (signed)
                         o_alu_operation <= opcode_SLT;
+                        o_inverse_zero <= '0';
                     
                     when func_BLTU =>  -- if rs1 < rs2  (unsigned)
                         o_alu_operation <= opcode_SLTU;
@@ -73,6 +78,7 @@ begin
 
                     when func_BGEU =>  -- if rs1 >= rs2 (unsigned)
                         o_alu_operation <= opcode_SLTU;
+                        o_inverse_zero <= '0';
                         
                     when others =>
                         o_alu_operation <= opcode_SUB;

@@ -54,6 +54,7 @@ architecture structure of cpu is
     signal s_data_memory_write_addr : std_logic_vector( log2(C_DM_MEM_SIZE)-1 downto 0 );
     signal s_data_memory_write_rden : std_logic;    
     signal s_data_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
+    signal s_data_memory_read_data_aligned : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
     signal s_data_memory_read_addr  : std_logic_vector( log2(C_DM_MEM_SIZE)-1 downto 0 );
     signal s_data_memory_read_rden  : std_logic; 
 
@@ -79,6 +80,7 @@ architecture structure of cpu is
     signal s_cu_mux_to_reg : std_logic_vector( 1 downto 0 );
 
     signal s_alu_operation : std_logic_vector( 3 downto 0 );
+    signal s_cu_alu_align  : std_logic_vector( 2 downto 0 );
 
 
 begin
@@ -112,7 +114,7 @@ begin
         o_adder_two      =>  s_pc_adder_two,
         o_pc             =>  s_pc_value 
     );
-    s_pc_value_sr <= std_logic_vector(shift_right(signed(s_pc_value), 1));
+    s_pc_value_sr <= std_logic_vector(shift_right(unsigned(s_pc_value), 1));
     
     
     IM : entity work.memory
@@ -143,12 +145,22 @@ begin
     );
 
 
-    ALU_IN : entity work.alu_control_unit
+    ALU_CU : entity work.alu_control_unit
     port map(
         i_instruction      =>  s_instruction_memory_read_data,
         i_alu_instruction  =>  s_cu_alu_op,
         o_alu_operation    =>  s_alu_operation,
+        o_store_align      =>  s_cu_alu_align,
         o_inverse_zero     =>  s_inverse_zero
+    );
+
+
+    ALU_IN : entity work.store_align
+    generic map( C_BIT_WIDTH )
+    port map(
+        control  =>  s_cu_alu_align,
+        din      =>  s_register_file_read_a_data,
+        dout     =>  s_alu_operand_a
     );
 
 
@@ -164,7 +176,6 @@ begin
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag
     );
-    s_alu_operand_a <= s_register_file_read_a_data;
 
 
     ALU_MUX : entity work.mux_switch_2
@@ -194,6 +205,15 @@ begin
     o_data_memory_read_data <= s_data_memory_read_data;
 
 
+    DM_IN : entity work.store_align
+    generic map( C_BIT_WIDTH )
+    port map(
+        control  =>  s_cu_alu_align,
+        din      =>  s_data_memory_read_data,
+        dout     =>  s_data_memory_read_data_aligned
+    );
+
+
     RF : entity work.register_file
     generic map(
         word_size  =>  C_REG_WORD_SIZE,
@@ -216,31 +236,12 @@ begin
     o_register_file_read_b_data <= s_register_file_read_b_data;
 
 
---    MEM_to_REG_MUX : entity work.mux_switch_2
---    generic map( bit_width  =>  C_BIT_WIDTH )
---    port map(
---        s  =>  s_cu_mem_to_reg,
---        a  =>  s_alu_result,
---        b  =>  s_data_memory_read_data,
---        o  =>  s_mem_to_reg_out
---    );
-
-    
---    PC_to_REG_MUX : entity work.mux_switch_2
---    generic map( bit_width  =>  C_BIT_WIDTH )
---    port map(
---        s  =>  s_cu_pc_to_reg,
---        a  =>  s_mem_to_reg_out,
---        b  =>  s_pc_adder_one,
---        o  =>  s_register_write_data
---    );
-
     REG_MUX : entity work.mux_register
     generic map( C_BIT_WIDTH )
     port map(
         s      =>  s_cu_mux_to_reg,
         din_a  =>  s_alu_result,
-        din_b  =>  s_data_memory_read_data,
+        din_b  =>  s_data_memory_read_data_aligned,
         din_c  =>  s_pc_adder_one,
         din_d  =>  s_pc_adder_two,
         dout   =>  s_register_write_data
