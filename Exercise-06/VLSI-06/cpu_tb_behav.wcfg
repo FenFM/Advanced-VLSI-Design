@@ -14,13 +14,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="721 ps"></ZoomStartTime>
-      <ZoomEndTime time="813 ps"></ZoomEndTime>
-      <Cursor1Time time="750 ps"></Cursor1Time>
+      <ZoomStartTime time="679 ps"></ZoomStartTime>
+      <ZoomEndTime time="732 ps"></ZoomEndTime>
+      <Cursor1Time time="690 ps"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="237"></NameColumnWidth>
-      <ValueColumnWidth column_width="140"></ValueColumnWidth>
+      <ValueColumnWidth column_width="135"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="20" />
    <wvobject fp_name="/cpu_tb/clk" type="logic">
@@ -194,14 +194,18 @@
    <wvobject fp_name="group329" type="group">
       <obj_property name="label">ALU</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/cpu_tb/uut/ALU/i_inverse_zero" type="logic">
          <obj_property name="ElementShortName">i_inverse_zero</obj_property>
          <obj_property name="ObjectShortName">i_inverse_zero</obj_property>
       </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/i_alu_pass" type="logic">
+         <obj_property name="ElementShortName">i_alu_pass</obj_property>
+         <obj_property name="ObjectShortName">i_alu_pass</obj_property>
+      </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU/i_operation" type="array">
-         <obj_property name="ElementShortName">i_operation[3:0]</obj_property>
-         <obj_property name="ObjectShortName">i_operation[3:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="ElementShortName">i_operation[4:0]</obj_property>
+         <obj_property name="ObjectShortName">i_operation[4:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU/i_operand_a" type="array">
          <obj_property name="ElementShortName">i_operand_a[31:0]</obj_property>
@@ -231,36 +235,6 @@
          <obj_property name="ObjectShortName">s_result[31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/signed_a" type="array">
-         <obj_property name="ElementShortName">signed_a[31:0]</obj_property>
-         <obj_property name="ObjectShortName">signed_a[31:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/signed_b" type="array">
-         <obj_property name="ElementShortName">signed_b[31:0]</obj_property>
-         <obj_property name="ObjectShortName">signed_b[31:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/unsigned_a" type="array">
-         <obj_property name="ElementShortName">unsigned_a[31:0]</obj_property>
-         <obj_property name="ObjectShortName">unsigned_a[31:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/unsigned_b" type="array">
-         <obj_property name="ElementShortName">unsigned_b[31:0]</obj_property>
-         <obj_property name="ObjectShortName">unsigned_b[31:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/std_b_cut" type="array">
-         <obj_property name="ElementShortName">std_b_cut[4:0]</obj_property>
-         <obj_property name="ObjectShortName">std_b_cut[4:0]</obj_property>
-         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/sll_uint_b" type="other">
-         <obj_property name="ElementShortName">sll_uint_b</obj_property>
-         <obj_property name="ObjectShortName">sll_uint_b</obj_property>
-         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
-      </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU/add_res" type="array">
          <obj_property name="ElementShortName">add_res[32:0]</obj_property>
          <obj_property name="ObjectShortName">add_res[32:0]</obj_property>
@@ -289,17 +263,12 @@
       <wvobject fp_name="/cpu_tb/uut/ALU/sll_res" type="array">
          <obj_property name="ElementShortName">sll_res[31:0]</obj_property>
          <obj_property name="ObjectShortName">sll_res[31:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/cpu_tb/uut/ALU/srl_res" type="array">
-         <obj_property name="ElementShortName">srl_res[31:0]</obj_property>
-         <obj_property name="ObjectShortName">srl_res[31:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU/sra_res" type="array">
          <obj_property name="ElementShortName">sra_res[31:0]</obj_property>
          <obj_property name="ObjectShortName">sra_res[31:0]</obj_property>
-         <obj_property name="Radix">BINARYRADIX</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU/slt_res" type="array">
          <obj_property name="ElementShortName">slt_res[31:0]</obj_property>
@@ -311,6 +280,90 @@
          <obj_property name="ObjectShortName">sltu_res[31:0]</obj_property>
          <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
       </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/mul_res" type="array">
+         <obj_property name="ElementShortName">mul_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mul_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/mulh_res" type="array">
+         <obj_property name="ElementShortName">mulh_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mulh_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/mulhu_res" type="array">
+         <obj_property name="ElementShortName">mulhu_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mulhu_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/mulhsu_res" type="array">
+         <obj_property name="ElementShortName">mulhsu_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mulhsu_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/div_res" type="array">
+         <obj_property name="ElementShortName">div_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">div_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/divu_res" type="array">
+         <obj_property name="ElementShortName">divu_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">divu_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/rem_res" type="array">
+         <obj_property name="ElementShortName">rem_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">rem_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/cpu_tb/uut/ALU/remu_res" type="array">
+         <obj_property name="ElementShortName">remu_res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">remu_res[31:0]</obj_property>
+         <obj_property name="Radix">SIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="group285" type="group">
+         <obj_property name="label">ADD</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/cpu_tb/uut/ALU/srl_res" type="array">
+            <obj_property name="ElementShortName">srl_res[31:0]</obj_property>
+            <obj_property name="ObjectShortName">srl_res[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/a" type="array">
+            <obj_property name="ElementShortName">a[31:0]</obj_property>
+            <obj_property name="ObjectShortName">a[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/b" type="array">
+            <obj_property name="ElementShortName">b[31:0]</obj_property>
+            <obj_property name="ObjectShortName">b[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/adds" type="array">
+            <obj_property name="ElementShortName">adds[31:0]</obj_property>
+            <obj_property name="ObjectShortName">adds[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/addu" type="array">
+            <obj_property name="ElementShortName">addu[31:0]</obj_property>
+            <obj_property name="ObjectShortName">addu[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/addsu" type="array">
+            <obj_property name="ElementShortName">addsu[31:0]</obj_property>
+            <obj_property name="ObjectShortName">addsu[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/add33" type="array">
+            <obj_property name="ElementShortName">add33[32:0]</obj_property>
+            <obj_property name="ObjectShortName">add33[32:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/subs" type="array">
+            <obj_property name="ElementShortName">subs[31:0]</obj_property>
+            <obj_property name="ObjectShortName">subs[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/subu" type="array">
+            <obj_property name="ElementShortName">subu[31:0]</obj_property>
+            <obj_property name="ObjectShortName">subu[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/cpu_tb/uut/ALU/adder_ins/subsu" type="array">
+            <obj_property name="ElementShortName">subsu[31:0]</obj_property>
+            <obj_property name="ObjectShortName">subsu[31:0]</obj_property>
+         </wvobject>
+      </wvobject>
    </wvobject>
    <wvobject type="divider" fp_name="divider728">
       <obj_property name="label">ALU_CU</obj_property>
@@ -319,6 +372,7 @@
    <wvobject fp_name="group729" type="group">
       <obj_property name="label">ALU CU</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/cpu_tb/uut/ALU_CU/i_instruction" type="array">
          <obj_property name="ElementShortName">i_instruction[31:0]</obj_property>
          <obj_property name="ObjectShortName">i_instruction[31:0]</obj_property>
@@ -326,14 +380,17 @@
       <wvobject fp_name="/cpu_tb/uut/ALU_CU/i_alu_instruction" type="array">
          <obj_property name="ElementShortName">i_alu_instruction[1:0]</obj_property>
          <obj_property name="ObjectShortName">i_alu_instruction[1:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU_CU/o_alu_operation" type="array">
-         <obj_property name="ElementShortName">o_alu_operation[3:0]</obj_property>
-         <obj_property name="ObjectShortName">o_alu_operation[3:0]</obj_property>
+         <obj_property name="ElementShortName">o_alu_operation[4:0]</obj_property>
+         <obj_property name="ObjectShortName">o_alu_operation[4:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU_CU/o_store_align" type="array">
          <obj_property name="ElementShortName">o_store_align[2:0]</obj_property>
          <obj_property name="ObjectShortName">o_store_align[2:0]</obj_property>
+         <obj_property name="Radix">BINARYRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/cpu_tb/uut/ALU_CU/o_inverse_zero" type="logic">
          <obj_property name="ElementShortName">o_inverse_zero</obj_property>

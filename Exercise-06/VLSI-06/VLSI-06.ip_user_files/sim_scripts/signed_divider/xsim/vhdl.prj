@@ -1,0 +1,5 @@
+vhdl xil_defaultlib  \
+"../../../../../VLSI-Files/ip/signed_divider/sim/signed_divider.vhd" \
+
+# Do not sort compile order
+nosort

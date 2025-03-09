@@ -3,19 +3,25 @@ use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 
 package	isa_riscv is
+	constant opcode_ADD    : std_logic_vector(4 downto 0) := "00000";
+	constant opcode_SUB    : std_logic_vector(4 downto 0) := "00001";
+	constant opcode_SLL    : std_logic_vector(4 downto 0) := "00010";
+	constant opcode_SLT    : std_logic_vector(4 downto 0) := "00011";
+	constant opcode_SLTU   : std_logic_vector(4 downto 0) := "00100";
+	constant opcode_XOR    : std_logic_vector(4 downto 0) := "00101";
+	constant opcode_SRL    : std_logic_vector(4 downto 0) := "00110";
+	constant opcode_SRA    : std_logic_vector(4 downto 0) := "00111";
+	constant opcode_OR     : std_logic_vector(4 downto 0) := "01000";
+	constant opcode_AND    : std_logic_vector(4 downto 0) := "01001";
+	constant opcode_MUL    : std_logic_vector(4 downto 0) := "01010";
+	constant opcode_MULH   : std_logic_vector(4 downto 0) := "01011";
+	constant opcode_MULHSU : std_logic_vector(4 downto 0) := "01100";
+	constant opcode_MULHU  : std_logic_vector(4 downto 0) := "01101";
+	constant opcode_DIV    : std_logic_vector(4 downto 0) := "01110";
+	constant opcode_DIVU   : std_logic_vector(4 downto 0) := "01111";
+	constant opcode_REM    : std_logic_vector(4 downto 0) := "10000";
+	constant opcode_REMU   : std_logic_vector(4 downto 0) := "10001";
 
-	constant opcode_ADD  : std_logic_vector(3 downto 0) := "0000";
-	constant opcode_SUB  : std_logic_vector(3 downto 0) := "1000";
-	constant opcode_SLL  : std_logic_vector(3 downto 0) := "0001";
-	constant opcode_SLT  : std_logic_vector(3 downto 0) := "0010";
-	constant opcode_SLTU : std_logic_vector(3 downto 0) := "0011";
-	constant opcode_XOR  : std_logic_vector(3 downto 0) := "0100";
-	constant opcode_SRL  : std_logic_vector(3 downto 0) := "0101";
-	constant opcode_SRA  : std_logic_vector(3 downto 0) := "1101";
-	constant opcode_OR   : std_logic_vector(3 downto 0) := "0110";
-	constant opcode_AND  : std_logic_vector(3 downto 0) := "0111";
-
-	constant opcode_PASS : std_logic_vector(3 downto 0) := "1111";
 
 	constant func_JALR : std_logic_vector(2 downto 0) := "000";
 	constant func_BEQ  : std_logic_vector(2 downto 0) := "000";

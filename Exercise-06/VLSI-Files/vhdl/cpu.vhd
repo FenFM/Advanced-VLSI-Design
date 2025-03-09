@@ -66,9 +66,6 @@ architecture structure of cpu is
     signal s_register_file_read_a_addr : std_logic_vector( 4 downto 0 );
     signal s_register_file_read_b_addr : std_logic_vector( 4 downto 0 );
 
-    -- signal for the mux siwtches
---    signal s_mem_to_reg_out : std_logic_vector( C_REG_SIZE-1 downto 0 );
-
     -- signals for the control unit
     signal s_cu_alu_op     : std_logic_vector( 1 downto 0 );
     signal s_cu_alu_src    : std_logic;
@@ -79,7 +76,7 @@ architecture structure of cpu is
     signal s_cu_mux_to_pc  : std_logic_vector( 1 downto 0 );
     signal s_cu_mux_to_reg : std_logic_vector( 1 downto 0 );
 
-    signal s_alu_operation : std_logic_vector( 3 downto 0 );
+    signal s_alu_operation : std_logic_vector( 4 downto 0 );
     signal s_cu_alu_align  : std_logic_vector( 2 downto 0 );
 
 

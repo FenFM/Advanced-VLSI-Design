@@ -8,7 +8,7 @@ entity alu_control_unit is
     port(
         i_instruction     : in  std_logic_vector( 31 downto 0 );
         i_alu_instruction : in  std_logic_vector(  1 downto 0 );
-        o_alu_operation   : out std_logic_vector(  3 downto 0 );
+        o_alu_operation   : out std_logic_vector(  4 downto 0 );
         o_store_align     : out std_logic_vector(  2 downto 0 );
         o_inverse_zero    : out std_logic
     );
@@ -26,26 +26,38 @@ begin
 
         case i_alu_instruction is
             when "10" =>  -- R-type operations
-                case i_instruction( 14 downto 12 ) is
-                    when "000"  =>  
-                        case i_instruction( 30 ) is
-                            when '0'    =>  o_alu_operation <= opcode_ADD;
-                            when '1'    =>  o_alu_operation <= opcode_SUB;
-                            when others =>  o_alu_operation <= "----";
+                case i_instruction( 31 downto 25 ) is
+                    when "0000000"  =>  -- standart
+                        case i_instruction( 14 downto 12 ) is
+                            when "000"  =>  o_alu_operation <= opcode_ADD;
+                            when "001"  =>  o_alu_operation <= opcode_SLL;
+                            when "010"  =>  o_alu_operation <= opcode_SLT;
+                            when "011"  =>  o_alu_operation <= opcode_SLTU;
+                            when "100"  =>  o_alu_operation <= opcode_XOR;
+                            when "101"  =>  o_alu_operation <= opcode_SRL;
+                            when "110"  =>  o_alu_operation <= opcode_OR;
+                            when "111"  =>  o_alu_operation <= opcode_AND;
+                            when others =>  o_alu_operation <= "-----"; 
                         end case;
-                    when "001"  =>  o_alu_operation <= opcode_SLL;
-                    when "010"  =>  o_alu_operation <= opcode_SLT;
-                    when "011"  =>  o_alu_operation <= opcode_SLTU;
-                    when "100"  =>  o_alu_operation <= opcode_XOR;
-                    when "101"  =>  
-                        case i_instruction( 30 ) is
-                            when '0'    =>  o_alu_operation <= opcode_SRL;
-                            when '1'    =>  o_alu_operation <= opcode_SRA;
-                            when others =>  o_alu_operation <= "----";
+                    when "0100000"  =>  -- sub and sra
+                        case i_instruction( 14 downto 12 ) is
+                            when "000"  =>  o_alu_operation <= opcode_SUB;
+                            when "101"  =>  o_alu_operation <= opcode_SRA;
+                            when others =>  o_alu_operation <= "-----"; 
+                        end case;                        
+                    when "0000001"  =>  -- mul and div
+                        case i_instruction( 14 downto 12 ) is
+                            when "000"  =>  o_alu_operation <= opcode_MUL;
+                            when "001"  =>  o_alu_operation <= opcode_MULH;
+                            when "010"  =>  o_alu_operation <= opcode_MULHSU;
+                            when "011"  =>  o_alu_operation <= opcode_MULHU;
+                            when "100"  =>  o_alu_operation <= opcode_DIV;
+                            when "101"  =>  o_alu_operation <= opcode_DIVU;
+                            when "110"  =>  o_alu_operation <= opcode_REM;
+                            when "111"  =>  o_alu_operation <= opcode_REMU;
+                            when others =>  o_alu_operation <= "-----"; 
                         end case;
-                    when "110"  =>  o_alu_operation <= opcode_OR;
-                    when "111"  =>  o_alu_operation <= opcode_AND;
-                    when others =>  o_alu_operation <= "----";      
+                    when others  =>  o_alu_operation <= "-----";
                 end case;
 
 
@@ -56,32 +68,16 @@ begin
 
             when "01" =>  -- BRANCH
                 case i_instruction( 14 downto 12 ) is
-                    when func_BEQ  =>  -- if equal
-                        o_alu_operation <= opcode_SUB;
-                        o_inverse_zero <= '0';
-
-                    when func_BNE  =>  -- if not equal
-                        o_alu_operation <= opcode_SUB;
-                        o_inverse_zero  <= '1';
-
-                    when func_BLT  =>  -- if rs1 < rs2  (signed)
-                        o_alu_operation <= opcode_SLT;
-                        o_inverse_zero  <= '1';
-
-                    when func_BGE  =>  -- if rs1 >= rs2 (signed)
-                        o_alu_operation <= opcode_SLT;
-                        o_inverse_zero <= '0';
-                    
-                    when func_BLTU =>  -- if rs1 < rs2  (unsigned)
-                        o_alu_operation <= opcode_SLTU;
-                        o_inverse_zero  <= '1';
-
-                    when func_BGEU =>  -- if rs1 >= rs2 (unsigned)
-                        o_alu_operation <= opcode_SLTU;
-                        o_inverse_zero <= '0';
-                        
-                    when others =>
-                        o_alu_operation <= opcode_SUB;
+                    when func_BEQ  =>  o_alu_operation <= opcode_SUB;   -- if equal
+                    when func_BNE  =>  o_alu_operation <= opcode_SUB;   -- if not equal
+                                       o_inverse_zero  <= '1';
+                    when func_BLT  =>  o_alu_operation <= opcode_SLT;   -- if rs1 <  rs2 (signed)
+                                       o_inverse_zero  <= '1';
+                    when func_BGE  =>  o_alu_operation <= opcode_SLT;   -- if rs1 >= rs2 (signed)             
+                    when func_BLTU =>  o_alu_operation <= opcode_SLTU;  -- if rs1 <  rs2 (unsigned)
+                                       o_inverse_zero  <= '1';
+                    when func_BGEU =>  o_alu_operation <= opcode_SLTU;  -- if rs1 >= rs2 (unsigned)
+                    when others =>     o_alu_operation <= "-----";
                 end case;
 
 
@@ -96,16 +92,15 @@ begin
                         case i_instruction( 30 ) is
                             when '0'    =>  o_alu_operation <= opcode_SRL;
                             when '1'    =>  o_alu_operation <= opcode_SRA;
-                            when others =>  o_alu_operation <= "----";
+                            when others =>  o_alu_operation <= "-----";
                         end case;
                     when "110"  =>  o_alu_operation <= opcode_OR;
                     when "111"  =>  o_alu_operation <= opcode_AND;
-                    when others =>  o_alu_operation <= "----";      
+                    when others =>  o_alu_operation <= "-----";      
                 end case;
 
                 
-            when others =>
-                o_alu_operation <= opcode_ADD;
+            when others  =>  o_alu_operation <= "-----";
                 
         end case;
     end process ALU_OP;

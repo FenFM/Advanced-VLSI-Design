@@ -1,0 +1,5 @@
+vhdl xil_defaultlib  \
+"../../../../../VLSI-Files/ip/counter_32/sim/counter_32.vhd" \
+
+# Do not sort compile order
+nosort

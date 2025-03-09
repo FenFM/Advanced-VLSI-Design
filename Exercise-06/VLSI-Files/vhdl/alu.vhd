@@ -10,7 +10,7 @@ entity alu is
         i_inverse_zero  : in std_logic;
         i_alu_pass      : in std_logic;
 
-		i_operation     : in  std_logic_vector( 3 downto 0 );
+		i_operation     : in  std_logic_vector( 4 downto 0 );
 		i_operand_a     : in  std_logic_vector( bit_width-1 downto 0 );
 		i_operand_b     : in  std_logic_vector( bit_width-1 downto 0 );
 
@@ -42,6 +42,15 @@ architecture behavior of alu is
     signal slt_res  : std_logic_vector( bit_width-1 downto 0 );
     signal sltu_res : std_logic_vector( bit_width-1 downto 0 );
 
+    signal mul_res    : std_logic_vector( bit_width-1 downto 0 );
+    signal mulh_res   : std_logic_vector( bit_width-1 downto 0 );
+    signal mulhu_res  : std_logic_vector( bit_width-1 downto 0 );
+    signal mulhsu_res : std_logic_vector( bit_width-1 downto 0 );
+    signal div_res    : std_logic_vector( bit_width-1 downto 0 );
+    signal divu_res   : std_logic_vector( bit_width-1 downto 0 );
+    signal rem_res    : std_logic_vector( bit_width-1 downto 0 );
+    signal remu_res   : std_logic_vector( bit_width-1 downto 0 );
+
 
 begin
     o_result <= s_result;
@@ -54,23 +63,21 @@ begin
     std_b_cut  <= i_operand_b( 4 downto 0 );
     sll_uint_b <= to_integer( unsigned( std_b_cut ));
 
+
     -- zero flag
     o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
 
-    -- addition
-    process( signed_a, signed_b )
-        variable extended_a, extended_b : signed( bit_width downto 0 );
-    begin
-        extended_a := signed_a(bit_width-1) & signed_a;
-        extended_b := signed_b(bit_width-1) & signed_b;
-        add_res <= std_logic_vector( extended_a + extended_b );
-    end process;
+    -- addition and substraction
+    adder_ins : entity work.adder
+    port map(
+        a      =>  i_operand_a,
+        b      =>  i_operand_b,
+        add33  =>  add_res,
+        subs   =>  sub_res
+    );
     
     -- overflow flag
     o_overflow_flag <= add_res( bit_width );
-    
-    -- substraction
-    sub_res <= std_logic_vector( signed_a - signed_b);
     
     -- and
     and_res <= i_operand_a and i_operand_b;
@@ -90,6 +97,7 @@ begin
     -- shift right arithmetic
     sra_res <= std_logic_vector( shift_right(   signed_a, sll_uint_b ));
 
+
     -- set less than
     process( signed_a, signed_b )
         variable temp : std_logic_vector( 30 downto 0 ) := ( others => '0' );
@@ -101,6 +109,7 @@ begin
         end if;
     end process;
 
+
     -- set less than unsigned
     process( unsigned_a, unsigned_b )
         variable temp : std_logic_vector( 30 downto 0 ) := ( others => '0' );
@@ -110,46 +119,55 @@ begin
         else
             sltu_res <= temp & '0';
         end if;
-
     end process;
     
+
+    -- multiplication
+    multiplier_ins : entity work.multiplier
+    port map(
+        a       =>  i_operand_a,
+        b       =>  i_operand_b,
+        mul     =>  mul_res,
+        mulh    =>  mulh_res,
+        mulhu   =>  mulhu_res,
+        mulhsu  =>  mulhsu_res
+    );
+
+
+    -- division
+    divider_ins : entity work.divider
+    port map(
+        divisor   =>  i_operand_a,
+        dividend  =>  i_operand_b,
+        divs      =>  div_res,
+        rems      =>  rem_res,
+        divu      =>  divu_res,
+        remu      =>  remu_res
+    );
+
 
     operation_mux_switch : process( all )
     begin
         case i_operation is
-            when opcode_ADD =>
-                s_result <= add_res( bit_width-1 downto 0 );
-            
-            when opcode_SUB =>
-                s_result <= sub_res;
-            
-            when opcode_AND =>
-                s_result <= and_res;
-            
-            when opcode_OR =>
-                s_result <= or_res;
-            
-            when opcode_XOR =>
-                s_result <= xor_res;
-
-            when opcode_SLL =>
-                s_result <= sll_res;
-
-            when opcode_SRL =>
-                 s_result <= srl_res;
-
-            when opcode_SRA =>
-                s_result <= sra_res;
-
-            when opcode_SLT =>
-                s_result <= slt_res;
-
-            when opcode_SLTU =>
-                s_result <= sltu_res;
-
-            when others =>
-                s_result <= ( others => '0' );
-
+            when opcode_ADD     =>  s_result <= add_res( bit_width-1 downto 0 );
+            when opcode_SUB     =>  s_result <= sub_res;
+            when opcode_AND     =>  s_result <= and_res;
+            when opcode_OR      =>  s_result <= or_res;
+            when opcode_XOR     =>  s_result <= xor_res;
+            when opcode_SLL     =>  s_result <= sll_res;
+            when opcode_SRL     =>  s_result <= srl_res;
+            when opcode_SRA     =>  s_result <= sra_res;
+            when opcode_SLT     =>  s_result <= slt_res;
+            when opcode_SLTU    =>  s_result <= sltu_res;
+            when opcode_MUL     =>  s_result <= mul_res;
+            when opcode_MULH    =>  s_result <= mulh_res;
+            when opcode_MULHSU  =>  s_result <= mulhsu_res;
+            when opcode_MULHU   =>  s_result <= mulhu_res;
+            when opcode_DIV     =>  s_result <= div_res;
+            when opcode_DIVU    =>  s_result <= divu_res;
+            when opcode_REM     =>  s_result <= rem_res;
+            when opcode_REMU    =>  s_result <= remu_res;
+            when others         =>  s_result <= ( others => '0' );
         end case;
 
         if i_alu_pass = '1' then
