@@ -127,7 +127,7 @@ BEGIN
     GENERIC MAP (
       C_VERBOSITY => 0,
       C_XDEVICEFAMILY => "zynq",
-      C_IMPLEMENTATION => 0,
+      C_IMPLEMENTATION => 1,
       C_A_WIDTH => 32,
       C_B_WIDTH => 32,
       C_OUT_WIDTH => 32,

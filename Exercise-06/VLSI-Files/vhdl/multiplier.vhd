@@ -16,7 +16,7 @@ end multiplier;
 
 
 architecture behavior of multiplier is
-    signal ress, resu, ressu : std_logic_vector( 63 downto 0 );
+    signal res, resu, ressu : std_logic_vector( 63 downto 0 );
 
     component signed_multiplier
         port(
@@ -48,7 +48,7 @@ begin
     port map(
         A  =>  a,
         B  =>  b,
-        P  =>  ress
+        P  =>  res
     );
 
     unsigned_multiplier_ins : unsigned_multiplier
@@ -65,10 +65,15 @@ begin
         P  =>  ressu
     );
 
-    mul    <= ress ( 31 downto  0 );
-    mulh   <= ress ( 63 downto 32 );
+
+--    res   <= std_logic_vector(  signed(a) * signed(b));
+--    resu  <= std_logic_vector(unsigned(a) * unsigned(b));
+--    ressu <= ( others => '0' );
+
+    mul    <= res  ( 31 downto  0 );
+    mulh   <= res  ( 63 downto 32 );
     mulhu  <= resu ( 63 downto 32 );
-    mulhsu <= ressu( 63 downto 32 );
+    mulhsu <= ressu( 63 downto 32 ); 
 
 
 end behavior;

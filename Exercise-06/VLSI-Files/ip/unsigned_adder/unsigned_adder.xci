@@ -8,7 +8,7 @@
     "parameters": {
       "component_parameters": {
         "Component_Name": [ { "value": "unsigned_adder", "resolve_type": "user", "usage": "all" } ],
-        "Implementation": [ { "value": "Fabric", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
+        "Implementation": [ { "value": "DSP48", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "A_Type": [ { "value": "Unsigned", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "B_Type": [ { "value": "Unsigned", "value_src": "user", "resolve_type": "user", "usage": "all" } ],
         "A_Width": [ { "value": "32", "value_src": "user", "resolve_type": "user", "format": "long", "usage": "all" } ],
@@ -37,7 +37,7 @@
       "model_parameters": {
         "C_VERBOSITY": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_XDEVICEFAMILY": [ { "value": "zynq", "resolve_type": "generated", "usage": "all" } ],
-        "C_IMPLEMENTATION": [ { "value": "0", "resolve_type": "generated", "format": "long", "usage": "all" } ],
+        "C_IMPLEMENTATION": [ { "value": "1", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_A_WIDTH": [ { "value": "32", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_B_WIDTH": [ { "value": "32", "resolve_type": "generated", "format": "long", "usage": "all" } ],
         "C_OUT_WIDTH": [ { "value": "32", "resolve_type": "generated", "format": "long", "usage": "all" } ],

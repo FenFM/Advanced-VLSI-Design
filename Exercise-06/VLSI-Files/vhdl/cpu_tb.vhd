@@ -24,7 +24,6 @@ architecture behav of cpu_tb is
 	
 	
 begin
-
 	vc: process
 	begin
 		clk <= '1';
@@ -68,7 +67,7 @@ begin
 		rst <= '0';
 		
 		for j in 0 to C_IM_MEM_SIZE+1 loop
-		  wait for clk_period;
+		  wait for 1ps;
 		end loop;
 		
 		wait;

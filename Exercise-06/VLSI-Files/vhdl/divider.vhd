@@ -16,8 +16,9 @@ end divider;
 
 
 architecture behavior of divider is
-    signal resa, resb : std_logic_vector( 63 downto 0 );
-    signal vala, valb : std_logic;
+    signal res, resu     : std_logic_vector( 63 downto 0 );
+    signal valid, validu : std_logic;
+    signal zero, zerou   : std_logic_vector(  0 downto 0 );
 
     component signed_divider
         port(
@@ -26,7 +27,8 @@ architecture behavior of divider is
             s_axis_dividend_tdata  : in  std_logic_vector( 31 downto 0 );
             s_axis_dividend_tvalid : in  std_logic;
             m_axis_dout_tdata      : out std_logic_vector( 63 downto 0 );
-            m_axis_dout_tvalid     : out  std_logic
+            m_axis_dout_tuser      : out std_logic_vector(  0 downto 0 );
+            m_axis_dout_tvalid     : out std_logic
         );
     end component;
 
@@ -37,7 +39,8 @@ architecture behavior of divider is
             s_axis_dividend_tdata  : in  std_logic_vector( 31 downto 0 );
             s_axis_dividend_tvalid : in  std_logic;
             m_axis_dout_tdata      : out std_logic_vector( 63 downto 0 );
-            m_axis_dout_tvalid     : out  std_logic
+            m_axis_dout_tuser      : out std_logic_vector(  0 downto 0 );
+            m_axis_dout_tvalid     : out std_logic
         );
     end component;
 
@@ -49,8 +52,9 @@ begin
         s_axis_divisor_tvalid   =>  '1',
         s_axis_dividend_tdata   =>  dividend,
         s_axis_dividend_tvalid  =>  '1',
-        m_axis_dout_tdata       =>  resa
---        m_axis_dout_tvalid       =>  '1'
+        m_axis_dout_tdata       =>  res,
+        m_axis_dout_tuser       =>  zero,
+        m_axis_dout_tvalid      =>  valid
     );
 
     unsigned_divider_ins : unsigned_divider
@@ -59,14 +63,30 @@ begin
         s_axis_divisor_tvalid   =>  '1',
         s_axis_dividend_tdata   =>  dividend,
         s_axis_dividend_tvalid  =>  '1',
-        m_axis_dout_tdata       =>  resb
---        m_axis_dout_tvalid       =>  '1'
+        m_axis_dout_tdata       =>  resu,
+        m_axis_dout_tuser       =>  zerou,
+        m_axis_dout_tvalid      =>  validu
     );
-
-    divs <= resa( 63 downto 32 );
-    rems <= resa( 31 downto  0 );
-    divu <= resb( 63 downto 32 );
-    remu <= resb( 31 downto  0 );
+   
+    
+    process( valid, validu, res, resu )
+    begin
+        if valid = '1'  and zero = "0" then
+            divs <= res( 63 downto 32 );
+            rems <= res( 31 downto  0 );    
+        else
+            divs <= ( others => '0' );
+            rems <= ( others => '0' );
+        end if;
+        
+        if validu = '1' and zerou = "0" then
+            divu <= resu( 63 downto 32 );
+            remu <= resu( 31 downto  0 );
+        else
+            divu <= ( others => '0' );
+            remu <= ( others => '0' );
+        end if;
+    end process;
 
 
 end behavior;

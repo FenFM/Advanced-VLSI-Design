@@ -1,1 +1,0 @@
-counter_32.vhd,vhdl,xil_defaultlib,../../../../../VLSI-Files/ip/counter_32/sim/counter_32.vhd,

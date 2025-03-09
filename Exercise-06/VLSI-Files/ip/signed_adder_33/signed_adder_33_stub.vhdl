@@ -2,10 +2,10 @@
 -- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
--- Date        : Sun Mar  9 14:19:43 2025
+-- Date        : Sun Mar  9 12:24:50 2025
 -- Host        : Crawler-E30 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub
---               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/signed_adder_33/signed_adder_33_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub -rename_top signed_adder_33 -prefix
+--               signed_adder_33_ signed_adder_33_stub.vhdl
 -- Design      : signed_adder_33
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7z010iclg225-1L

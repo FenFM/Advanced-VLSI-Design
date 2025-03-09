@@ -2,10 +2,10 @@
 // Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
-// Date        : Sun Mar  9 14:31:30 2025
+// Date        : Sun Mar  9 13:28:16 2025
 // Host        : Crawler-E30 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub
-//               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/signed_adder/signed_adder_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top signed_adder -prefix
+//               signed_adder_ signed_adder_stub.v
 // Design      : signed_adder
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z010iclg225-1L

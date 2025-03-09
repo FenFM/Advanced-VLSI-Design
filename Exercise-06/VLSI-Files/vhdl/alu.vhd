@@ -23,6 +23,23 @@ end entity alu;
 
 
 architecture behavior of alu is
+    component signed_adder_33
+    port(
+        A : in  std_logic_vector( 31 downto 0 );
+        B : in  std_logic_vector( 31 downto 0 );
+        S : out std_logic_vector( 32 downto 0 )
+    );
+    end component;
+    
+    component signed_adder
+    port(
+        A   : in  std_logic_vector( 31 downto 0 );
+        B   : in  std_logic_vector( 31 downto 0 );
+        ADD : in  std_logic;
+        S   : out std_logic_vector( 31 downto 0 )
+    );    
+    end component;
+
     signal s_result : std_logic_vector( bit_width-1 downto 0 );
 
     signal signed_a, signed_b     : signed( bit_width-1 downto 0 );
@@ -67,13 +84,21 @@ begin
     -- zero flag
     o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
 
-    -- addition and substraction
-    adder_ins : entity work.adder
-    port map(
-        a      =>  i_operand_a,
-        b      =>  i_operand_b,
-        add33  =>  add_res,
-        subs   =>  sub_res
+    -- addition
+    signed_adder_33_ins : signed_adder_33
+    port map( 
+        A  =>  i_operand_a, 
+        B  =>  i_operand_b, 
+        S  =>  add_res 
+    );
+    
+    -- substraction
+    signed_adder_ins : signed_adder
+    port map( 
+        A    =>  i_operand_a, 
+        B    =>  i_operand_b, 
+        ADD  =>  '0', 
+        S    =>  sub_res 
     );
     
     -- overflow flag
@@ -134,11 +159,11 @@ begin
     );
 
 
-    -- division
+    -- division : dividend/divisor  -  rs1/rs2
     divider_ins : entity work.divider
     port map(
-        divisor   =>  i_operand_a,
-        dividend  =>  i_operand_b,
+        divisor   =>  i_operand_b,
+        dividend  =>  i_operand_a,
         divs      =>  div_res,
         rems      =>  rem_res,
         divu      =>  divu_res,

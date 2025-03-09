@@ -2,10 +2,10 @@
 -- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
--- Date        : Sun Mar  9 13:38:30 2025
+-- Date        : Sun Mar  9 10:54:00 2025
 -- Host        : Crawler-E30 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub
---               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/unsigned_divider/unsigned_divider_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub -rename_top unsigned_divider -prefix
+--               unsigned_divider_ unsigned_divider_stub.vhdl
 -- Design      : unsigned_divider
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7z010iclg225-1L
@@ -20,6 +20,7 @@ entity unsigned_divider is
     s_axis_dividend_tvalid : in STD_LOGIC;
     s_axis_dividend_tdata : in STD_LOGIC_VECTOR ( 31 downto 0 );
     m_axis_dout_tvalid : out STD_LOGIC;
+    m_axis_dout_tuser : out STD_LOGIC_VECTOR ( 0 to 0 );
     m_axis_dout_tdata : out STD_LOGIC_VECTOR ( 63 downto 0 )
   );
 
@@ -29,7 +30,7 @@ architecture stub of unsigned_divider is
 attribute syn_black_box : boolean;
 attribute black_box_pad_pin : string;
 attribute syn_black_box of stub : architecture is true;
-attribute black_box_pad_pin of stub : architecture is "s_axis_divisor_tvalid,s_axis_divisor_tdata[31:0],s_axis_dividend_tvalid,s_axis_dividend_tdata[31:0],m_axis_dout_tvalid,m_axis_dout_tdata[63:0]";
+attribute black_box_pad_pin of stub : architecture is "s_axis_divisor_tvalid,s_axis_divisor_tdata[31:0],s_axis_dividend_tvalid,s_axis_dividend_tdata[31:0],m_axis_dout_tvalid,m_axis_dout_tuser[0:0],m_axis_dout_tdata[63:0]";
 attribute x_core_info : string;
 attribute x_core_info of stub : architecture is "div_gen_v5_1_22,Vivado 2024.1";
 begin

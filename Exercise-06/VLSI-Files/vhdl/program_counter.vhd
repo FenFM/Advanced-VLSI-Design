@@ -31,31 +31,77 @@ architecture behavior of program_counter is
     constant jalr_jump  : std_logic_vector( 1 downto 0 ) := "11";  -- JALR jump
 
     type alu is record
-        pc_counter : unsigned( bit_width-1 downto 0 );
+        pc_counter : std_logic_vector( bit_width-1 downto 0 );
     end record;
     signal r, rin : alu;
 
-    signal s_adder_one  : unsigned( bit_width-1 downto 0 );
-    signal s_adder_two  : unsigned( bit_width-1 downto 0 );
+    signal s_adder_one : std_logic_vector( bit_width-1 downto 0 );
+    signal s_adder_two : std_logic_vector( bit_width-1 downto 0 );
+    signal s_pc_offset : std_logic_vector( bit_width-1 downto 0 );
+
+    component unsigned_adder_const_value_2
+        port(
+            A : in  std_logic_vector( 31 downto 0 );
+            S : out std_logic_vector( 31 downto 0 )
+        );
+    end component;
+    
+    component un_signed_adder
+        port(
+            A   : in  std_logic_vector( 31 downto 0 );
+            B   : in  std_logic_vector( 31 downto 0 );
+            ADD : in std_logic;
+            S   : out std_logic_vector( 31 downto 0 )
+        );
+    end component;
+    
+    component unsigned_adder
+        port(
+            A   : in  std_logic_vector( 31 downto 0 );
+            B   : in  std_logic_vector( 31 downto 0 );
+            ADD : in std_logic;
+            S   : out std_logic_vector( 31 downto 0 )
+        );
+    end component;    
 
 
 begin
-    o_pc        <= std_logic_vector( r.pc_counter );
-    o_adder_one <= std_logic_vector( s_adder_one );
-    o_adder_two <= std_logic_vector( s_adder_two );
+    o_pc        <= r.pc_counter;
+    o_adder_one <= s_adder_one;
+    o_adder_two <= s_adder_two;
+    
+    s_pc_offset <= std_logic_vector(to_unsigned(pc_offset, 32));
 
-    s_adder_one <= r.pc_counter + pc_offset;
-    s_adder_two <= unsigned( signed( r.pc_counter ) + signed( i_immediate ) );
+
+    -- r.pc_counter + pc_offset
+    adder_one_ins : unsigned_adder
+    port map(
+        A    =>  r.pc_counter, 
+        B    =>  s_pc_offset,
+        ADD  =>  '1',
+        S    =>  s_adder_one 
+    );
+
+--    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
+
+
+    -- unsigned( r.pc_counter ) + signed( i_immediate )
+    adder_two_ins : un_signed_adder
+    port map(
+        A    =>  r.pc_counter, 
+        B    =>  i_immediate,
+        ADD  =>  '1',
+        S    =>  s_adder_two 
+    );
 
 
     reg : process ( clk, rst )
     begin
         if rst = '1' then
             r.pc_counter <= (others => '0');
-
-        elsif rising_edge( clk ) then
+        end if;
+        if rising_edge( clk ) then
             r <= rin;
-
         end if;
     end process reg;
 
@@ -72,7 +118,7 @@ begin
                                      v.pc_counter := s_adder_two;
                                  end if;
             when uncon_jump  =>  v.pc_counter := s_adder_two;
-            when jalr_jump   =>  v.pc_counter := unsigned(i_jalr_value( bit_width-1 downto 1 ) & '0');
+            when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
             when others      =>  
         end case;
 

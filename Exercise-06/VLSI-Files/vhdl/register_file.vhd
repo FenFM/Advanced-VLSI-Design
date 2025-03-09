@@ -18,6 +18,7 @@ entity register_file is
 
     o_read_b_data : out std_logic_vector( word_size-1 downto 0 );
     i_read_b_addr : in  std_logic_vector( log2(reg_size)-1 downto 0 );
+    i_read_rden   : in  std_logic;
 
     i_write_data  : in  std_logic_vector( word_size-1 downto 0 );
     i_write_addr  : in  std_logic_vector( log2(reg_size)-1 downto 0 );
@@ -36,9 +37,6 @@ architecture behavioral of register_file is
     
 
 begin
-    -- this does not work for some reason, but a workaround was found
---    s_register_data_vec( 0 ) <= ( others => '0' );
-
     s_register_read_a_addr <= to_integer( unsigned( i_read_a_addr ) );
     s_register_read_b_addr <= to_integer( unsigned( i_read_b_addr ) );
     s_register_write_addr  <= to_integer( unsigned( i_write_addr  ) );
@@ -52,7 +50,7 @@ begin
     end process register_in;
     
     
-    register_out : process( s_register_read_a_addr, s_register_read_b_addr, s_register_data_vec )
+    register_out : process( i_read_rden, s_register_read_a_addr, s_register_read_b_addr, s_register_data_vec )
     begin
         if s_register_read_a_addr /= 0 then
             o_read_a_data <= s_register_data_vec( s_register_read_a_addr );

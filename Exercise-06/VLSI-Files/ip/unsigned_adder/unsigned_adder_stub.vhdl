@@ -2,10 +2,10 @@
 -- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
--- Date        : Sun Mar  9 14:32:38 2025
+-- Date        : Sun Mar  9 13:28:16 2025
 -- Host        : Crawler-E30 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub
---               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/unsigned_adder/unsigned_adder_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub -rename_top unsigned_adder -prefix
+--               unsigned_adder_ unsigned_adder_stub.vhdl
 -- Design      : unsigned_adder
 -- Purpose     : Stub declaration of top-level module interface
 -- Device      : xc7z010iclg225-1L

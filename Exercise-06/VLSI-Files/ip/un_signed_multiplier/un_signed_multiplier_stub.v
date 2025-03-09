@@ -2,10 +2,10 @@
 // Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
-// Date        : Sun Mar  9 14:30:34 2025
+// Date        : Sun Mar  9 10:30:28 2025
 // Host        : Crawler-E30 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub
-//               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/un_signed_multiplier/un_signed_multiplier_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top un_signed_multiplier -prefix
+//               un_signed_multiplier_ un_signed_multiplier_stub.v
 // Design      : un_signed_multiplier
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z010iclg225-1L

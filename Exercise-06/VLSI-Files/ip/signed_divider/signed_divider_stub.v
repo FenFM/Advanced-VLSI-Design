@@ -2,10 +2,10 @@
 // Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
-// Date        : Sun Mar  9 13:38:31 2025
+// Date        : Sun Mar  9 10:53:10 2025
 // Host        : Crawler-E30 running 64-bit major release  (build 9200)
-// Command     : write_verilog -force -mode synth_stub
-//               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/signed_divider/signed_divider_stub.v
+// Command     : write_verilog -force -mode synth_stub -rename_top signed_divider -prefix
+//               signed_divider_ signed_divider_stub.v
 // Design      : signed_divider
 // Purpose     : Stub declaration of top-level module interface
 // Device      : xc7z010iclg225-1L
@@ -17,12 +17,13 @@
 (* x_core_info = "div_gen_v5_1_22,Vivado 2024.1" *)
 module signed_divider(s_axis_divisor_tvalid, 
   s_axis_divisor_tdata, s_axis_dividend_tvalid, s_axis_dividend_tdata, 
-  m_axis_dout_tvalid, m_axis_dout_tdata)
-/* synthesis syn_black_box black_box_pad_pin="s_axis_divisor_tvalid,s_axis_divisor_tdata[31:0],s_axis_dividend_tvalid,s_axis_dividend_tdata[31:0],m_axis_dout_tvalid,m_axis_dout_tdata[63:0]" */;
+  m_axis_dout_tvalid, m_axis_dout_tuser, m_axis_dout_tdata)
+/* synthesis syn_black_box black_box_pad_pin="s_axis_divisor_tvalid,s_axis_divisor_tdata[31:0],s_axis_dividend_tvalid,s_axis_dividend_tdata[31:0],m_axis_dout_tvalid,m_axis_dout_tuser[0:0],m_axis_dout_tdata[63:0]" */;
   input s_axis_divisor_tvalid;
   input [31:0]s_axis_divisor_tdata;
   input s_axis_dividend_tvalid;
   input [31:0]s_axis_dividend_tdata;
   output m_axis_dout_tvalid;
+  output [0:0]m_axis_dout_tuser;
   output [63:0]m_axis_dout_tdata;
 endmodule
