@@ -18,7 +18,8 @@ end alu_control_unit;
 
 
 architecture behavior of alu_control_unit is
-    signal s_align : std_logic_vector ( 2 downto 0 );
+    signal s_align     : std_logic_vector ( 2 downto 0 );
+    signal s_align_reg : std_logic_vector ( 2 downto 0 );
 
 
 begin
@@ -114,7 +115,8 @@ begin
     shift_register : process( clk )
     begin
         if rising_edge( clk ) then
-            o_dm_align <= s_align;
+            o_dm_align  <= s_align_reg;
+            s_align_reg <= s_align;
         end if;
     end process shift_register;
 

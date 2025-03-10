@@ -17,8 +17,8 @@ entity program_counter is
         i_mux_signal    : in  std_logic_vector( 1 downto 0 );
         i_immediate     : in  std_logic_vector( bit_width-1 downto 0 );
         i_jalr_value    : in  std_logic_vector( bit_width-1 downto 0 );
-        o_adder_one     : out std_logic_vector( bit_width-1 downto 0 );
-        o_adder_two     : out std_logic_vector( bit_width-1 downto 0 );
+        o_adder_one_reg : out std_logic_vector( bit_width-1 downto 0 );
+        o_adder_two_reg : out std_logic_vector( bit_width-1 downto 0 );
         o_pc            : out std_logic_vector( bit_width-1 downto 0 )
     );
 end entity program_counter;
@@ -39,9 +39,10 @@ architecture behavior of program_counter is
     signal s_adder_two : std_logic_vector( bit_width-1 downto 0 );
     signal s_pc_offset : std_logic_vector( bit_width-1 downto 0 );
     
-    type shift_reg_2 is array( 1 downto 0 ) of std_logic_vector( bit_width-1 downto 0 );
-    signal s_pc_counter_reg : shift_reg_2;
-    signal s_adder_two_reg : std_logic_vector( bit_width-1 downto 0 );
+    type shift_reg_vec is array( 3 downto 0 ) of std_logic_vector( bit_width-1 downto 0 );
+    signal s_pc_counter_reg : shift_reg_vec;
+    signal s_adder_one_reg  : shift_reg_vec;
+    signal s_adder_two_reg  : shift_reg_vec;
     
     component un_signed_adder
         port(
@@ -64,8 +65,8 @@ architecture behavior of program_counter is
 
 begin
     o_pc        <= r.pc_counter;
-    o_adder_one <= s_adder_one;
-    o_adder_two <= s_adder_two;
+    o_adder_one_reg <= s_adder_one_reg( 3 );
+    o_adder_two_reg <= s_adder_two_reg( 1 );
     
     s_pc_offset <= std_logic_vector(to_unsigned(pc_offset, 32));
 
@@ -112,9 +113,9 @@ begin
         case i_mux_signal is
             when no_jump     =>  
             when con_jump    =>  if i_alu_zero_flag = '1' then
-                                     v.pc_counter := s_adder_two_reg;
+                                     v.pc_counter := s_adder_two_reg( 0 );
                                  end if;
-            when uncon_jump  =>  v.pc_counter := s_adder_two_reg;
+            when uncon_jump  =>  v.pc_counter := s_adder_two_reg( 0 );
             when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
             when others      =>  
         end case;
@@ -126,9 +127,9 @@ begin
     shift_register : process( clk )
     begin
         if rising_edge( clk ) then
-            s_pc_counter_reg( 1 ) <= s_pc_counter_reg( 0 );
-            s_pc_counter_reg( 0 ) <= r.pc_counter;
-            s_adder_two_reg       <= s_adder_two;
+            s_pc_counter_reg <= s_pc_counter_reg( s_pc_counter_reg'high-1 downto s_pc_counter_reg'low) & r.pc_counter;
+            s_adder_one_reg  <= s_adder_one_reg( s_adder_one_reg'high-1 downto s_adder_one_reg'low) & s_adder_one;
+            s_adder_two_reg  <= s_adder_two_reg( s_adder_two_reg'high-1 downto s_adder_two_reg'low) & s_adder_two;
         end if;
     end process;
 

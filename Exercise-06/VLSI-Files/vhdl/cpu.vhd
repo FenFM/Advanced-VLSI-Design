@@ -27,11 +27,11 @@ end entity cpu;
 
 architecture structure of cpu is
     -- signals for the program counter
-    signal s_pc_jump      : std_logic;
-    signal s_pc_adder_one : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_adder_two : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_value     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
-    signal s_pc_value_sr  : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_jump          : std_logic;
+    signal s_pc_adder_one_reg : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_adder_two_reg : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_value         : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
+    signal s_pc_value_sr      : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
     -- signals for the alu
     signal s_alu_operand_a     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -67,10 +67,10 @@ architecture structure of cpu is
 
     -- signals for the control unit
     signal s_acu_operation     : std_logic_vector( 1 downto 0 );
-    signal s_alu_mux_src    : std_logic;
-    signal s_alu_passthrough_b   : std_logic;
-    signal s_pc_mux_src  : std_logic_vector( 1 downto 0 );
-    signal s_reg_mux_src : std_logic_vector( 1 downto 0 );
+    signal s_alu_mux_src       : std_logic;
+    signal s_alu_passthrough_b : std_logic;
+    signal s_pc_mux_src        : std_logic_vector( 1 downto 0 );
+    signal s_reg_mux_src       : std_logic_vector( 1 downto 0 );
 
     -- signals for the alu control unit
     signal s_alu_operation         : std_logic_vector( 4 downto 0 );
@@ -78,7 +78,9 @@ architecture structure of cpu is
     signal s_dm_align_output_src   : std_logic_vector( 2 downto 0 );
     
     -- signals for the pipliner
-    signal s_instruction_memory_read_data_reg : std_logic_vector( 31 downto 0 );
+    signal s_instruction_memory_read_data_reg_1 : std_logic_vector( 31 downto 0 );
+    signal s_instruction_memory_read_data_reg_2 : std_logic_vector( 31 downto 0 );
+    signal s_instruction_memory_read_data_reg_4 : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_a_data_reg    : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_b_data_reg_1  : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_b_data_reg_2  : std_logic_vector( 31 downto 0 );
@@ -96,7 +98,7 @@ begin
     port map(
         clk            =>  clk,
         rst            =>  rst,
-        i_instruction  =>  s_instruction_memory_read_data_reg,
+        i_instruction  =>  s_instruction_memory_read_data_reg_1,
         o_alu_op       =>  s_acu_operation,
         o_alu_src      =>  s_alu_mux_src,
         o_alu_pass     =>  s_alu_passthrough_b,
@@ -116,12 +118,12 @@ begin
     port map(
         clk              =>  clk,
         rst              =>  rst,
-        i_alu_zero_flag  =>  s_alu_zero_flag,
+        i_alu_zero_flag  =>  s_alu_zero_flag_reg,
         i_mux_signal     =>  s_pc_mux_src,
         i_immediate      =>  s_immediate_reg_2,
         i_jalr_value     =>  s_alu_result_reg_1,
-        o_adder_one      =>  s_pc_adder_one,
-        o_adder_two      =>  s_pc_adder_two,
+        o_adder_one_reg  =>  s_pc_adder_one_reg,
+        o_adder_two_reg  =>  s_pc_adder_two_reg,
         o_pc             =>  s_pc_value 
     );
     s_pc_value_sr <= std_logic_vector(shift_right(unsigned(s_pc_value), 1));
@@ -141,15 +143,17 @@ begin
         i_read_addr   =>  s_instruction_memory_read_addr,
         i_read_rden   =>  s_instruction_memory_read_rden                                     
     );
-    s_instruction_memory_read_addr <= s_pc_value_sr( log2(C_IM_MEM_SIZE)-1 downto 0 );
-    s_instruction_memory_read_rden <= '1';
-    o_instruction_memory_read_data <= s_instruction_memory_read_data;
+    s_instruction_memory_read_addr     <= s_pc_value_sr( log2(C_IM_MEM_SIZE)-1 downto 0 );
+    s_instruction_memory_read_rden     <= '1';
+    s_instruction_memory_read_data_reg_1 <= s_instruction_memory_read_data;
+    
+    o_instruction_memory_read_data     <= s_instruction_memory_read_data;
  
 
     IG : entity work.imm_gen
     generic map( C_BIT_WIDTH )
     port map(
-        din   =>  s_instruction_memory_read_data_reg,
+        din   =>  s_instruction_memory_read_data_reg_1,
         dout  =>  s_immediate
     );
 
@@ -157,7 +161,7 @@ begin
     ALU_CU : entity work.alu_control_unit
     port map(
         clk                =>  clk,
-        i_instruction      =>  s_instruction_memory_read_data_reg,
+        i_instruction      =>  s_instruction_memory_read_data_reg_2,
         i_alu_instruction  =>  s_acu_operation,
         o_alu_operation    =>  s_alu_operation,
         o_alu_align        =>  s_alu_align_input_a_src,
@@ -223,6 +227,7 @@ begin
         din      =>  s_data_memory_read_data,
         dout     =>  s_data_memory_read_data_aligned
     );
+    s_data_memory_read_data_reg <= s_data_memory_read_data_aligned;
 
 
     RF : entity work.register_file
@@ -240,9 +245,9 @@ begin
         o_read_b_data  =>  s_register_file_read_b_data,
         i_read_b_addr  =>  s_register_file_read_b_addr
     );
-    s_register_file_read_a_addr <= s_instruction_memory_read_data( 19 downto 15 );
-    s_register_file_read_b_addr <= s_instruction_memory_read_data( 24 downto 20 );
-    s_register_file_write_addr  <= s_instruction_memory_read_data( 11 downto  7 );
+    s_register_file_read_a_addr <= s_instruction_memory_read_data_reg_1( 19 downto 15 );
+    s_register_file_read_b_addr <= s_instruction_memory_read_data_reg_1( 24 downto 20 );
+    s_register_file_write_addr  <= s_instruction_memory_read_data_reg_4( 11 downto  7 );
     o_register_file_read_a_data <= s_register_file_read_a_data;
     o_register_file_read_b_data <= s_register_file_read_b_data;
 
@@ -253,8 +258,8 @@ begin
         s      =>  s_reg_mux_src,
         din_a  =>  s_alu_result_reg_2,
         din_b  =>  s_data_memory_read_data_reg,
-        din_c  =>  s_pc_adder_one,
-        din_d  =>  s_pc_adder_two,
+        din_c  =>  s_pc_adder_one_reg,
+        din_d  =>  s_pc_adder_two_reg,
         dout   =>  s_register_write_data
     );
 
@@ -263,29 +268,26 @@ begin
     port map(
         clk  =>  clk,
         rst  =>  rst,
-        -- IF/ID
-        i_instruction_memory_read_data      =>  s_instruction_memory_read_data,
-        o_instruction_memory_read_data_reg  =>  s_instruction_memory_read_data_reg,
-        -- ID/EX 
+      
+        i_instruction_memory_read_data_reg  =>  s_instruction_memory_read_data_reg_1,
         i_register_file_read_a_data         =>  s_register_file_read_a_data,
-        i_register_file_read_b_data         =>  s_register_file_read_b_data,
-        o_register_file_read_a_data_reg     =>  s_register_file_read_a_data_reg,
-        o_register_file_read_b_data_reg_1   =>  s_register_file_read_b_data_reg_1,
-        i_immediate                         =>  s_immediate,
-        o_immediate_reg_1                   =>  s_immediate_reg_1,
-        -- EX/MEM
-        o_immediate_reg_2                   =>  s_immediate_reg_2,
+        i_register_file_read_b_data         =>  s_register_file_read_b_data,       
+        i_immediate                         =>  s_immediate,     
         i_alu_result                        =>  s_alu_result,
         i_alu_zero_flag                     =>  s_alu_zero_flag,
         i_alu_overflow_flag                 =>  s_alu_overflow_flag,
-        o_alu_result_reg_1                  =>  s_alu_result_reg_1,
-        o_alu_zero_flag_reg                 =>  s_alu_zero_flag_reg,
-        o_alu_overflow_flag_reg             =>  s_alu_overflow_flag_reg,
-        o_register_file_read_b_data_reg_2   =>  s_register_file_read_b_data_reg_2,
-        -- MEM/WB
-        i_data_memory_read_data             =>  s_data_memory_read_data_aligned,
-        o_data_memory_read_data_reg         =>  s_data_memory_read_data_reg,
-        o_alu_result_reg_2                  =>  s_alu_result_reg_2
+        
+        o_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
+        o_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
+        o_register_file_read_a_data_reg       =>  s_register_file_read_a_data_reg,
+        o_register_file_read_b_data_reg_1     =>  s_register_file_read_b_data_reg_1,
+        o_register_file_read_b_data_reg_2     =>  s_register_file_read_b_data_reg_2,
+        o_immediate_reg_1                     =>  s_immediate_reg_1,
+        o_immediate_reg_2                     =>  s_immediate_reg_2,
+        o_alu_result_reg_1                    =>  s_alu_result_reg_1,
+        o_alu_result_reg_2                    =>  s_alu_result_reg_2,
+        o_alu_zero_flag_reg                   =>  s_alu_zero_flag_reg,
+        o_alu_overflow_flag_reg               =>  s_alu_overflow_flag_reg
     );
 
 
