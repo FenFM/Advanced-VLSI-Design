@@ -5,8 +5,8 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity divider is
     port(
-        divisor  : in  std_logic_vector( 31 downto 0 );
         dividend : in  std_logic_vector( 31 downto 0 );
+        divisor  : in  std_logic_vector( 31 downto 0 );
         divs     : out std_logic_vector( 31 downto 0 );
         rems     : out std_logic_vector( 31 downto 0 );
         divu     : out std_logic_vector( 31 downto 0 );
@@ -20,6 +20,7 @@ architecture behavior of divider is
     signal valid, validu : std_logic;
     signal zero, zerou   : std_logic_vector(  0 downto 0 );
 
+    -- dividend / divisor
     component signed_divider
         port(
             s_axis_divisor_tdata   : in  std_logic_vector( 31 downto 0 );

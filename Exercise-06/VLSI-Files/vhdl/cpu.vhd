@@ -26,21 +26,19 @@ end entity cpu;
 
 
 architecture structure of cpu is
-    -- signal for the program counter
+    -- signals for the program counter
     signal s_pc_jump      : std_logic;
     signal s_pc_adder_one : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_pc_adder_two : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_pc_value     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_pc_value_sr  : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
-    
     -- signals for the alu
     signal s_alu_operand_a     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_operand_b     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_result        : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_alu_zero_flag     : std_logic;
     signal s_alu_overflow_flag : std_logic;
-
     signal s_inverse_zero      : std_logic;
     signal s_immediate         : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
@@ -52,7 +50,7 @@ architecture structure of cpu is
     -- signals for the data memory    
     signal s_data_memory_write_data : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
     signal s_data_memory_write_addr : std_logic_vector( log2(C_DM_MEM_SIZE)-1 downto 0 );
-    signal s_data_memory_write_rden : std_logic;    
+    signal s_data_memory_write_wren : std_logic;   
     signal s_data_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
     signal s_data_memory_read_data_aligned : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
     signal s_data_memory_read_addr  : std_logic_vector( log2(C_DM_MEM_SIZE)-1 downto 0 );
@@ -63,35 +61,50 @@ architecture structure of cpu is
     signal s_register_file_read_b_data : std_logic_vector( C_REG_SIZE-1 downto 0 );
     signal s_register_write_data       : std_logic_vector( C_REG_SIZE-1 downto 0 );
     signal s_register_file_write_addr  : std_logic_vector( 4 downto 0 );
+    signal s_register_file_write_wren  : std_logic;
     signal s_register_file_read_a_addr : std_logic_vector( 4 downto 0 );
     signal s_register_file_read_b_addr : std_logic_vector( 4 downto 0 );
 
     -- signals for the control unit
-    signal s_cu_alu_op     : std_logic_vector( 1 downto 0 );
-    signal s_cu_alu_src    : std_logic;
-    signal s_cu_alu_pass   : std_logic;
-    signal s_cu_reg_wren   : std_logic;
-    signal s_cu_mem_wren   : std_logic;
-    signal s_cu_mem_rden   : std_logic;
-    signal s_cu_mux_to_pc  : std_logic_vector( 1 downto 0 );
-    signal s_cu_mux_to_reg : std_logic_vector( 1 downto 0 );
+    signal s_acu_operation     : std_logic_vector( 1 downto 0 );
+    signal s_alu_mux_src    : std_logic;
+    signal s_alu_passthrough_b   : std_logic;
+    signal s_pc_mux_src  : std_logic_vector( 1 downto 0 );
+    signal s_reg_mux_src : std_logic_vector( 1 downto 0 );
 
-    signal s_alu_operation : std_logic_vector( 4 downto 0 );
-    signal s_cu_alu_align  : std_logic_vector( 2 downto 0 );
+    -- signals for the alu control unit
+    signal s_alu_operation         : std_logic_vector( 4 downto 0 );
+    signal s_alu_align_input_a_src : std_logic_vector( 2 downto 0 );
+    signal s_dm_align_output_src   : std_logic_vector( 2 downto 0 );
+    
+    -- signals for the pipliner
+    signal s_instruction_memory_read_data_reg : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_a_data_reg    : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_b_data_reg_1  : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_b_data_reg_2  : std_logic_vector( 31 downto 0 );
+    signal s_immediate_reg_1                  : std_logic_vector( 31 downto 0 );
+    signal s_immediate_reg_2                  : std_logic_vector( 31 downto 0 );
+    signal s_alu_result_reg_1                 : std_logic_vector( 31 downto 0 );
+    signal s_alu_result_reg_2                 : std_logic_vector( 31 downto 0 );
+    signal s_alu_zero_flag_reg                : std_logic;
+    signal s_alu_overflow_flag_reg            : std_logic;
+    signal s_data_memory_read_data_reg        : std_logic_vector( 31 downto 0 );
 
 
 begin
     CU : entity work.control_unit
     port map(
-        i_instruction  =>  s_instruction_memory_read_data,
-        o_alu_op       =>  s_cu_alu_op,
-        o_alu_src      =>  s_cu_alu_src,
-        o_alu_pass     =>  s_cu_alu_pass,
-        o_reg_wren     =>  s_cu_reg_wren,
-        o_mem_wren     =>  s_cu_mem_wren,
-        o_mem_rden     =>  s_cu_mem_rden,
-        o_mux_to_pc    =>  s_cu_mux_to_pc,
-        o_mux_to_reg   =>  s_cu_mux_to_reg
+        clk            =>  clk,
+        rst            =>  rst,
+        i_instruction  =>  s_instruction_memory_read_data_reg,
+        o_alu_op       =>  s_acu_operation,
+        o_alu_src      =>  s_alu_mux_src,
+        o_alu_pass     =>  s_alu_passthrough_b,
+        o_reg_wren     =>  s_register_file_write_wren,
+        o_mem_wren     =>  s_data_memory_write_wren,
+        o_mem_rden     =>  s_data_memory_read_rden,
+        o_mux_to_pc    =>  s_pc_mux_src,
+        o_mux_to_reg   =>  s_reg_mux_src
     );
 
 
@@ -104,9 +117,9 @@ begin
         clk              =>  clk,
         rst              =>  rst,
         i_alu_zero_flag  =>  s_alu_zero_flag,
-        i_mux_signal     =>  s_cu_mux_to_pc,
-        i_immediate      =>  s_immediate,
-        i_jalr_value     =>  s_alu_result,
+        i_mux_signal     =>  s_pc_mux_src,
+        i_immediate      =>  s_immediate_reg_2,
+        i_jalr_value     =>  s_alu_result_reg_1,
         o_adder_one      =>  s_pc_adder_one,
         o_adder_two      =>  s_pc_adder_two,
         o_pc             =>  s_pc_value 
@@ -133,21 +146,22 @@ begin
     o_instruction_memory_read_data <= s_instruction_memory_read_data;
  
 
-     
     IG : entity work.imm_gen
     generic map( C_BIT_WIDTH )
     port map(
-        din   =>  s_instruction_memory_read_data,
+        din   =>  s_instruction_memory_read_data_reg,
         dout  =>  s_immediate
     );
 
 
     ALU_CU : entity work.alu_control_unit
     port map(
-        i_instruction      =>  s_instruction_memory_read_data,
-        i_alu_instruction  =>  s_cu_alu_op,
+        clk                =>  clk,
+        i_instruction      =>  s_instruction_memory_read_data_reg,
+        i_alu_instruction  =>  s_acu_operation,
         o_alu_operation    =>  s_alu_operation,
-        o_store_align      =>  s_cu_alu_align,
+        o_alu_align        =>  s_alu_align_input_a_src,
+        o_dm_align         =>  s_dm_align_output_src,
         o_inverse_zero     =>  s_inverse_zero
     );
 
@@ -155,8 +169,8 @@ begin
     ALU_IN : entity work.store_align
     generic map( C_BIT_WIDTH )
     port map(
-        control  =>  s_cu_alu_align,
-        din      =>  s_register_file_read_a_data,
+        control  =>  s_alu_align_input_a_src,
+        din      =>  s_register_file_read_a_data_reg,
         dout     =>  s_alu_operand_a
     );
 
@@ -168,7 +182,7 @@ begin
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_alu_operation,
         i_inverse_zero   =>  s_inverse_zero,
-        i_alu_pass       =>  s_cu_alu_pass,
+        i_alu_pass       =>  s_alu_passthrough_b,
         o_result         =>  s_alu_result,
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag
@@ -178,9 +192,9 @@ begin
     ALU_MUX : entity work.mux_switch_2
     generic map( bit_width  =>  C_BIT_WIDTH )
     port map (
-        s  =>  s_cu_alu_src,
-        a  =>  s_register_file_read_b_data,
-        b  =>  s_immediate,
+        s  =>  s_alu_mux_src,
+        a  =>  s_register_file_read_b_data_reg_1,
+        b  =>  s_immediate_reg_1,
         o  =>  s_alu_operand_b
     );
 
@@ -192,20 +206,20 @@ begin
     )
     port map (
         clk           =>  clk,
-        i_write_data  =>  s_register_file_read_b_data,        
-        i_write_addr  =>  s_alu_result( log2(C_DM_MEM_SIZE)-1 downto 0 ), 
-        i_write_wren  =>  s_cu_mem_wren,
+        i_write_data  =>  s_register_file_read_b_data_reg_2,        
+        i_write_addr  =>  s_alu_result_reg_1( log2(C_DM_MEM_SIZE)-1 downto 0 ), 
+        i_write_wren  =>  s_data_memory_write_wren,
         o_read_data   =>  s_data_memory_read_data,       
-        i_read_addr   =>  s_alu_result( log2(C_DM_MEM_SIZE)-1 downto 0 ),
-        i_read_rden   =>  s_cu_mem_rden
+        i_read_addr   =>  s_alu_result_reg_1( log2(C_DM_MEM_SIZE)-1 downto 0 ),
+        i_read_rden   =>  s_data_memory_read_rden
     );
     o_data_memory_read_data <= s_data_memory_read_data;
 
 
-    DM_IN : entity work.store_align
+    DM_OUT : entity work.store_align
     generic map( C_BIT_WIDTH )
     port map(
-        control  =>  s_cu_alu_align,
+        control  =>  s_dm_align_output_src,
         din      =>  s_data_memory_read_data,
         dout     =>  s_data_memory_read_data_aligned
     );
@@ -220,7 +234,7 @@ begin
         clk            =>  clk,
         i_write_data   =>  s_register_write_data,
         i_write_addr   =>  s_register_file_write_addr,
-        i_write_wren   =>  s_cu_reg_wren,
+        i_write_wren   =>  s_register_file_write_wren,
         o_read_a_data  =>  s_register_file_read_a_data,
         i_read_a_addr  =>  s_register_file_read_a_addr,        
         o_read_b_data  =>  s_register_file_read_b_data,
@@ -236,12 +250,42 @@ begin
     REG_MUX : entity work.mux_register
     generic map( C_BIT_WIDTH )
     port map(
-        s      =>  s_cu_mux_to_reg,
-        din_a  =>  s_alu_result,
-        din_b  =>  s_data_memory_read_data_aligned,
+        s      =>  s_reg_mux_src,
+        din_a  =>  s_alu_result_reg_2,
+        din_b  =>  s_data_memory_read_data_reg,
         din_c  =>  s_pc_adder_one,
         din_d  =>  s_pc_adder_two,
         dout   =>  s_register_write_data
+    );
+
+
+    PIPE : entity work.pipeliner
+    port map(
+        clk  =>  clk,
+        rst  =>  rst,
+        -- IF/ID
+        i_instruction_memory_read_data      =>  s_instruction_memory_read_data,
+        o_instruction_memory_read_data_reg  =>  s_instruction_memory_read_data_reg,
+        -- ID/EX 
+        i_register_file_read_a_data         =>  s_register_file_read_a_data,
+        i_register_file_read_b_data         =>  s_register_file_read_b_data,
+        o_register_file_read_a_data_reg     =>  s_register_file_read_a_data_reg,
+        o_register_file_read_b_data_reg_1   =>  s_register_file_read_b_data_reg_1,
+        i_immediate                         =>  s_immediate,
+        o_immediate_reg_1                   =>  s_immediate_reg_1,
+        -- EX/MEM
+        o_immediate_reg_2                   =>  s_immediate_reg_2,
+        i_alu_result                        =>  s_alu_result,
+        i_alu_zero_flag                     =>  s_alu_zero_flag,
+        i_alu_overflow_flag                 =>  s_alu_overflow_flag,
+        o_alu_result_reg_1                  =>  s_alu_result_reg_1,
+        o_alu_zero_flag_reg                 =>  s_alu_zero_flag_reg,
+        o_alu_overflow_flag_reg             =>  s_alu_overflow_flag_reg,
+        o_register_file_read_b_data_reg_2   =>  s_register_file_read_b_data_reg_2,
+        -- MEM/WB
+        i_data_memory_read_data             =>  s_data_memory_read_data_aligned,
+        o_data_memory_read_data_reg         =>  s_data_memory_read_data_reg,
+        o_alu_result_reg_2                  =>  s_alu_result_reg_2
     );
 
 

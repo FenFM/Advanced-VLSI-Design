@@ -38,13 +38,10 @@ architecture behavior of program_counter is
     signal s_adder_one : std_logic_vector( bit_width-1 downto 0 );
     signal s_adder_two : std_logic_vector( bit_width-1 downto 0 );
     signal s_pc_offset : std_logic_vector( bit_width-1 downto 0 );
-
-    component unsigned_adder_const_value_2
-        port(
-            A : in  std_logic_vector( 31 downto 0 );
-            S : out std_logic_vector( 31 downto 0 )
-        );
-    end component;
+    
+    type shift_reg_2 is array( 1 downto 0 ) of std_logic_vector( bit_width-1 downto 0 );
+    signal s_pc_counter_reg : shift_reg_2;
+    signal s_adder_two_reg : std_logic_vector( bit_width-1 downto 0 );
     
     component un_signed_adder
         port(
@@ -73,26 +70,26 @@ begin
     s_pc_offset <= std_logic_vector(to_unsigned(pc_offset, 32));
 
 
-    -- r.pc_counter + pc_offset
-    adder_one_ins : unsigned_adder
-    port map(
-        A    =>  r.pc_counter, 
-        B    =>  s_pc_offset,
-        ADD  =>  '1',
-        S    =>  s_adder_one 
-    );
+--    -- r.pc_counter + pc_offset
+--    adder_one_ins : unsigned_adder
+--    port map(
+--        A    =>  r.pc_counter, 
+--        B    =>  s_pc_offset,
+--        ADD  =>  '1',
+--        S    =>  s_adder_one 
+--    );
 
---    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
+--    -- unsigned( r.pc_counter ) + signed( i_immediate )
+--    adder_two_ins : un_signed_adder
+--    port map(
+--        A    =>  i_immediate, 
+--        B    =>  s_pc_counter_reg(1),
+--        ADD  =>  '1',
+--        S    =>  s_adder_two 
+--    );
 
-
-    -- unsigned( r.pc_counter ) + signed( i_immediate )
-    adder_two_ins : un_signed_adder
-    port map(
-        A    =>  r.pc_counter, 
-        B    =>  i_immediate,
-        ADD  =>  '1',
-        S    =>  s_adder_two 
-    );
+    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
+    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
 
 
     reg : process ( clk, rst )
@@ -115,15 +112,25 @@ begin
         case i_mux_signal is
             when no_jump     =>  
             when con_jump    =>  if i_alu_zero_flag = '1' then
-                                     v.pc_counter := s_adder_two;
+                                     v.pc_counter := s_adder_two_reg;
                                  end if;
-            when uncon_jump  =>  v.pc_counter := s_adder_two;
+            when uncon_jump  =>  v.pc_counter := s_adder_two_reg;
             when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
             when others      =>  
         end case;
 
         rin <= v;
     end process comb;
+    
+    
+    shift_register : process( clk )
+    begin
+        if rising_edge( clk ) then
+            s_pc_counter_reg( 1 ) <= s_pc_counter_reg( 0 );
+            s_pc_counter_reg( 0 ) <= r.pc_counter;
+            s_adder_two_reg       <= s_adder_two;
+        end if;
+    end process;
 
 
 end behavior;

@@ -6,23 +6,28 @@ use work.isa_riscv.ALL;
 
 entity alu_control_unit is
     port(
+        clk               : in  std_logic;
         i_instruction     : in  std_logic_vector( 31 downto 0 );
         i_alu_instruction : in  std_logic_vector(  1 downto 0 );
         o_alu_operation   : out std_logic_vector(  4 downto 0 );
-        o_store_align     : out std_logic_vector(  2 downto 0 );
+        o_alu_align       : out std_logic_vector(  2 downto 0 );
+        o_dm_align        : out std_logic_vector(  2 downto 0 );
         o_inverse_zero    : out std_logic
     );
 end alu_control_unit;
 
 
 architecture behavior of alu_control_unit is
+    signal s_align : std_logic_vector ( 2 downto 0 );
 
 
 begin
+    o_alu_align <= s_align;
+
     ALU_OP : process( i_instruction, i_alu_instruction )
     begin
         o_inverse_zero <= '0';
-        o_store_align  <= "010";
+        s_align        <= "010"; 
 
         case i_alu_instruction is
             when "10" =>  -- R-type operations
@@ -63,7 +68,7 @@ begin
 
             when "00" =>  -- LW and SW
                 o_alu_operation <= opcode_ADD;
-                o_store_align   <= i_instruction( 14 downto 12 );
+                s_align         <= i_instruction( 14 downto 12 );
 
 
             when "01" =>  -- BRANCH
@@ -104,5 +109,13 @@ begin
                 
         end case;
     end process ALU_OP;
+    
+    
+    shift_register : process( clk )
+    begin
+        if rising_edge( clk ) then
+            o_dm_align <= s_align;
+        end if;
+    end process shift_register;
 
 end behavior;
