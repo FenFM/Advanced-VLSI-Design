@@ -16,6 +16,7 @@ entity control_unit is
         o_alu_src      : out std_logic;
         o_alu_pass     : out std_logic;
         o_reg_wren     : out std_logic;
+        o_reg_wren_fw  : out std_logic;
         o_mem_wren     : out std_logic;
         o_mem_rden     : out std_logic;
         o_mux_to_reg   : out std_logic_vector( 1 downto 0 );
@@ -153,14 +154,15 @@ begin
 
     
     -- wire output to corresponding register
-    o_alu_op     <= s_alu_op_reg  ( 0 );
-    o_alu_src    <= s_alu_src_reg ( 0 );
-    o_alu_pass   <= s_alu_pass_reg( 0 );
-    o_reg_wren   <= s_reg_wren_reg( 2 );
-    o_mem_wren   <= s_mem_wren_reg( 1 );
-    o_mem_rden   <= s_mem_rden_reg( 1 );
-    o_mux_to_reg <= s_mux_to_reg_reg( 2 );
-    o_mux_to_pc  <= s_mux_to_pc_reg ( 1 );
+    o_alu_op      <= s_alu_op_reg  ( 0 );
+    o_alu_src     <= s_alu_src_reg ( 0 );
+    o_alu_pass    <= s_alu_pass_reg( 0 );
+    o_reg_wren    <= s_reg_wren_reg( 2 );
+    o_reg_wren_fw <= s_reg_wren_reg( 1 );
+    o_mem_wren    <= s_mem_wren_reg( 1 );
+    o_mem_rden    <= s_mem_rden_reg( 1 );
+    o_mux_to_reg  <= s_mux_to_reg_reg( 2 );
+    o_mux_to_pc   <= s_mux_to_pc_reg ( 1 );
 
 
 end behavior;

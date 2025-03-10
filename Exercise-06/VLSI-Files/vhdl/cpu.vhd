@@ -57,13 +57,14 @@ architecture structure of cpu is
     signal s_data_memory_read_rden  : std_logic; 
 
     -- signals for the register file
-    signal s_register_file_read_a_data : std_logic_vector( C_REG_SIZE-1 downto 0 );
-    signal s_register_file_read_b_data : std_logic_vector( C_REG_SIZE-1 downto 0 );
-    signal s_register_write_data       : std_logic_vector( C_REG_SIZE-1 downto 0 );
-    signal s_register_file_write_addr  : std_logic_vector( 4 downto 0 );
-    signal s_register_file_write_wren  : std_logic;
-    signal s_register_file_read_a_addr : std_logic_vector( 4 downto 0 );
-    signal s_register_file_read_b_addr : std_logic_vector( 4 downto 0 );
+    signal s_register_file_read_a_data  : std_logic_vector( C_REG_SIZE-1 downto 0 );
+    signal s_register_file_read_b_data  : std_logic_vector( C_REG_SIZE-1 downto 0 );
+    signal s_register_write_data        : std_logic_vector( C_REG_SIZE-1 downto 0 );
+    signal s_register_file_write_addr   : std_logic_vector( 4 downto 0 );
+    signal s_register_file_write_wren_2 : std_logic;
+    signal s_register_file_write_wren_3 : std_logic;
+    signal s_register_file_read_a_addr  : std_logic_vector( 4 downto 0 );
+    signal s_register_file_read_b_addr  : std_logic_vector( 4 downto 0 );
 
     -- signals for the control unit
     signal s_acu_operation     : std_logic_vector( 1 downto 0 );
@@ -108,7 +109,8 @@ begin
         o_alu_op       =>  s_acu_operation,
         o_alu_src      =>  s_alu_mux_b_src,
         o_alu_pass     =>  s_alu_passthrough_b,
-        o_reg_wren     =>  s_register_file_write_wren,
+        o_reg_wren     =>  s_register_file_write_wren_3,
+        o_reg_wren_fw  =>  s_register_file_write_wren_2,
         o_mem_wren     =>  s_data_memory_write_wren,
         o_mem_rden     =>  s_data_memory_read_rden,
         o_mux_to_pc    =>  s_pc_mux_src,
@@ -235,6 +237,8 @@ begin
         i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
         i_instruction_memory_read_data_reg_3  =>  s_instruction_memory_read_data_reg_3,
         i_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
+        i_reg_wren_reg_2  =>  s_register_file_write_wren_2,
+        i_reg_wren_reg_3  =>  s_register_file_write_wren_3,
         o_mux_a_src  =>  s_forwarding_mux_a_src,
         o_mux_b_src  =>  s_forwarding_mux_b_src
     );
@@ -275,7 +279,7 @@ begin
         clk            =>  clk,
         i_write_data   =>  s_register_write_data,
         i_write_addr   =>  s_register_file_write_addr,
-        i_write_wren   =>  s_register_file_write_wren,
+        i_write_wren   =>  s_register_file_write_wren_3,
         o_read_a_data  =>  s_register_file_read_a_data,
         i_read_a_addr  =>  s_register_file_read_a_addr,        
         o_read_b_data  =>  s_register_file_read_b_data,
