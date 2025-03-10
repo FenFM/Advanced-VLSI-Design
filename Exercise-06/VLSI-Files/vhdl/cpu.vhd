@@ -67,7 +67,7 @@ architecture structure of cpu is
 
     -- signals for the control unit
     signal s_acu_operation     : std_logic_vector( 1 downto 0 );
-    signal s_alu_mux_src       : std_logic;
+    signal s_alu_mux_b_src     : std_logic;
     signal s_alu_passthrough_b : std_logic;
     signal s_pc_mux_src        : std_logic_vector( 1 downto 0 );
     signal s_reg_mux_src       : std_logic_vector( 1 downto 0 );
@@ -80,17 +80,23 @@ architecture structure of cpu is
     -- signals for the pipliner
     signal s_instruction_memory_read_data_reg_1 : std_logic_vector( 31 downto 0 );
     signal s_instruction_memory_read_data_reg_2 : std_logic_vector( 31 downto 0 );
+    signal s_instruction_memory_read_data_reg_3 : std_logic_vector( 31 downto 0 );
     signal s_instruction_memory_read_data_reg_4 : std_logic_vector( 31 downto 0 );
-    signal s_register_file_read_a_data_reg    : std_logic_vector( 31 downto 0 );
-    signal s_register_file_read_b_data_reg_1  : std_logic_vector( 31 downto 0 );
-    signal s_register_file_read_b_data_reg_2  : std_logic_vector( 31 downto 0 );
-    signal s_immediate_reg_1                  : std_logic_vector( 31 downto 0 );
-    signal s_immediate_reg_2                  : std_logic_vector( 31 downto 0 );
-    signal s_alu_result_reg_1                 : std_logic_vector( 31 downto 0 );
-    signal s_alu_result_reg_2                 : std_logic_vector( 31 downto 0 );
-    signal s_alu_zero_flag_reg                : std_logic;
-    signal s_alu_overflow_flag_reg            : std_logic;
-    signal s_data_memory_read_data_reg        : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_a_data_reg   : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_b_data_reg_1 : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_b_data_reg_2 : std_logic_vector( 31 downto 0 );
+    signal s_immediate_reg             : std_logic_vector( 31 downto 0 );
+    signal s_alu_result_reg_1          : std_logic_vector( 31 downto 0 );
+    signal s_alu_result_reg_2          : std_logic_vector( 31 downto 0 );
+    signal s_alu_zero_flag_reg         : std_logic;
+    signal s_alu_overflow_flag_reg     : std_logic;
+    signal s_data_memory_read_data_reg : std_logic_vector( 31 downto 0 );
+    
+    -- signals for the forwarding unit
+    signal s_forwarding_mux_a_src : std_logic_vector( 1 downto 0 );
+    signal s_forwarding_mux_b_src : std_logic_vector( 1 downto 0 );
+    signal s_alu_forwarding_mux_a_data : std_logic_vector( 31 downto 0 );
+    signal s_alu_forwarding_mux_b_data : std_logic_vector( 31 downto 0 );
 
 
 begin
@@ -100,7 +106,7 @@ begin
         rst            =>  rst,
         i_instruction  =>  s_instruction_memory_read_data_reg_1,
         o_alu_op       =>  s_acu_operation,
-        o_alu_src      =>  s_alu_mux_src,
+        o_alu_src      =>  s_alu_mux_b_src,
         o_alu_pass     =>  s_alu_passthrough_b,
         o_reg_wren     =>  s_register_file_write_wren,
         o_mem_wren     =>  s_data_memory_write_wren,
@@ -120,7 +126,7 @@ begin
         rst              =>  rst,
         i_alu_zero_flag  =>  s_alu_zero_flag_reg,
         i_mux_signal     =>  s_pc_mux_src,
-        i_immediate      =>  s_immediate_reg_2,
+        i_immediate      =>  s_immediate_reg,
         i_jalr_value     =>  s_alu_result_reg_1,
         o_adder_one_reg  =>  s_pc_adder_one_reg,
         o_adder_two_reg  =>  s_pc_adder_two_reg,
@@ -169,16 +175,46 @@ begin
         o_inverse_zero     =>  s_inverse_zero
     );
 
-
-    ALU_IN : entity work.store_align
+   
+    ALU_MUX_FORW_A : entity work.mux_switch_4
+    generic map( C_BIT_WIDTH )
+    port map(
+        s  =>  s_forwarding_mux_a_src,
+        a  =>  s_register_file_read_a_data_reg,
+        b  =>  s_register_write_data,
+        c  =>  s_alu_result_reg_1,
+        d  =>  x"--------",
+        o  =>  s_alu_forwarding_mux_a_data
+    );
+    
+    ALU_MUX_FORW_B : entity work.mux_switch_4
+    generic map( C_BIT_WIDTH )
+    port map(
+        s  =>  s_forwarding_mux_b_src,
+        a  =>  s_register_file_read_b_data_reg_1,
+        b  =>  s_register_write_data,
+        c  =>  s_alu_result_reg_1,
+        d  =>  x"--------",
+        o  =>  s_alu_forwarding_mux_b_data
+    );
+     
+    ALU_IN_A : entity work.store_align
     generic map( C_BIT_WIDTH )
     port map(
         control  =>  s_alu_align_input_a_src,
-        din      =>  s_register_file_read_a_data_reg,
+        din      =>  s_alu_forwarding_mux_a_data,
         dout     =>  s_alu_operand_a
     );
-
-
+    
+    ALU_MUX_B : entity work.mux_switch_2
+    generic map( C_BIT_WIDTH )
+    port map (
+        s  =>  s_alu_mux_b_src,
+        a  =>  s_alu_forwarding_mux_b_data,
+        b  =>  s_immediate_reg,
+        o  =>  s_alu_operand_b
+    );
+    
     ALU : entity work.alu
     generic map ( C_BIT_WIDTH )
     port map (
@@ -191,15 +227,16 @@ begin
         o_zero_flag      =>  s_alu_zero_flag,
         o_overflow_flag  =>  s_alu_overflow_flag
     );
-
-
-    ALU_MUX : entity work.mux_switch_2
-    generic map( bit_width  =>  C_BIT_WIDTH )
-    port map (
-        s  =>  s_alu_mux_src,
-        a  =>  s_register_file_read_b_data_reg_1,
-        b  =>  s_immediate_reg_1,
-        o  =>  s_alu_operand_b
+    
+    
+    FORW_UNIT : entity work.forwarding_unit
+    generic map( C_REG_SIZE )
+    port map(
+        i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
+        i_instruction_memory_read_data_reg_3  =>  s_instruction_memory_read_data_reg_3,
+        i_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
+        o_mux_a_src  =>  s_forwarding_mux_a_src,
+        o_mux_b_src  =>  s_forwarding_mux_b_src
     );
 
 
@@ -218,7 +255,6 @@ begin
         i_read_rden   =>  s_data_memory_read_rden
     );
     o_data_memory_read_data <= s_data_memory_read_data;
-
 
     DM_OUT : entity work.store_align
     generic map( C_BIT_WIDTH )
@@ -251,16 +287,15 @@ begin
     o_register_file_read_a_data <= s_register_file_read_a_data;
     o_register_file_read_b_data <= s_register_file_read_b_data;
 
-
-    REG_MUX : entity work.mux_register
+    REG_MUX : entity work.mux_switch_4
     generic map( C_BIT_WIDTH )
     port map(
-        s      =>  s_reg_mux_src,
-        din_a  =>  s_alu_result_reg_2,
-        din_b  =>  s_data_memory_read_data_reg,
-        din_c  =>  s_pc_adder_one_reg,
-        din_d  =>  s_pc_adder_two_reg,
-        dout   =>  s_register_write_data
+        s  =>  s_reg_mux_src,
+        a  =>  s_alu_result_reg_2,           -- alu         to reg
+        b  =>  s_data_memory_read_data_reg,  -- data memory to reg
+        c  =>  s_pc_adder_one_reg,           -- pc + 4      to reg
+        d  =>  s_pc_adder_two_reg,           -- pc + imm    to reg
+        o  =>  s_register_write_data
     );
 
 
@@ -278,12 +313,12 @@ begin
         i_alu_overflow_flag                 =>  s_alu_overflow_flag,
         
         o_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
+        o_instruction_memory_read_data_reg_3  =>  s_instruction_memory_read_data_reg_3,
         o_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
         o_register_file_read_a_data_reg       =>  s_register_file_read_a_data_reg,
         o_register_file_read_b_data_reg_1     =>  s_register_file_read_b_data_reg_1,
         o_register_file_read_b_data_reg_2     =>  s_register_file_read_b_data_reg_2,
-        o_immediate_reg_1                     =>  s_immediate_reg_1,
-        o_immediate_reg_2                     =>  s_immediate_reg_2,
+        o_immediate_reg                       =>  s_immediate_reg,
         o_alu_result_reg_1                    =>  s_alu_result_reg_1,
         o_alu_result_reg_2                    =>  s_alu_result_reg_2,
         o_alu_zero_flag_reg                   =>  s_alu_zero_flag_reg,

@@ -1,14 +1,13 @@
 library IEEE;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
-
 use work.misc.ALL;
 
 
 entity register_file is
     generic(
-        constant word_size : integer := 8;  -- bit size of each register
-        constant reg_size  : integer := 32  -- # of register
+        word_size : integer := 8;  -- bit size of each register
+        reg_size  : integer := 32  -- # of register
     );
     port(
     clk : in  std_logic;

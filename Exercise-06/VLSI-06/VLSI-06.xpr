@@ -59,7 +59,7 @@
     <Option Name="IPUserFilesDir" Val="$PIPUSERFILESDIR"/>
     <Option Name="IPStaticSourceDir" Val="$PIPUSERFILESDIR/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
-    <Option Name="WTXSimLaunchSim" Val="423"/>
+    <Option Name="WTXSimLaunchSim" Val="431"/>
     <Option Name="WTModelSimLaunchSim" Val="0"/>
     <Option Name="WTQuestaLaunchSim" Val="0"/>
     <Option Name="WTIesLaunchSim" Val="0"/>
@@ -159,12 +159,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../VLSI-Files/vhdl/register_file.vhd">
-        <FileInfo>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PPRDIR/../VLSI-Files/vhdl/store_align.vhd">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -195,13 +189,25 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PPRDIR/../VLSI-Files/vhdl/mux_switch_4.vhd">
+        <FileInfo SFType="VHDL2008">
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PPRDIR/../VLSI-Files/vhdl/mux_switch.vhd">
         <FileInfo SFType="VHDL2008">
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../VLSI-Files/vhdl/mux_register.vhd">
+      <File Path="$PPRDIR/../VLSI-Files/vhdl/forwarding_unit.vhd">
+        <FileInfo SFType="VHDL2008">
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../VLSI-Files/vhdl/register_file.vhd">
         <FileInfo SFType="VHDL2008">
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -287,6 +293,13 @@
       <File Path="$PPRDIR/../VLSI-Files/sim/adder_tb.vhd">
         <FileInfo>
           <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PPRDIR/../VLSI-Files/vhdl/hazard_detection_unit.vhd">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>

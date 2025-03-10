@@ -8,22 +8,22 @@ entity pipeliner is
         clk : in std_logic;
         rst : in std_logic;
         
-        i_instruction_memory_read_data_reg  : in std_logic_vector( 31 downto 0 );
-        i_register_file_read_a_data         : in std_logic_vector( 31 downto 0 );
-        i_register_file_read_b_data         : in std_logic_vector( 31 downto 0 );       
-        i_immediate                         : in std_logic_vector( 31 downto 0 );     
+        i_instruction_memory_read_data_reg : in std_logic_vector( 31 downto 0 );
+        i_register_file_read_a_data        : in std_logic_vector( 31 downto 0 );
+        i_register_file_read_b_data        : in std_logic_vector( 31 downto 0 );       
+        i_immediate                        : in std_logic_vector( 31 downto 0 );     
         
-        i_alu_result            : in std_logic_vector( 31 downto 0 );
-        i_alu_zero_flag         : in std_logic;
-        i_alu_overflow_flag     : in std_logic;
+        i_alu_result        : in std_logic_vector( 31 downto 0 );
+        i_alu_zero_flag     : in std_logic;
+        i_alu_overflow_flag : in std_logic;
         
         o_instruction_memory_read_data_reg_2 : out std_logic_vector( 31 downto 0 );
+        o_instruction_memory_read_data_reg_3 : out std_logic_vector( 31 downto 0 );
         o_instruction_memory_read_data_reg_4 : out std_logic_vector( 31 downto 0 );
         o_register_file_read_a_data_reg   : out std_logic_vector( 31 downto 0 );
         o_register_file_read_b_data_reg_1 : out std_logic_vector( 31 downto 0 );
         o_register_file_read_b_data_reg_2 : out std_logic_vector( 31 downto 0 );
-        o_immediate_reg_1 : out std_logic_vector( 31 downto 0 );
-        o_immediate_reg_2 : out std_logic_vector( 31 downto 0 );
+        o_immediate_reg : out std_logic_vector( 31 downto 0 );
         
         o_alu_result_reg_1      : out std_logic_vector( 31 downto 0 );
         o_alu_result_reg_2      : out std_logic_vector( 31 downto 0 );
@@ -72,12 +72,12 @@ begin
 
 
     o_instruction_memory_read_data_reg_2 <= s_instruction_memory_read_data_reg( 0 );
+    o_instruction_memory_read_data_reg_3 <= s_instruction_memory_read_data_reg( 1 );
     o_instruction_memory_read_data_reg_4 <= s_instruction_memory_read_data_reg( 2 );
     o_register_file_read_a_data_reg      <= s_register_file_read_a_data_reg( 0 );
     o_register_file_read_b_data_reg_1    <= s_register_file_read_b_data_reg( 0 );
     o_register_file_read_b_data_reg_2    <= s_register_file_read_b_data_reg( 1 );
-    o_immediate_reg_1                    <= s_immediate_reg( 0 );
-    o_immediate_reg_2                    <= s_immediate_reg( 1 );                                                   
+    o_immediate_reg                      <= s_immediate_reg( 0 );                                                  
     o_alu_result_reg_1                   <= s_alu_result_reg( 0 );           
     o_alu_result_reg_2                   <= s_alu_result_reg( 1 );           
     o_alu_zero_flag_reg                  <= s_alu_zero_flag_reg( 0 );           
