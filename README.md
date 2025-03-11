@@ -17,3 +17,4 @@ My repository for the Advanced VLSI Design / Advanced CPU Design course at my Un
 
   ### CPU-Design
   
+![CPU](cpu_design.svg)
