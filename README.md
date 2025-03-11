@@ -5,6 +5,7 @@ My repository for the Advanced VLSI Design / Advanced CPU Design course at my Un
 
 - **Exercise-xy** contanis the tasks and data for the given exercise.
 - **VHDL-Guidlines** contains some good practices; only in german.
+- The **VHDL-Files** can be found in /Exercise-xy/VLSI-Files/vhdl
 
 ### Opening an Exercise
 
