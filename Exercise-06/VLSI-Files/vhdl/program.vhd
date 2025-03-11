@@ -62,7 +62,7 @@ package	program is
 		5   => x"00201123",  -- sh   x0, x2, 2
 		6   => x"003021A3",  -- sw   x0, x3, 3
 		-- LOAD
-		7   => x"00102203",  -- lw   x4, x0, 1
+		7   => x"00102203",  -- lw   x4, x0, 1		| x4 = 1
 
 
 --		-- MUL and DIV

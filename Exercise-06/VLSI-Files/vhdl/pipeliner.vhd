@@ -18,6 +18,8 @@ entity pipeliner is
         i_alu_zero_flag             : in std_logic;
         i_alu_overflow_flag         : in std_logic;
         
+        i_register_write_data       : in std_logic_vector( 31 downto 0 );
+        
         o_instruction_memory_read_data_reg_2 : out std_logic_vector( 31 downto 0 );
         o_instruction_memory_read_data_reg_3 : out std_logic_vector( 31 downto 0 );
         o_instruction_memory_read_data_reg_4 : out std_logic_vector( 31 downto 0 );
@@ -30,7 +32,9 @@ entity pipeliner is
         o_alu_result_reg_2         : out std_logic_vector( 31 downto 0 );
         o_alu_forwarding_mux_b_reg : out std_logic_vector( 31 downto 0 );
         o_alu_zero_flag_reg        : out std_logic;
-        o_alu_overflow_flag_reg    : out std_logic
+        o_alu_overflow_flag_reg    : out std_logic;
+        
+        o_register_write_data_reg  : out std_logic_vector( 31 downto 0 )
     );
 end pipeliner;
 
@@ -43,6 +47,7 @@ architecture behavior of pipeliner is
     signal s_immediate_reg            : shift_reg_vec;
     signal s_alu_result_reg           : shift_reg_vec;
     signal s_alu_forwarding_mux_b_reg : shift_reg_vec;
+    signal s_register_write_data_reg  : shift_reg_vec;
     signal s_alu_zero_flag_reg     : std_logic_vector( 3 downto 0 );
     signal s_alu_overflow_flag_reg : std_logic_vector( 3 downto 0 );
     
@@ -57,7 +62,8 @@ begin
                 s_register_file_read_b_data_reg( i )    <= s_register_file_read_b_data_reg( i-1 );
                 s_immediate_reg( i )                    <= s_immediate_reg( i-1 );        
                 s_alu_result_reg( i )                   <= s_alu_result_reg( i-1 ); 
-                s_alu_forwarding_mux_b_reg( i )         <= s_alu_forwarding_mux_b_reg( i-1 );      
+                s_alu_forwarding_mux_b_reg( i )         <= s_alu_forwarding_mux_b_reg( i-1 );
+                s_register_write_data_reg( i )          <= s_register_write_data_reg( i-1 );   
                 s_alu_zero_flag_reg( i )                <= s_alu_zero_flag_reg( i-1 );    
                 s_alu_overflow_flag_reg( i )            <= s_alu_overflow_flag_reg( i-1 );
             end loop;
@@ -68,6 +74,7 @@ begin
             s_immediate_reg( 0 )                    <= i_immediate;
             s_alu_result_reg( 0 )                   <= i_alu_result;
             s_alu_forwarding_mux_b_reg( 0 )         <= i_alu_forwarding_mux_b_data;
+            s_register_write_data_reg( 0 )          <= i_register_write_data;
             s_alu_zero_flag_reg( 0 )                <= i_alu_zero_flag;
             s_alu_overflow_flag_reg( 0 )            <= i_alu_overflow_flag;
             end if;    
@@ -84,6 +91,7 @@ begin
     o_alu_result_reg_1                   <= s_alu_result_reg( 0 );           
     o_alu_result_reg_2                   <= s_alu_result_reg( 1 );
     o_alu_forwarding_mux_b_reg           <= s_alu_forwarding_mux_b_reg( 0 );
+    o_register_write_data_reg            <= s_register_write_data_reg( 0 );
     o_alu_zero_flag_reg                  <= s_alu_zero_flag_reg( 0 );           
     o_alu_overflow_flag_reg              <= s_alu_overflow_flag_reg( 0 );           
 

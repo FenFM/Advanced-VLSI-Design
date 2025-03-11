@@ -91,6 +91,7 @@ architecture structure of cpu is
     signal s_alu_result_reg_1          : std_logic_vector( 31 downto 0 );
     signal s_alu_result_reg_2          : std_logic_vector( 31 downto 0 );
     signal s_alu_forwarding_mux_b_reg  : std_logic_vector( 31 downto 0 );
+    signal s_register_write_data_reg   : std_logic_vector( 31 downto 0 );
     signal s_alu_zero_flag_reg         : std_logic;
     signal s_alu_overflow_flag_reg     : std_logic;
     signal s_data_memory_read_data_reg : std_logic_vector( 31 downto 0 );
@@ -185,10 +186,10 @@ begin
     generic map( C_BIT_WIDTH )
     port map(
         s  =>  s_forwarding_mux_a_src,
-        a  =>  s_register_file_read_a_data_reg,
-        b  =>  s_register_write_data,
-        c  =>  s_alu_result_reg_1,
-        d  =>  s_register_file_read_a_data,
+        a  =>  s_register_file_read_a_data_reg,  -- og input
+        b  =>  s_alu_result_reg_1,               -- alu result from previous op
+        c  =>  s_register_write_data,            -- alu result from 2 ops ago
+        d  =>  s_register_write_data_reg,        -- alu result from 3 ops ago
         o  =>  s_alu_forwarding_mux_a_data
     );
     
@@ -196,13 +197,14 @@ begin
     generic map( C_BIT_WIDTH )
     port map(
         s  =>  s_forwarding_mux_b_src,
-        a  =>  s_register_file_read_b_data_reg,
-        b  =>  s_register_write_data,
-        c  =>  s_alu_result_reg_1,
-        d  =>  s_register_file_read_b_data,
+        a  =>  s_register_file_read_b_data_reg,  -- og input
+        b  =>  s_alu_result_reg_1,               -- alu result from previous op
+        c  =>  s_register_write_data,            -- alu result from 2 ops ago
+        d  =>  s_register_write_data_reg,        -- alu result from 3 ops ago
         o  =>  s_alu_forwarding_mux_b_data
     );
-     
+    
+    -- aligns the input for LOAD and STORE operations
     ALU_IN_A : entity work.inout_align
     generic map( C_BIT_WIDTH )
     port map(
@@ -265,6 +267,7 @@ begin
     );
     o_data_memory_read_data <= s_data_memory_read_data;
 
+    -- aligns the output for LOAD and STORE operations
     DM_OUT : entity work.inout_align
     generic map( C_BIT_WIDTH )
     port map(
@@ -319,6 +322,7 @@ begin
         i_immediate                         =>  s_immediate,     
         i_alu_result                        =>  s_alu_result,
         i_alu_forwarding_mux_b_data         =>  s_alu_forwarding_mux_b_data,
+        i_register_write_data               =>  s_register_write_data,
         i_alu_zero_flag                     =>  s_alu_zero_flag,
         i_alu_overflow_flag                 =>  s_alu_overflow_flag,
         
@@ -332,6 +336,7 @@ begin
         o_alu_result_reg_1                    =>  s_alu_result_reg_1,
         o_alu_result_reg_2                    =>  s_alu_result_reg_2,
         o_alu_forwarding_mux_b_reg            =>  s_alu_forwarding_mux_b_reg,
+        o_register_write_data_reg             =>  s_register_write_data_reg,
         o_alu_zero_flag_reg                   =>  s_alu_zero_flag_reg,
         o_alu_overflow_flag_reg               =>  s_alu_overflow_flag_reg
     );

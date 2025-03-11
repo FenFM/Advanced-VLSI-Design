@@ -49,17 +49,17 @@ begin
         o_mux_b_src <= "00";
         
         if s_rf_read_a_addr = s_rf_write_addr_3 and s_rf_write_addr_3u /= 0 and i_reg_wren_reg_2 = '1' then
-            o_mux_a_src <= "10";
-        elsif s_rf_read_a_addr = s_rf_write_addr_4 and s_rf_write_addr_4u /= 0 and i_reg_wren_reg_3 = '1'  then
             o_mux_a_src <= "01";
+        elsif s_rf_read_a_addr = s_rf_write_addr_4 and s_rf_write_addr_4u /= 0 and i_reg_wren_reg_3 = '1'  then
+            o_mux_a_src <= "10";
         elsif s_rf_read_a_addr = s_rf_write_addr_5 and s_rf_write_addr_5u /= 0 and i_reg_wren_reg_4 = '1'  then
             o_mux_a_src <= "11";
         end if;
         
         if s_rf_read_b_addr = s_rf_write_addr_3 and s_rf_write_addr_3u /= 0 and i_reg_wren_reg_2 = '1' then
-            o_mux_b_src <= "10";
-        elsif s_rf_read_b_addr = s_rf_write_addr_5 and s_rf_write_addr_4u /= 0 and i_reg_wren_reg_3 = '1' then
             o_mux_b_src <= "01";
+        elsif s_rf_read_b_addr = s_rf_write_addr_4 and s_rf_write_addr_4u /= 0 and i_reg_wren_reg_3 = '1' then
+            o_mux_b_src <= "10";
         elsif s_rf_read_b_addr = s_rf_write_addr_5 and s_rf_write_addr_5u /= 0 and i_reg_wren_reg_4 = '1' then
             o_mux_b_src <= "11";
         end if;
