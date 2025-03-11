@@ -84,26 +84,26 @@ begin
     -- zero flag
     o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
 
---    -- addition
---    signed_adder_33_ins : signed_adder_33
---    port map( 
---        A  =>  i_operand_a, 
---        B  =>  i_operand_b, 
---        S  =>  add_res 
---    );
+    -- addition
+    signed_adder_33_ins : signed_adder_33
+    port map( 
+        A  =>  i_operand_a, 
+        B  =>  i_operand_b, 
+        S  =>  add_res 
+    );
     
---    -- substraction
---    signed_adder_ins : signed_adder
---    port map( 
---        A    =>  i_operand_a, 
---        B    =>  i_operand_b, 
---        ADD  =>  '0', 
---        S    =>  sub_res 
---    );
+    -- substraction
+    signed_adder_ins : signed_adder
+    port map( 
+        A    =>  i_operand_a, 
+        B    =>  i_operand_b, 
+        ADD  =>  '0', 
+        S    =>  sub_res 
+    );
     
     -- add and sub only for testbench
-    add_res <= std_logic_vector(signed(i_operand_a(31) & i_operand_a) +  signed(i_operand_b(31) & i_operand_b));
-    sub_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
+--    add_res <= std_logic_vector(signed(i_operand_a(31) & i_operand_a) +  signed(i_operand_b(31) & i_operand_b));
+--    sub_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
     
     -- overflow flag
     o_overflow_flag <= add_res( bit_width );

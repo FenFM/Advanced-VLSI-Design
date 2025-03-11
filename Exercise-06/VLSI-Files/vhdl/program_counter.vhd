@@ -13,6 +13,7 @@ entity program_counter is
     port(
         clk             : in  std_logic;
         rst             : in  std_logic;
+        i_enable        : in  std_logic;
         i_alu_zero_flag : in  std_logic;
         i_mux_signal    : in  std_logic_vector( 1 downto 0 );
         i_immediate     : in  std_logic_vector( bit_width-1 downto 0 );
@@ -71,26 +72,26 @@ begin
     s_pc_offset <= std_logic_vector(to_unsigned(pc_offset, 32));
 
 
---    -- r.pc_counter + pc_offset
---    adder_one_ins : unsigned_adder
---    port map(
---        A    =>  r.pc_counter, 
---        B    =>  s_pc_offset,
---        ADD  =>  '1',
---        S    =>  s_adder_one 
---    );
+    -- r.pc_counter + pc_offset
+    adder_one_ins : unsigned_adder
+    port map(
+        A    =>  r.pc_counter, 
+        B    =>  s_pc_offset,
+        ADD  =>  '1',
+        S    =>  s_adder_one 
+    );
 
---    -- unsigned( r.pc_counter ) + signed( i_immediate )
---    adder_two_ins : un_signed_adder
---    port map(
---        A    =>  i_immediate, 
---        B    =>  s_pc_counter_reg(1),
---        ADD  =>  '1',
---        S    =>  s_adder_two 
---    );
+    -- unsigned( r.pc_counter ) + signed( i_immediate )
+    adder_two_ins : un_signed_adder
+    port map(
+        A    =>  i_immediate, 
+        B    =>  s_pc_counter_reg(1),
+        ADD  =>  '1',
+        S    =>  s_adder_two 
+    );
 
-    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
-    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
+--    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
+--    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
 
 
     reg : process ( clk, rst )
@@ -108,17 +109,19 @@ begin
         variable v : alu;
     begin
         v := r;
-        v.pc_counter := s_adder_one;
-    
-        case i_mux_signal is
-            when no_jump     =>  
-            when con_jump    =>  if i_alu_zero_flag = '1' then
-                                     v.pc_counter := s_adder_two_reg( 0 );
-                                 end if;
-            when uncon_jump  =>  v.pc_counter := s_adder_two_reg( 0 );
-            when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
-            when others      =>  
-        end case;
+        
+        if i_enable = '1' then
+            v.pc_counter := s_adder_one;
+            case i_mux_signal is
+                when no_jump     =>  
+                when con_jump    =>  if i_alu_zero_flag = '1' then
+                                        v.pc_counter := s_adder_two_reg( 0 );
+                                    end if;
+                when uncon_jump  =>  v.pc_counter := s_adder_two_reg( 0 );
+                when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
+                when others      =>  
+            end case;
+        end if;
 
         rin <= v;
     end process comb;

@@ -43,7 +43,7 @@ architecture structure of cpu is
     signal s_immediate         : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 
     -- signals for the instruction memory
-    signal s_instruction_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
+    signal s_instruction_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
     signal s_instruction_memory_read_addr  : std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
     signal s_instruction_memory_read_rden  : std_logic;  
 
@@ -53,8 +53,9 @@ architecture structure of cpu is
     signal s_data_memory_write_wren : std_logic;   
     signal s_data_memory_read_data  : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
     signal s_data_memory_read_data_aligned : std_logic_vector( C_BIT_WIDTH-1 downto 0 ) ;
-    signal s_data_memory_read_addr  : std_logic_vector( log2(C_DM_MEM_SIZE)-1 downto 0 );
-    signal s_data_memory_read_rden  : std_logic; 
+    signal s_data_memory_read_addr   : std_logic_vector( log2(C_DM_MEM_SIZE)-1 downto 0 );
+    signal s_data_memory_read_rden_1 : std_logic;
+    signal s_data_memory_read_rden_2 : std_logic; 
 
     -- signals for the register file
     signal s_register_file_read_a_data  : std_logic_vector( C_REG_SIZE-1 downto 0 );
@@ -102,23 +103,30 @@ architecture structure of cpu is
     signal s_alu_forwarding_mux_a_data : std_logic_vector( 31 downto 0 );
     signal s_alu_forwarding_mux_b_data : std_logic_vector( 31 downto 0 );
 
+    -- signals for the hazard detection unit
+    signal s_control_unit_mux_src : std_logic;
+    signal s_im_write             : std_logic;
+    signal s_pc_write             : std_logic;
+
 
 begin
     CU : entity work.control_unit
     port map(
-        clk            =>  clk,
-        rst            =>  rst,
-        i_instruction  =>  s_instruction_memory_read_data_reg_1,
-        o_alu_op       =>  s_acu_operation,
-        o_alu_src      =>  s_alu_mux_b_src,
-        o_alu_pass     =>  s_alu_passthrough_b,
-        o_reg_wren_2   =>  s_register_file_write_wren_2,
-        o_reg_wren_3   =>  s_register_file_write_wren_3,
-        o_reg_wren_4   =>  s_register_file_write_wren_4,
-        o_mem_wren     =>  s_data_memory_write_wren,
-        o_mem_rden     =>  s_data_memory_read_rden,
-        o_mux_to_pc    =>  s_pc_mux_src,
-        o_mux_to_reg   =>  s_reg_mux_src
+        clk               =>  clk,
+        rst               =>  rst,
+        i_instruction     =>  s_instruction_memory_read_data_reg_1,
+        i_hazard_mux_src  =>  s_control_unit_mux_src,
+        o_alu_op          =>  s_acu_operation,
+        o_alu_src         =>  s_alu_mux_b_src,
+        o_alu_pass        =>  s_alu_passthrough_b,
+        o_reg_wren_2      =>  s_register_file_write_wren_2,
+        o_reg_wren_3      =>  s_register_file_write_wren_3,
+        o_reg_wren_4      =>  s_register_file_write_wren_4,
+        o_mem_wren        =>  s_data_memory_write_wren,
+        o_mem_rden_1      =>  s_data_memory_read_rden_1,
+        o_mem_rden_2      =>  s_data_memory_read_rden_2,
+        o_mux_to_pc       =>  s_pc_mux_src,
+        o_mux_to_reg      =>  s_reg_mux_src
     );
 
 
@@ -130,6 +138,7 @@ begin
     port map(
         clk              =>  clk,
         rst              =>  rst,
+        i_enable         =>  s_pc_write,
         i_alu_zero_flag  =>  s_alu_zero_flag_reg,
         i_mux_signal     =>  s_pc_mux_src,
         i_immediate      =>  s_immediate_reg,
@@ -155,11 +164,18 @@ begin
         i_read_addr   =>  s_instruction_memory_read_addr,
         i_read_rden   =>  s_instruction_memory_read_rden                                     
     );
-    s_instruction_memory_read_addr     <= s_pc_value_sr( log2(C_IM_MEM_SIZE)-1 downto 0 );
-    s_instruction_memory_read_rden     <= '1';
-    s_instruction_memory_read_data_reg_1 <= s_instruction_memory_read_data;
-    
-    o_instruction_memory_read_data     <= s_instruction_memory_read_data;
+    s_instruction_memory_read_addr <= s_pc_value_sr( log2(C_IM_MEM_SIZE)-1 downto 0 );
+    s_instruction_memory_read_rden <= s_im_write;
+    o_instruction_memory_read_data <= s_instruction_memory_read_data;
+
+    IM_OUT_MUX : entity work.mux_switch_2
+    generic map( C_BIT_WIDTH )
+    port map(
+        s  =>  s_im_write,
+        a  =>  x"0000000C",
+        b  =>  s_instruction_memory_read_data,
+        o  =>  s_instruction_memory_read_data_reg_1
+    );
  
 
     IG : entity work.imm_gen
@@ -263,7 +279,7 @@ begin
         i_write_wren  =>  s_data_memory_write_wren,
         o_read_data   =>  s_data_memory_read_data,       
         i_read_addr   =>  s_alu_result_reg_1( log2(C_DM_MEM_SIZE)-1 downto 0 ),
-        i_read_rden   =>  s_data_memory_read_rden
+        i_read_rden   =>  s_data_memory_read_rden_2
     );
     o_data_memory_read_data <= s_data_memory_read_data;
 
@@ -340,6 +356,19 @@ begin
         o_alu_zero_flag_reg                   =>  s_alu_zero_flag_reg,
         o_alu_overflow_flag_reg               =>  s_alu_overflow_flag_reg
     );
+
+
+    HAZARD : entity work.hazard_detection_unit
+    generic map( C_REG_SIZE )
+    port map (
+        i_instruction_memory_read_data_reg_1  =>  s_instruction_memory_read_data_reg_1,
+        i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_1,
+        i_data_memory_read_rden_1             =>  s_data_memory_read_rden_1,
+        o_control_unit_mux                    =>  s_control_unit_mux_src,
+        o_if_df_write                         =>  s_im_write,
+        o_pc_write                            =>  s_pc_write
+    );
+
 
 
 end structure;
