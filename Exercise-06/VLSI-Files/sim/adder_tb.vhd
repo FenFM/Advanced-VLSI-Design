@@ -13,17 +13,17 @@ architecture testing of adder_tb is
     
     component un_signed_adder
         port(
-            A   : in  std_logic_vector( 32 downto 0 );
-            B   : in  std_logic_vector( 32 downto 0 );
+            A   : in  std_logic_vector( 31 downto 0 );
+            B   : in  std_logic_vector( 31 downto 0 );
             ADD : in  std_logic;
-            S   : out std_logic_vector( 32 downto 0 )
+            S   : out std_logic_vector( 31 downto 0 )
         );
     end component;
 
-    signal A_sig   : std_logic_vector( 32 downto 0 );
-    signal B_sig   : std_logic_vector( 32 downto 0 );
+    signal A_sig   : std_logic_vector( 31 downto 0 );
+    signal B_sig   : std_logic_vector( 31 downto 0 );
     signal ADD_sig : std_logic;
-    signal S_sig   : std_logic_vector( 32 downto 0 );
+    signal S_sig   : std_logic_vector( 31 downto 0 );
 
 
 begin
@@ -46,23 +46,23 @@ begin
 
     TEST : process
     begin
-        A_sig   <= "1101";
-        B_sig   <= "1001";
+        A_sig   <= x"00000001";
+        B_sig   <= x"00000002";
         ADD_sig <= '1';
         wait for clk_period;
         
-        A_sig   <= x"0";
-        B_sig   <= x"0";
+        A_sig   <= x"0000000A";
+        B_sig   <= x"0000000A";
         ADD_sig <= '1';
         wait for clk_period;
         
-        A_sig   <= x"0";
-        B_sig   <= x"0";
+        A_sig   <= x"00000001";
+        B_sig   <= x"00000001";
         ADD_sig <= '0';
         wait for clk_period;
         
-        A_sig   <= x"0";
-        B_sig   <= x"0";
+        A_sig   <= x"00000002";
+        B_sig   <= x"00000004";
         ADD_sig <= '0';
         wait for clk_period;
     
