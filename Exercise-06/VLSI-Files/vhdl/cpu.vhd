@@ -247,8 +247,8 @@ begin
         i_inverse_zero   =>  s_inverse_zero,
         i_alu_pass       =>  s_alu_passthrough_b,
         o_result         =>  s_alu_result,
-        o_zero_flag      =>  s_alu_zero_flag,
-        o_overflow_flag  =>  s_alu_overflow_flag
+        o_zero_flag      =>  s_alu_zero_flag
+--        o_overflow_flag  =>  s_alu_overflow_flag
     );
     
     

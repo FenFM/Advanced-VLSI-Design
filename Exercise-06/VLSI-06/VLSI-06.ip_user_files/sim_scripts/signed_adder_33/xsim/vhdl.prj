@@ -1,5 +1,0 @@
-vhdl xil_defaultlib  \
-"../../../../../VLSI-Files/ip/signed_adder_33/sim/signed_adder_33.vhd" \
-
-# Do not sort compile order
-nosort

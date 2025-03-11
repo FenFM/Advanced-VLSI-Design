@@ -16,8 +16,8 @@ entity alu is
 
 		o_result        : out std_logic_vector( bit_width-1 downto 0 );
 
-        o_zero_flag     : out std_logic;
-        o_overflow_flag : out std_logic
+        o_zero_flag     : out std_logic
+--        o_overflow_flag : out std_logic
 	);
 end entity alu;
 
@@ -47,9 +47,12 @@ architecture behavior of alu is
 
     signal std_b_cut  : std_logic_vector( 4 downto 0 );
     signal sll_uint_b : integer range 0 to 31;
+    
+    signal add_src : std_logic;
 
-    signal add_res  : std_logic_vector( bit_width   downto 0 );
-    signal sub_res  : std_logic_vector( bit_width-1 downto 0 );
+--    signal add_res  : std_logic_vector( bit_width   downto 0 );
+--    signal sub_res  : std_logic_vector( bit_width-1 downto 0 );
+    signal add_res  : std_logic_vector( bit_width-1 downto 0 );
     signal and_res  : std_logic_vector( bit_width-1 downto 0 );
     signal or_res   : std_logic_vector( bit_width-1 downto 0 );
     signal xor_res  : std_logic_vector( bit_width-1 downto 0 );
@@ -84,21 +87,14 @@ begin
     -- zero flag
     o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
 
-    -- addition
-    signed_adder_33_ins : signed_adder_33
-    port map( 
-        A  =>  i_operand_a, 
-        B  =>  i_operand_b, 
-        S  =>  add_res 
-    );
-    
-    -- substraction
+
+    -- addition and substraction
     signed_adder_ins : signed_adder
     port map( 
         A    =>  i_operand_a, 
         B    =>  i_operand_b, 
-        ADD  =>  '0', 
-        S    =>  sub_res 
+        ADD  =>  add_src, 
+        S    =>  add_res 
     );
     
     -- add and sub only for testbench
@@ -106,7 +102,7 @@ begin
 --    sub_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
     
     -- overflow flag
-    o_overflow_flag <= add_res( bit_width );
+--    o_overflow_flag <= add_res( bit_width );
     
     -- and
     and_res <= i_operand_a and i_operand_b;
@@ -177,9 +173,13 @@ begin
 
     operation_mux_switch : process( all )
     begin
+        add_src <= '1';
         case i_operation is
-            when opcode_ADD     =>  s_result <= add_res( bit_width-1 downto 0 );
-            when opcode_SUB     =>  s_result <= sub_res;
+--            when opcode_ADD     =>  s_result <= add_res( bit_width-1 downto 0 );
+--            when opcode_SUB     =>  s_result <= sub_res;
+            when opcode_ADD     =>  s_result <= add_res;
+            when opcode_SUB     =>  s_result <= add_res;
+                                    add_src  <= '0';
             when opcode_AND     =>  s_result <= and_res;
             when opcode_OR      =>  s_result <= or_res;
             when opcode_XOR     =>  s_result <= xor_res;
