@@ -15,8 +15,9 @@ entity control_unit is
         o_alu_op       : out std_logic_vector(  1 downto 0 );
         o_alu_src      : out std_logic;
         o_alu_pass     : out std_logic;
-        o_reg_wren     : out std_logic;
-        o_reg_wren_fw  : out std_logic;
+        o_reg_wren_2   : out std_logic;
+        o_reg_wren_3   : out std_logic;
+        o_reg_wren_4   : out std_logic;
         o_mem_wren     : out std_logic;
         o_mem_rden     : out std_logic;
         o_mux_to_reg   : out std_logic_vector( 1 downto 0 );
@@ -47,15 +48,15 @@ architecture behavior of control_unit is
     signal s_mem_wren   : std_logic;
     signal s_mem_rden   : std_logic;    
     
-    type shift_reg_vec_2  is array( 2 downto 0 ) of std_logic_vector( 1 downto 0 );
+    type shift_reg_vec_2  is array( 3 downto 0 ) of std_logic_vector( 1 downto 0 );
     signal s_alu_op_reg     : shift_reg_vec_2;
     signal s_mux_to_reg_reg : shift_reg_vec_2;
     signal s_mux_to_pc_reg  : shift_reg_vec_2;    
-    signal s_alu_src_reg    : std_logic_vector( 2 downto 0 );
-    signal s_alu_pass_reg   : std_logic_vector( 2 downto 0 );
-    signal s_reg_wren_reg   : std_logic_vector( 2 downto 0 );
-    signal s_mem_wren_reg   : std_logic_vector( 2 downto 0 );
-    signal s_mem_rden_reg   : std_logic_vector( 2 downto 0 );
+    signal s_alu_src_reg    : std_logic_vector( 3 downto 0 );
+    signal s_alu_pass_reg   : std_logic_vector( 3 downto 0 );
+    signal s_reg_wren_reg   : std_logic_vector( 3 downto 0 );
+    signal s_mem_wren_reg   : std_logic_vector( 3 downto 0 );
+    signal s_mem_rden_reg   : std_logic_vector( 3 downto 0 );
 
 
 begin
@@ -157,8 +158,9 @@ begin
     o_alu_op      <= s_alu_op_reg  ( 0 );
     o_alu_src     <= s_alu_src_reg ( 0 );
     o_alu_pass    <= s_alu_pass_reg( 0 );
-    o_reg_wren    <= s_reg_wren_reg( 2 );
-    o_reg_wren_fw <= s_reg_wren_reg( 1 );
+    o_reg_wren_2  <= s_reg_wren_reg( 1 );
+    o_reg_wren_3  <= s_reg_wren_reg( 2 );
+    o_reg_wren_4  <= s_reg_wren_reg( 3 );
     o_mem_wren    <= s_mem_wren_reg( 1 );
     o_mem_rden    <= s_mem_rden_reg( 1 );
     o_mux_to_reg  <= s_mux_to_reg_reg( 2 );

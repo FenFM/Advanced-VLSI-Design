@@ -10,7 +10,7 @@ entity register_file is
         reg_size  : integer := 32  -- # of register
     );
     port(
-    clk : in  std_logic;
+    clk : in std_logic;
 
     o_read_a_data : out std_logic_vector( word_size-1 downto 0 );
     i_read_a_addr : in  std_logic_vector( log2(reg_size)-1 downto 0 );
@@ -38,7 +38,7 @@ begin
     s_register_read_a_addr <= to_integer( unsigned( i_read_a_addr ) );
     s_register_read_b_addr <= to_integer( unsigned( i_read_b_addr ) );
     s_register_write_addr  <= to_integer( unsigned( i_write_addr  ) );
-    
+  
 
     register_in : process( clk, i_write_wren, i_write_data, s_register_write_addr )
     begin

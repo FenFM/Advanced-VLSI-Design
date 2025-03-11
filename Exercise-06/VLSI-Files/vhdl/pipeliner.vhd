@@ -20,6 +20,7 @@ entity pipeliner is
         o_instruction_memory_read_data_reg_2 : out std_logic_vector( 31 downto 0 );
         o_instruction_memory_read_data_reg_3 : out std_logic_vector( 31 downto 0 );
         o_instruction_memory_read_data_reg_4 : out std_logic_vector( 31 downto 0 );
+        o_instruction_memory_read_data_reg_5 : out std_logic_vector( 31 downto 0 );
         o_register_file_read_a_data_reg   : out std_logic_vector( 31 downto 0 );
         o_register_file_read_b_data_reg_1 : out std_logic_vector( 31 downto 0 );
         o_register_file_read_b_data_reg_2 : out std_logic_vector( 31 downto 0 );
@@ -34,23 +35,21 @@ end pipeliner;
 
 
 architecture behavior of pipeliner is
-    signal s_instruction_memory_read_data_reg_3 : std_logic_vector( 31 downto 0 );
-    
-    type shift_reg_vec is array( 2 downto 0 ) of std_logic_vector( 31 downto 0 );
+    type shift_reg_vec is array( 3 downto 0 ) of std_logic_vector( 31 downto 0 );
     signal s_instruction_memory_read_data_reg : shift_reg_vec;
     signal s_register_file_read_a_data_reg    : shift_reg_vec;
     signal s_register_file_read_b_data_reg    : shift_reg_vec;
     signal s_immediate_reg         : shift_reg_vec;
     signal s_alu_result_reg        : shift_reg_vec;
-    signal s_alu_zero_flag_reg     : std_logic_vector( 2 downto 0 );
-    signal s_alu_overflow_flag_reg : std_logic_vector( 2 downto 0 );
+    signal s_alu_zero_flag_reg     : std_logic_vector( 3 downto 0 );
+    signal s_alu_overflow_flag_reg : std_logic_vector( 3 downto 0 );
     
 
 begin
     process( clk )
     begin
         if rising_edge( clk ) then
-            for i in 2 downto 1 loop
+            for i in 3 downto 1 loop
                 s_instruction_memory_read_data_reg( i ) <= s_instruction_memory_read_data_reg( i-1 );
                 s_register_file_read_a_data_reg( i )    <= s_register_file_read_a_data_reg( i-1 );
                 s_register_file_read_b_data_reg( i )    <= s_register_file_read_b_data_reg( i-1 );
@@ -74,6 +73,7 @@ begin
     o_instruction_memory_read_data_reg_2 <= s_instruction_memory_read_data_reg( 0 );
     o_instruction_memory_read_data_reg_3 <= s_instruction_memory_read_data_reg( 1 );
     o_instruction_memory_read_data_reg_4 <= s_instruction_memory_read_data_reg( 2 );
+    o_instruction_memory_read_data_reg_5 <= s_instruction_memory_read_data_reg( 3 );
     o_register_file_read_a_data_reg      <= s_register_file_read_a_data_reg( 0 );
     o_register_file_read_b_data_reg_1    <= s_register_file_read_b_data_reg( 0 );
     o_register_file_read_b_data_reg_2    <= s_register_file_read_b_data_reg( 1 );

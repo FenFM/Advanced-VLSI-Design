@@ -63,6 +63,7 @@ architecture structure of cpu is
     signal s_register_file_write_addr   : std_logic_vector( 4 downto 0 );
     signal s_register_file_write_wren_2 : std_logic;
     signal s_register_file_write_wren_3 : std_logic;
+    signal s_register_file_write_wren_4 : std_logic;
     signal s_register_file_read_a_addr  : std_logic_vector( 4 downto 0 );
     signal s_register_file_read_b_addr  : std_logic_vector( 4 downto 0 );
 
@@ -83,6 +84,7 @@ architecture structure of cpu is
     signal s_instruction_memory_read_data_reg_2 : std_logic_vector( 31 downto 0 );
     signal s_instruction_memory_read_data_reg_3 : std_logic_vector( 31 downto 0 );
     signal s_instruction_memory_read_data_reg_4 : std_logic_vector( 31 downto 0 );
+    signal s_instruction_memory_read_data_reg_5 : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_a_data_reg   : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_b_data_reg_1 : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_b_data_reg_2 : std_logic_vector( 31 downto 0 );
@@ -109,8 +111,9 @@ begin
         o_alu_op       =>  s_acu_operation,
         o_alu_src      =>  s_alu_mux_b_src,
         o_alu_pass     =>  s_alu_passthrough_b,
-        o_reg_wren     =>  s_register_file_write_wren_3,
-        o_reg_wren_fw  =>  s_register_file_write_wren_2,
+        o_reg_wren_2   =>  s_register_file_write_wren_2,
+        o_reg_wren_3   =>  s_register_file_write_wren_3,
+        o_reg_wren_4   =>  s_register_file_write_wren_4,
         o_mem_wren     =>  s_data_memory_write_wren,
         o_mem_rden     =>  s_data_memory_read_rden,
         o_mux_to_pc    =>  s_pc_mux_src,
@@ -185,7 +188,7 @@ begin
         a  =>  s_register_file_read_a_data_reg,
         b  =>  s_register_write_data,
         c  =>  s_alu_result_reg_1,
-        d  =>  x"--------",
+        d  =>  s_register_file_read_a_data,
         o  =>  s_alu_forwarding_mux_a_data
     );
     
@@ -196,11 +199,11 @@ begin
         a  =>  s_register_file_read_b_data_reg_1,
         b  =>  s_register_write_data,
         c  =>  s_alu_result_reg_1,
-        d  =>  x"--------",
+        d  =>  s_register_file_read_b_data,
         o  =>  s_alu_forwarding_mux_b_data
     );
      
-    ALU_IN_A : entity work.store_align
+    ALU_IN_A : entity work.inout_align
     generic map( C_BIT_WIDTH )
     port map(
         control  =>  s_alu_align_input_a_src,
@@ -237,8 +240,10 @@ begin
         i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
         i_instruction_memory_read_data_reg_3  =>  s_instruction_memory_read_data_reg_3,
         i_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
+        i_instruction_memory_read_data_reg_5  =>  s_instruction_memory_read_data_reg_5,
         i_reg_wren_reg_2  =>  s_register_file_write_wren_2,
         i_reg_wren_reg_3  =>  s_register_file_write_wren_3,
+        i_reg_wren_reg_4  =>  s_register_file_write_wren_4,
         o_mux_a_src  =>  s_forwarding_mux_a_src,
         o_mux_b_src  =>  s_forwarding_mux_b_src
     );
@@ -260,7 +265,7 @@ begin
     );
     o_data_memory_read_data <= s_data_memory_read_data;
 
-    DM_OUT : entity work.store_align
+    DM_OUT : entity work.inout_align
     generic map( C_BIT_WIDTH )
     port map(
         control  =>  s_dm_align_output_src,
@@ -319,6 +324,7 @@ begin
         o_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
         o_instruction_memory_read_data_reg_3  =>  s_instruction_memory_read_data_reg_3,
         o_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
+        o_instruction_memory_read_data_reg_5  =>  s_instruction_memory_read_data_reg_5,
         o_register_file_read_a_data_reg       =>  s_register_file_read_a_data_reg,
         o_register_file_read_b_data_reg_1     =>  s_register_file_read_b_data_reg_1,
         o_register_file_read_b_data_reg_2     =>  s_register_file_read_b_data_reg_2,

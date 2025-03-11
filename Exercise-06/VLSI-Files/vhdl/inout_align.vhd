@@ -3,17 +3,17 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.NUMERIC_STD.ALL;
 
 
-entity store_align is
+entity inout_align is
     generic( bit_width : integer := 32 );
     port(
         control : in  std_logic_vector( 2 downto 0 );
         din     : in  std_logic_vector( bit_width-1 downto 0 );
         dout    : out std_logic_vector( bit_width-1 downto 0 )
     );
-end store_align;
+end inout_align;
 
 
-architecture behavior of store_align is
+architecture behavior of inout_align is
     constant bit_32  : std_logic_vector( 2 downto 0 ) := "010";
     constant bit_16  : std_logic_vector( 2 downto 0 ) := "001";
     constant ubit_16 : std_logic_vector( 2 downto 0 ) := "101";
