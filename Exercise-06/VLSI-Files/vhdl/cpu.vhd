@@ -86,11 +86,11 @@ architecture structure of cpu is
     signal s_instruction_memory_read_data_reg_4 : std_logic_vector( 31 downto 0 );
     signal s_instruction_memory_read_data_reg_5 : std_logic_vector( 31 downto 0 );
     signal s_register_file_read_a_data_reg   : std_logic_vector( 31 downto 0 );
-    signal s_register_file_read_b_data_reg_1 : std_logic_vector( 31 downto 0 );
-    signal s_register_file_read_b_data_reg_2 : std_logic_vector( 31 downto 0 );
+    signal s_register_file_read_b_data_reg : std_logic_vector( 31 downto 0 );
     signal s_immediate_reg             : std_logic_vector( 31 downto 0 );
     signal s_alu_result_reg_1          : std_logic_vector( 31 downto 0 );
     signal s_alu_result_reg_2          : std_logic_vector( 31 downto 0 );
+    signal s_alu_forwarding_mux_b_reg  : std_logic_vector( 31 downto 0 );
     signal s_alu_zero_flag_reg         : std_logic;
     signal s_alu_overflow_flag_reg     : std_logic;
     signal s_data_memory_read_data_reg : std_logic_vector( 31 downto 0 );
@@ -196,7 +196,7 @@ begin
     generic map( C_BIT_WIDTH )
     port map(
         s  =>  s_forwarding_mux_b_src,
-        a  =>  s_register_file_read_b_data_reg_1,
+        a  =>  s_register_file_read_b_data_reg,
         b  =>  s_register_write_data,
         c  =>  s_alu_result_reg_1,
         d  =>  s_register_file_read_b_data,
@@ -256,7 +256,7 @@ begin
     )
     port map (
         clk           =>  clk,
-        i_write_data  =>  s_register_file_read_b_data_reg_2,        
+        i_write_data  =>  s_alu_forwarding_mux_b_reg,        
         i_write_addr  =>  s_alu_result_reg_1( log2(C_DM_MEM_SIZE)-1 downto 0 ), 
         i_write_wren  =>  s_data_memory_write_wren,
         o_read_data   =>  s_data_memory_read_data,       
@@ -318,6 +318,7 @@ begin
         i_register_file_read_b_data         =>  s_register_file_read_b_data,       
         i_immediate                         =>  s_immediate,     
         i_alu_result                        =>  s_alu_result,
+        i_alu_forwarding_mux_b_data         =>  s_alu_forwarding_mux_b_data,
         i_alu_zero_flag                     =>  s_alu_zero_flag,
         i_alu_overflow_flag                 =>  s_alu_overflow_flag,
         
@@ -326,11 +327,11 @@ begin
         o_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
         o_instruction_memory_read_data_reg_5  =>  s_instruction_memory_read_data_reg_5,
         o_register_file_read_a_data_reg       =>  s_register_file_read_a_data_reg,
-        o_register_file_read_b_data_reg_1     =>  s_register_file_read_b_data_reg_1,
-        o_register_file_read_b_data_reg_2     =>  s_register_file_read_b_data_reg_2,
+        o_register_file_read_b_data_reg       =>  s_register_file_read_b_data_reg,
         o_immediate_reg                       =>  s_immediate_reg,
         o_alu_result_reg_1                    =>  s_alu_result_reg_1,
         o_alu_result_reg_2                    =>  s_alu_result_reg_2,
+        o_alu_forwarding_mux_b_reg            =>  s_alu_forwarding_mux_b_reg,
         o_alu_zero_flag_reg                   =>  s_alu_zero_flag_reg,
         o_alu_overflow_flag_reg               =>  s_alu_overflow_flag_reg
     );
