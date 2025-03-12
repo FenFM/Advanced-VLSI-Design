@@ -105,8 +105,7 @@ architecture structure of cpu is
 
     -- signals for the hazard detection unit
     signal s_control_unit_mux_src : std_logic;
-    signal s_im_write             : std_logic;
-    signal s_pc_write             : std_logic;
+    signal s_pc_read_enable       : std_logic;
 
 
 begin
@@ -138,7 +137,7 @@ begin
     port map(
         clk              =>  clk,
         rst              =>  rst,
-        i_enable         =>  s_pc_write,
+        i_enable         =>  s_pc_read_enable,
         i_alu_zero_flag  =>  s_alu_zero_flag_reg,
         i_mux_signal     =>  s_pc_mux_src,
         i_immediate      =>  s_immediate_reg,
@@ -162,16 +161,15 @@ begin
         i_write_wren  =>  i_instruction_memory_write_wren,
         o_read_data   =>  s_instruction_memory_read_data,
         i_read_addr   =>  s_instruction_memory_read_addr,
-        i_read_rden   =>  s_instruction_memory_read_rden                                     
+        i_read_rden   =>  s_instruction_memory_read_rden
     );
     s_instruction_memory_read_addr <= s_pc_value_sr( log2(C_IM_MEM_SIZE)-1 downto 0 );
-    s_instruction_memory_read_rden <= s_im_write;
     o_instruction_memory_read_data <= s_instruction_memory_read_data;
 
     IM_OUT_MUX : entity work.mux_switch_2
     generic map( C_BIT_WIDTH )
     port map(
-        s  =>  s_im_write,
+        s  =>  s_instruction_memory_read_rden,
         a  =>  x"00000013",  -- NOP: addi x0, x0, 0
         b  =>  s_instruction_memory_read_data,
         o  =>  s_instruction_memory_read_data_reg_1
@@ -245,10 +243,10 @@ begin
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_alu_operation,
         i_inverse_zero   =>  s_inverse_zero,
-        i_alu_pass       =>  s_alu_passthrough_b,
+        i_alu_bypass     =>  s_alu_passthrough_b,
         o_result         =>  s_alu_result,
-        o_zero_flag      =>  s_alu_zero_flag
---        o_overflow_flag  =>  s_alu_overflow_flag
+        o_zero_flag      =>  s_alu_zero_flag,
+        o_overflow_flag  =>  s_alu_overflow_flag
     );
     
     
@@ -361,12 +359,13 @@ begin
     HAZARD : entity work.hazard_detection_unit
     generic map( C_REG_SIZE )
     port map (
-        i_instruction_memory_read_data_reg_1  =>  s_instruction_memory_read_data_reg_1,
-        i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_1,
+        rst                                   =>  rst,
+        i_instruction_memory_read_data_reg_1  =>  s_instruction_memory_read_data,
+        i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
         i_data_memory_read_rden_1             =>  s_data_memory_read_rden_1,
         o_control_unit_mux                    =>  s_control_unit_mux_src,
-        o_if_df_write                         =>  s_im_write,
-        o_pc_write                            =>  s_pc_write
+        o_if_df_write                         =>  s_instruction_memory_read_rden,
+        o_pc_write                            =>  s_pc_read_enable
     );
 
 

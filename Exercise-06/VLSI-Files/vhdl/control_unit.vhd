@@ -132,7 +132,7 @@ begin
     begin
         if rising_edge( clk ) then
             if rst = '1' then
-                for i in 0 to 2 loop
+                for i in 0 to 3 loop
                     s_alu_op_reg(i)     <= "00";     
                     s_mux_to_reg_reg(i) <=  from_alu;     
                     s_mux_to_pc_reg(i)  <=  no_jump;     
@@ -143,7 +143,7 @@ begin
                     s_mem_rden_reg(i)   <=  '0';
                 end loop;
             
-            elsif i_hazard_mux_src = '1' then  -- if no hazard
+            elsif rst = '0' then --i_hazard_mux_src = '1' then  -- if no hazard
                 s_alu_op_reg     <= s_alu_op_reg    (s_alu_op_reg    'high -1 downto s_alu_op_reg    'low) & s_alu_op;
                 s_mux_to_reg_reg <= s_mux_to_reg_reg(s_mux_to_reg_reg'high -1 downto s_mux_to_reg_reg'low) & s_mux_to_reg;
                 s_mux_to_pc_reg  <= s_mux_to_pc_reg (s_mux_to_pc_reg 'high -1 downto s_mux_to_pc_reg 'low) & s_mux_to_pc;
@@ -153,7 +153,7 @@ begin
                 s_mem_wren_reg   <= s_mem_wren_reg  (s_mem_wren_reg  'high -1 downto s_mem_wren_reg  'low) & s_mem_wren;
                 s_mem_rden_reg   <= s_mem_rden_reg  (s_mem_rden_reg  'high -1 downto s_mem_rden_reg  'low) & s_mem_rden;
             
-            else  -- if hazard
+            else  -- reset
                 s_alu_op_reg     <= s_alu_op_reg    (s_alu_op_reg    'high -1 downto s_alu_op_reg    'low) & "00";
                 s_mux_to_reg_reg <= s_mux_to_reg_reg(s_mux_to_reg_reg'high -1 downto s_mux_to_reg_reg'low) & from_alu;
                 s_mux_to_pc_reg  <= s_mux_to_pc_reg (s_mux_to_pc_reg 'high -1 downto s_mux_to_pc_reg 'low) & no_jump;

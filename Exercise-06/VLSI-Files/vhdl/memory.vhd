@@ -32,6 +32,8 @@ architecture behav of memory is
 	signal s_mem_read_addr  : integer range 0 to mem_size-1;
 
 	signal s_read_data_reg  : std_logic_vector( word_size-1 downto 0 );
+	
+	signal tb_read_data     : std_logic_vector( word_size-1 downto 0 );
 
 
 begin
@@ -54,6 +56,8 @@ begin
 	   end if;
 	end process reading;
     o_read_data <= s_read_data_reg;
+    
+    tb_read_data <= s_data_reg_vec( s_mem_read_addr );
 
 
 

@@ -2,7 +2,6 @@ library IEEE;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
 use work.generic_header.ALL;
-use work.program.ALL;
 use work.misc.ALL;
 
 
@@ -23,8 +22,21 @@ architecture behav of cpu_tb is
 	signal s_register_file_read_b_data     : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
 	
 	
+	type program_mem is array( C_IM_MEM_SIZE downto 0 ) of std_logic_vector( 31 downto 0 );
+	constant program : program_mem := (
+	   0  => x"00500093",  -- addi x1, x0, 5
+	   1  => x"00102023",  -- sw   x0, 0(x0)
+	   2  => x"00002103",  -- lw   x2, 0(x0)
+	   3  => x"002081b3",  -- add  x3, x1, x2
+	   4  => x"ff9ff26f",  -- jal  x4, 8
+	   8  => x"00a202e7",  -- jalr x5, x4, 10
+	   
+	   others => ( others => '0' )
+	);	
+	
+	
 begin
-	vc: process
+	vc : process
 	begin
 		clk <= '1';
 		wait for clk_period/2;
@@ -32,11 +44,8 @@ begin
 		wait for clk_period/2;
 	end process;
 
-	--------------------
-	-- Finish CPU instantiation
-	--------------------
-	uut: entity work.cpu
---	generic map ()
+
+	UUT : entity work.cpu
 	port map(
         clk  =>  clk,
         rst  =>  rst,
@@ -49,8 +58,10 @@ begin
         o_register_file_read_b_data      =>  s_register_file_read_b_data
 	);
 
-	sim: process
+
+	TEST : process
 	begin
+		-- reset while loading instruction memory
 		rst <= '1';
 		
 		-- load instruction memory
@@ -58,20 +69,24 @@ begin
 		wait for clk_period;
         for i in 0 to (C_IM_MEM_SIZE)-1 loop
             s_instruction_memory_write_addr <= std_logic_vector( to_unsigned( i, log2(C_IM_MEM_SIZE)));
-            wait for clk_period;  -- don't ask me why this has to be here, I don't get it either
-            s_instruction_memory_write_data <= get_instruction( i );
+            wait for clk_period/2;
+            s_instruction_memory_write_data <= program( i );
+            wait for clk_period/2;
 		end loop;
+		wait for clk_period;
 		s_instruction_memory_write_wren <= '0';
 		
+		-- stop reset to start simulation the cpu
 		wait for 4*clk_period;
 		rst <= '0';
 		
-		for j in 0 to C_IM_MEM_SIZE+1 loop
-		  wait for 1ps;
+		for j in 0 to C_IM_MEM_SIZE*2 loop
+		  wait for clk_period/2;
 		end loop;
 		
-		wait;
+		wait;		
 	end process;
+
 
 end behav;
 

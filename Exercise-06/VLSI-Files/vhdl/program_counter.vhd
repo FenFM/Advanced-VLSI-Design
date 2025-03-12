@@ -49,7 +49,7 @@ architecture behavior of program_counter is
         port(
             A   : in  std_logic_vector( 31 downto 0 );
             B   : in  std_logic_vector( 31 downto 0 );
-            ADD : in std_logic;
+            ADD : in  std_logic;
             S   : out std_logic_vector( 31 downto 0 )
         );
     end component;
@@ -58,14 +58,14 @@ architecture behavior of program_counter is
         port(
             A   : in  std_logic_vector( 31 downto 0 );
             B   : in  std_logic_vector( 31 downto 0 );
-            ADD : in std_logic;
+            ADD : in  std_logic;
             S   : out std_logic_vector( 31 downto 0 )
         );
     end component;    
 
 
 begin
-    o_pc        <= r.pc_counter;
+    o_pc <= r.pc_counter;
     o_adder_one_reg <= s_adder_one_reg( 3 );
     o_adder_two_reg <= s_adder_two_reg( 1 );
     
@@ -73,25 +73,25 @@ begin
 
 
     -- r.pc_counter + pc_offset
-    adder_one_ins : unsigned_adder
-    port map(
-        A    =>  r.pc_counter, 
-        B    =>  s_pc_offset,
-        ADD  =>  '1',
-        S    =>  s_adder_one 
-    );
+--    adder_one_ins : unsigned_adder
+--    port map(
+--        A    =>  r.pc_counter, 
+--        B    =>  s_pc_offset,
+--        ADD  =>  '1',
+--        S    =>  s_adder_one 
+--    );
 
     -- unsigned( r.pc_counter ) + signed( i_immediate )
-    adder_two_ins : un_signed_adder
-    port map(
-        A    =>  i_immediate, 
-        B    =>  s_pc_counter_reg(1),
-        ADD  =>  '1',
-        S    =>  s_adder_two 
-    );
+--    adder_two_ins : un_signed_adder
+--    port map(
+--        A    =>  i_immediate, 
+--        B    =>  s_pc_counter_reg(1),
+--        ADD  =>  '1',
+--        S    =>  s_adder_two 
+--    );
 
---    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
---    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
+    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
+    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
 
 
     reg : process ( clk, rst )
@@ -99,7 +99,7 @@ begin
         if rst = '1' then
             r.pc_counter <= (others => '0');
         end if;
-        if rising_edge( clk ) then
+        if rising_edge( clk ) and i_enable = '1' then
             r <= rin;
         end if;
     end process reg;
@@ -110,18 +110,16 @@ begin
     begin
         v := r;
         
-        if i_enable = '1' then
-            v.pc_counter := s_adder_one;
-            case i_mux_signal is
-                when no_jump     =>  
-                when con_jump    =>  if i_alu_zero_flag = '1' then
-                                        v.pc_counter := s_adder_two_reg( 0 );
-                                     end if;
-                when uncon_jump  =>  v.pc_counter := s_adder_two_reg( 0 );
-                when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
-                when others      =>  
-            end case;
-        end if;
+        v.pc_counter := s_adder_one;
+        case i_mux_signal is
+            when no_jump     =>  
+            when con_jump    =>  if i_alu_zero_flag = '1' then
+                                    v.pc_counter := s_adder_two_reg( 0 );
+                                 end if;
+            when uncon_jump  =>  v.pc_counter := s_adder_two_reg( 0 );
+            when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
+            when others      =>  
+        end case;
 
         rin <= v;
     end process comb;

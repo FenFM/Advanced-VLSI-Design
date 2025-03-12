@@ -8,7 +8,7 @@ entity alu is
 	generic ( bit_width : integer := 32 );
 	port (
         i_inverse_zero  : in std_logic;
-        i_alu_pass      : in std_logic;
+        i_alu_bypass    : in std_logic;
 
 		i_operation     : in  std_logic_vector( 4 downto 0 );
 		i_operand_a     : in  std_logic_vector( bit_width-1 downto 0 );
@@ -16,28 +16,20 @@ entity alu is
 
 		o_result        : out std_logic_vector( bit_width-1 downto 0 );
 
-        o_zero_flag     : out std_logic
---        o_overflow_flag : out std_logic
+        o_zero_flag     : out std_logic;
+        o_overflow_flag : out std_logic
 	);
 end entity alu;
 
 
-architecture behavior of alu is
-    component signed_adder_33
-    port(
-        A : in  std_logic_vector( 31 downto 0 );
-        B : in  std_logic_vector( 31 downto 0 );
-        S : out std_logic_vector( 32 downto 0 )
-    );
-    end component;
-    
+architecture behavior of alu is   
     component signed_adder
     port(
         A   : in  std_logic_vector( 31 downto 0 );
         B   : in  std_logic_vector( 31 downto 0 );
         ADD : in  std_logic;
         S   : out std_logic_vector( 31 downto 0 )
-    );    
+    );
     end component;
 
     signal s_result : std_logic_vector( bit_width-1 downto 0 );
@@ -50,8 +42,6 @@ architecture behavior of alu is
     
     signal add_src : std_logic;
 
---    signal add_res  : std_logic_vector( bit_width   downto 0 );
---    signal sub_res  : std_logic_vector( bit_width-1 downto 0 );
     signal add_res  : std_logic_vector( bit_width-1 downto 0 );
     signal and_res  : std_logic_vector( bit_width-1 downto 0 );
     signal or_res   : std_logic_vector( bit_width-1 downto 0 );
@@ -84,25 +74,35 @@ begin
     sll_uint_b <= to_integer( unsigned( std_b_cut ));
 
 
-    -- zero flag
-    o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
-
-
-    -- addition and substraction
-    signed_adder_ins : signed_adder
-    port map( 
-        A    =>  i_operand_a, 
-        B    =>  i_operand_b, 
-        ADD  =>  add_src, 
-        S    =>  add_res 
-    );
+    -- addition and subtraction
+--    signed_adder_ins : signed_adder
+--    port map( 
+--        A    =>  i_operand_a, 
+--        B    =>  i_operand_b, 
+--        ADD  =>  add_src,
+--        S    =>  add_res 
+--    );
     
     -- add and sub only for testbench
---    add_res <= std_logic_vector(signed(i_operand_a(31) & i_operand_a) +  signed(i_operand_b(31) & i_operand_b));
---    sub_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
-    
+    process( add_src, i_operand_a, i_operand_b )
+    begin
+        case add_src is
+            when '0'     =>  add_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
+            when others  =>  add_res <= std_logic_vector(signed(i_operand_a) + signed(i_operand_b));
+        end case;
+    end process;
+     
     -- overflow flag
---    o_overflow_flag <= add_res( bit_width );
+    overflow_detection : process( add_res )
+    begin
+        case add_src is
+            when '0'     =>  o_overflow_flag <= not add_res( bit_width-1 );  -- sub: overflow when MSB == 0
+            when others  =>  o_overflow_flag <= add_res( bit_width-1 );      -- add: overflow when MSB == 1
+        end case;
+    end process overflow_detection;
+    
+    -- zero flag                                             
+    o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;    
     
     -- and
     and_res <= i_operand_a and i_operand_b;
@@ -175,8 +175,6 @@ begin
     begin
         add_src <= '1';
         case i_operation is
---            when opcode_ADD     =>  s_result <= add_res( bit_width-1 downto 0 );
---            when opcode_SUB     =>  s_result <= sub_res;
             when opcode_ADD     =>  s_result <= add_res;
             when opcode_SUB     =>  s_result <= add_res;
                                     add_src  <= '0';
@@ -199,7 +197,7 @@ begin
             when others         =>  s_result <= ( others => '0' );
         end case;
 
-        if i_alu_pass = '1' then
+        if i_alu_bypass = '1' then
             s_result <= i_operand_b;
         end if;
 
