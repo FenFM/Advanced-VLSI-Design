@@ -1,5 +1,0 @@
-vhdl xil_defaultlib  \
-"../../../../../VLSI-Files/ip/un_signed_multiplier/sim/un_signed_multiplier.vhd" \
-
-# Do not sort compile order
-nosort
