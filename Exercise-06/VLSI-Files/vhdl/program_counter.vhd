@@ -73,25 +73,25 @@ begin
 
 
     -- r.pc_counter + pc_offset
---    adder_one_ins : unsigned_adder
---    port map(
---        A    =>  r.pc_counter, 
---        B    =>  s_pc_offset,
---        ADD  =>  '1',
---        S    =>  s_adder_one 
---    );
+    adder_one_ins : unsigned_adder
+    port map(
+        A    =>  r.pc_counter, 
+        B    =>  s_pc_offset,
+        ADD  =>  '1',
+        S    =>  s_adder_one 
+    );
 
     -- unsigned( r.pc_counter ) + signed( i_immediate )
---    adder_two_ins : un_signed_adder
---    port map(
---        A    =>  i_immediate, 
---        B    =>  s_pc_counter_reg(1),
---        ADD  =>  '1',
---        S    =>  s_adder_two 
---    );
+    adder_two_ins : un_signed_adder
+    port map(
+        A    =>  i_immediate, 
+        B    =>  s_pc_counter_reg(1),
+        ADD  =>  '1',
+        S    =>  s_adder_two 
+    );
 
-    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
-    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
+--    s_adder_one <= std_logic_vector(unsigned(r.pc_counter) + pc_offset);
+--    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
 
 
     reg : process ( clk, rst )

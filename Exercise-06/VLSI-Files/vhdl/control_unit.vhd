@@ -9,21 +9,23 @@ entity control_unit is
         bit_width : integer := 8
     );
     port(
-        clk              : in  std_logic;
-        rst              : in  std_logic;
-        i_instruction    : in  std_logic_vector( 31 downto 0 );
-        i_hazard_mux_src : in  std_logic;
-        o_alu_op         : out std_logic_vector(  1 downto 0 );
-        o_alu_src        : out std_logic;
-        o_alu_pass       : out std_logic;
-        o_reg_wren_2     : out std_logic;
-        o_reg_wren_3     : out std_logic;
-        o_reg_wren_4     : out std_logic;
-        o_mem_wren       : out std_logic;
-        o_mem_rden_1     : out std_logic;
-        o_mem_rden_2     : out std_logic;
-        o_mux_to_reg     : out std_logic_vector( 1 downto 0 );
-        o_mux_to_pc      : out std_logic_vector( 1 downto 0 )
+        clk                : in  std_logic;
+        rst                : in  std_logic;
+        i_instruction      : in  std_logic_vector( 31 downto 0 );
+        i_hazard_mux_src_1 : in  std_logic;
+        i_hazard_mux_src_2 : in  std_logic;
+        o_alu_op           : out std_logic_vector(  1 downto 0 );
+        o_alu_src          : out std_logic;
+        o_alu_pass         : out std_logic;
+        o_reg_wren_2       : out std_logic;
+        o_reg_wren_3       : out std_logic;
+        o_reg_wren_4       : out std_logic;
+        o_mem_wren         : out std_logic;
+        o_mem_rden_1       : out std_logic;
+        o_mem_rden_2       : out std_logic;
+        o_mux_to_reg       : out std_logic_vector( 1 downto 0 );
+        o_mux_to_pc_1      : out std_logic_vector( 1 downto 0 );
+        o_mux_to_pc_2      : out std_logic_vector( 1 downto 0 )
     );
 end entity;
 
@@ -128,9 +130,29 @@ begin
     end process set_output_flags;
     
     
-    shift_registers : process( clk )
+    shift_registers : process( all )
     begin
         if rising_edge( clk ) then
+            s_alu_op_reg     <= s_alu_op_reg    (s_alu_op_reg    'high -1 downto s_alu_op_reg    'low) & s_alu_op;
+            s_mux_to_reg_reg <= s_mux_to_reg_reg(s_mux_to_reg_reg'high -1 downto s_mux_to_reg_reg'low) & s_mux_to_reg;
+            s_mux_to_pc_reg  <= s_mux_to_pc_reg (s_mux_to_pc_reg 'high -1 downto s_mux_to_pc_reg 'low) & s_mux_to_pc;
+            s_alu_src_reg    <= s_alu_src_reg   (s_alu_src_reg   'high -1 downto s_alu_src_reg   'low) & s_alu_src;
+            s_alu_pass_reg   <= s_alu_pass_reg  (s_alu_pass_reg  'high -1 downto s_alu_pass_reg  'low) & s_alu_pass;
+            s_reg_wren_reg   <= s_reg_wren_reg  (s_reg_wren_reg  'high -1 downto s_reg_wren_reg  'low) & s_reg_wren;
+            s_mem_wren_reg   <= s_mem_wren_reg  (s_mem_wren_reg  'high -1 downto s_mem_wren_reg  'low) & s_mem_wren;
+            s_mem_rden_reg   <= s_mem_rden_reg  (s_mem_rden_reg  'high -1 downto s_mem_rden_reg  'low) & s_mem_rden;        
+
+            if i_hazard_mux_src_2 = '0' then
+                s_alu_op_reg(1)     <= "00";     
+                s_mux_to_reg_reg(1) <=  from_alu;     
+                s_mux_to_pc_reg(1)  <=  no_jump;     
+                s_alu_src_reg(1)    <=  '0';    
+                s_alu_pass_reg(1)   <=  '0';    
+                s_reg_wren_reg(1)   <=  '0';    
+                s_mem_wren_reg(1)   <=  '0';
+                s_mem_rden_reg(1)   <=  '0';
+            end if;     
+        
             if rst = '1' then
                 for i in 0 to 3 loop
                     s_alu_op_reg(i)     <= "00";     
@@ -142,28 +164,20 @@ begin
                     s_mem_wren_reg(i)   <=  '0';
                     s_mem_rden_reg(i)   <=  '0';
                 end loop;
-            
-            elsif rst = '0' then --i_hazard_mux_src = '1' then  -- if no hazard
-                s_alu_op_reg     <= s_alu_op_reg    (s_alu_op_reg    'high -1 downto s_alu_op_reg    'low) & s_alu_op;
-                s_mux_to_reg_reg <= s_mux_to_reg_reg(s_mux_to_reg_reg'high -1 downto s_mux_to_reg_reg'low) & s_mux_to_reg;
-                s_mux_to_pc_reg  <= s_mux_to_pc_reg (s_mux_to_pc_reg 'high -1 downto s_mux_to_pc_reg 'low) & s_mux_to_pc;
-                s_alu_src_reg    <= s_alu_src_reg   (s_alu_src_reg   'high -1 downto s_alu_src_reg   'low) & s_alu_src;
-                s_alu_pass_reg   <= s_alu_pass_reg  (s_alu_pass_reg  'high -1 downto s_alu_pass_reg  'low) & s_alu_pass;
-                s_reg_wren_reg   <= s_reg_wren_reg  (s_reg_wren_reg  'high -1 downto s_reg_wren_reg  'low) & s_reg_wren;
-                s_mem_wren_reg   <= s_mem_wren_reg  (s_mem_wren_reg  'high -1 downto s_mem_wren_reg  'low) & s_mem_wren;
-                s_mem_rden_reg   <= s_mem_rden_reg  (s_mem_rden_reg  'high -1 downto s_mem_rden_reg  'low) & s_mem_rden;
-            
-            else  -- reset
-                s_alu_op_reg     <= s_alu_op_reg    (s_alu_op_reg    'high -1 downto s_alu_op_reg    'low) & "00";
-                s_mux_to_reg_reg <= s_mux_to_reg_reg(s_mux_to_reg_reg'high -1 downto s_mux_to_reg_reg'low) & from_alu;
-                s_mux_to_pc_reg  <= s_mux_to_pc_reg (s_mux_to_pc_reg 'high -1 downto s_mux_to_pc_reg 'low) & no_jump;
-                s_alu_src_reg    <= s_alu_src_reg   (s_alu_src_reg   'high -1 downto s_alu_src_reg   'low) & '0';
-                s_alu_pass_reg   <= s_alu_pass_reg  (s_alu_pass_reg  'high -1 downto s_alu_pass_reg  'low) & '0';
-                s_reg_wren_reg   <= s_reg_wren_reg  (s_reg_wren_reg  'high -1 downto s_reg_wren_reg  'low) & '0';
-                s_mem_wren_reg   <= s_mem_wren_reg  (s_mem_wren_reg  'high -1 downto s_mem_wren_reg  'low) & '0';
-                s_mem_rden_reg   <= s_mem_rden_reg  (s_mem_rden_reg  'high -1 downto s_mem_rden_reg  'low) & '0';
             end if;
         end if;
+        
+--        if i_hazard_mux_src_2 = '0' then
+--            s_alu_op_reg(0)     <= "00";     
+--            s_mux_to_reg_reg(0) <=  from_alu;     
+--            s_mux_to_pc_reg(0)  <=  no_jump;     
+--            s_alu_src_reg(0)    <=  '0';    
+--            s_alu_pass_reg(0)   <=  '0';    
+--            s_reg_wren_reg(0)   <=  '0';    
+--            s_mem_wren_reg(0)   <=  '0';
+--            s_mem_rden_reg(0)   <=  '0';
+--        end if;          
+        
     end process shift_registers;
 
     
@@ -178,7 +192,8 @@ begin
     o_mem_rden_1  <= s_mem_rden_reg( 0 );
     o_mem_rden_2  <= s_mem_rden_reg( 1 );
     o_mux_to_reg  <= s_mux_to_reg_reg( 2 );
-    o_mux_to_pc   <= s_mux_to_pc_reg ( 1 );
+    o_mux_to_pc_1 <= s_mux_to_pc_reg ( 0 );
+    o_mux_to_pc_2 <= s_mux_to_pc_reg ( 1 );
 
 
 end behavior;

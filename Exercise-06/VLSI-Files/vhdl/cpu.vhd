@@ -1,6 +1,8 @@
 library IEEE;
+library UNISIM;
 use IEEE.std_logic_1164.ALL;
 use IEEE.numeric_std.ALL;
+use UNISIM.vcomponents.all;
 
 use work.generic_header.ALL;
 use work.isa_riscv.ALL;
@@ -10,8 +12,8 @@ use work.misc.ALL;
 
 entity cpu is
     port(
-        clk : in std_logic;
-        rst : in std_logic;
+        clk_100 : in std_logic;
+        rst     : in std_logic;
 
         i_instruction_memory_write_data : in  std_logic_vector( C_BIT_WIDTH-1 downto 0 );
         i_instruction_memory_write_addr : in  std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
@@ -26,6 +28,7 @@ end entity cpu;
 
 
 architecture structure of cpu is
+    signal clk : std_logic;
     -- signals for the program counter
     signal s_pc_jump          : std_logic;
     signal s_pc_adder_one_reg : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -72,7 +75,8 @@ architecture structure of cpu is
     signal s_acu_operation     : std_logic_vector( 1 downto 0 );
     signal s_alu_mux_b_src     : std_logic;
     signal s_alu_passthrough_b : std_logic;
-    signal s_pc_mux_src        : std_logic_vector( 1 downto 0 );
+    signal s_pc_mux_src_1      : std_logic_vector( 1 downto 0 );
+    signal s_pc_mux_src_2      : std_logic_vector( 1 downto 0 );
     signal s_reg_mux_src       : std_logic_vector( 1 downto 0 );
 
     -- signals for the alu control unit
@@ -104,28 +108,38 @@ architecture structure of cpu is
     signal s_alu_forwarding_mux_b_data : std_logic_vector( 31 downto 0 );
 
     -- signals for the hazard detection unit
-    signal s_control_unit_mux_src : std_logic;
-    signal s_pc_read_enable       : std_logic;
+    signal s_control_unit_mux_src_1 : std_logic;
+    signal s_control_unit_mux_src_2 : std_logic;
+    signal s_pc_read_enable         : std_logic;
+    signal s_im_mux_src             : std_logic;
 
 
 begin
+    BUFG_inst : BUFG
+    port map (
+       O  =>  clk, -- 1-bit output: Clock output.
+       I  =>  clk_100  -- 1-bit input: Clock input.
+    );
+
     CU : entity work.control_unit
     port map(
-        clk               =>  clk,
-        rst               =>  rst,
-        i_instruction     =>  s_instruction_memory_read_data_reg_1,
-        i_hazard_mux_src  =>  s_control_unit_mux_src,
-        o_alu_op          =>  s_acu_operation,
-        o_alu_src         =>  s_alu_mux_b_src,
-        o_alu_pass        =>  s_alu_passthrough_b,
-        o_reg_wren_2      =>  s_register_file_write_wren_2,
-        o_reg_wren_3      =>  s_register_file_write_wren_3,
-        o_reg_wren_4      =>  s_register_file_write_wren_4,
-        o_mem_wren        =>  s_data_memory_write_wren,
-        o_mem_rden_1      =>  s_data_memory_read_rden_1,
-        o_mem_rden_2      =>  s_data_memory_read_rden_2,
-        o_mux_to_pc       =>  s_pc_mux_src,
-        o_mux_to_reg      =>  s_reg_mux_src
+        clk                 =>  clk,
+        rst                 =>  rst,
+        i_instruction       =>  s_instruction_memory_read_data_reg_1,
+        i_hazard_mux_src_1  =>  s_control_unit_mux_src_1,
+        i_hazard_mux_src_2  =>  s_control_unit_mux_src_2,
+        o_alu_op            =>  s_acu_operation,
+        o_alu_src           =>  s_alu_mux_b_src,
+        o_alu_pass          =>  s_alu_passthrough_b,
+        o_reg_wren_2        =>  s_register_file_write_wren_2,
+        o_reg_wren_3        =>  s_register_file_write_wren_3,
+        o_reg_wren_4        =>  s_register_file_write_wren_4,
+        o_mem_wren          =>  s_data_memory_write_wren,
+        o_mem_rden_1        =>  s_data_memory_read_rden_1,
+        o_mem_rden_2        =>  s_data_memory_read_rden_2,
+        o_mux_to_pc_1       =>  s_pc_mux_src_1,
+        o_mux_to_pc_2       =>  s_pc_mux_src_2,
+        o_mux_to_reg        =>  s_reg_mux_src
     );
 
 
@@ -139,7 +153,7 @@ begin
         rst              =>  rst,
         i_enable         =>  s_pc_read_enable,
         i_alu_zero_flag  =>  s_alu_zero_flag_reg,
-        i_mux_signal     =>  s_pc_mux_src,
+        i_mux_signal     =>  s_pc_mux_src_2,
         i_immediate      =>  s_immediate_reg,
         i_jalr_value     =>  s_alu_result_reg_1,
         o_adder_one_reg  =>  s_pc_adder_one_reg,
@@ -169,7 +183,7 @@ begin
     IM_OUT_MUX : entity work.mux_switch_2
     generic map( C_BIT_WIDTH )
     port map(
-        s  =>  s_instruction_memory_read_rden,
+        s  =>  s_im_mux_src,
         a  =>  x"00000013",  -- NOP: addi x0, x0, 0
         b  =>  s_instruction_memory_read_data,
         o  =>  s_instruction_memory_read_data_reg_1
@@ -359,13 +373,18 @@ begin
     HAZARD : entity work.hazard_detection_unit
     generic map( C_REG_SIZE )
     port map (
+        clk                                   =>  clk,
         rst                                   =>  rst,
         i_instruction_memory_read_data_reg_1  =>  s_instruction_memory_read_data,
         i_instruction_memory_read_data_reg_2  =>  s_instruction_memory_read_data_reg_2,
         i_data_memory_read_rden_1             =>  s_data_memory_read_rden_1,
-        o_control_unit_mux                    =>  s_control_unit_mux_src,
-        o_if_df_write                         =>  s_instruction_memory_read_rden,
-        o_pc_write                            =>  s_pc_read_enable
+        i_pc_mux_src_2                        =>  s_pc_mux_src_2,
+        i_alu_zero_flag_reg                   =>  s_alu_zero_flag_reg,
+        o_control_unit_mux_1                  =>  s_control_unit_mux_src_1,
+        o_control_unit_mux_2                  =>  s_control_unit_mux_src_2,
+        o_im_rden                             =>  s_instruction_memory_read_rden,
+        o_im_mux_src                          =>  s_im_mux_src,
+        o_pc_rden                             =>  s_pc_read_enable
     );
 
 

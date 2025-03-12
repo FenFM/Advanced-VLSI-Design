@@ -75,22 +75,22 @@ begin
 
 
     -- addition and subtraction
---    signed_adder_ins : signed_adder
---    port map( 
---        A    =>  i_operand_a, 
---        B    =>  i_operand_b, 
---        ADD  =>  add_src,
---        S    =>  add_res 
---    );
+    signed_adder_ins : signed_adder
+    port map( 
+        A    =>  i_operand_a, 
+        B    =>  i_operand_b, 
+        ADD  =>  add_src,
+        S    =>  add_res 
+    );
     
     -- add and sub only for testbench
-    process( add_src, i_operand_a, i_operand_b )
-    begin
-        case add_src is
-            when '0'     =>  add_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
-            when others  =>  add_res <= std_logic_vector(signed(i_operand_a) + signed(i_operand_b));
-        end case;
-    end process;
+--    process( add_src, i_operand_a, i_operand_b )
+--    begin
+--        case add_src is
+--            when '0'     =>  add_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
+--            when others  =>  add_res <= std_logic_vector(signed(i_operand_a) + signed(i_operand_b));
+--        end case;
+--    end process;
      
     -- overflow flag
     overflow_detection : process( add_res )
