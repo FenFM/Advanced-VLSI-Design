@@ -116,7 +116,7 @@ begin
                 when no_jump     =>  
                 when con_jump    =>  if i_alu_zero_flag = '1' then
                                         v.pc_counter := s_adder_two_reg( 0 );
-                                    end if;
+                                     end if;
                 when uncon_jump  =>  v.pc_counter := s_adder_two_reg( 0 );
                 when jalr_jump   =>  v.pc_counter := i_jalr_value( bit_width-1 downto 1 ) & '0';
                 when others      =>  

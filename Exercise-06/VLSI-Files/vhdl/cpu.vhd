@@ -172,7 +172,7 @@ begin
     generic map( C_BIT_WIDTH )
     port map(
         s  =>  s_im_write,
-        a  =>  x"0000000C",
+        a  =>  x"00000013",  -- NOP: addi x0, x0, 0
         b  =>  s_instruction_memory_read_data,
         o  =>  s_instruction_memory_read_data_reg_1
     );
