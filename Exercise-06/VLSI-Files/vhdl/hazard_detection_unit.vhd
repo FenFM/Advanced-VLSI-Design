@@ -41,7 +41,7 @@ begin
     o_im_mux_src <= s_im_mux_src and s_im_mux_reg( 0 ) and s_im_mux_reg( 1 );
 
 
-    hazard : process( rst, i_data_memory_read_rden_1, s_rf_read_a_addr, s_rf_read_b_addr, s_rf_write_addr_2 )
+    hazard : process( rst, i_data_memory_read_rden_1, s_rf_read_a_addr, s_rf_read_b_addr, s_rf_write_addr_2, i_pc_mux_src_2, i_alu_zero_flag_reg )
     begin
         -- control signals when no hazard is detected
         o_control_unit_mux_1 <= '1';

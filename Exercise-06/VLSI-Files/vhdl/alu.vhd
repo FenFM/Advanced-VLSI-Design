@@ -93,7 +93,7 @@ begin
 --    end process;
      
     -- overflow flag
-    overflow_detection : process( add_res )
+    overflow_detection : process( add_src, add_res )
     begin
         case add_src is
             when '0'     =>  o_overflow_flag <= not add_res( bit_width-1 );  -- sub: overflow when MSB == 0
@@ -101,8 +101,9 @@ begin
         end case;
     end process overflow_detection;
     
-    -- zero flag                                             
-    o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;    
+    -- zero flag
+    o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
+
     
     -- and
     and_res <= i_operand_a and i_operand_b;

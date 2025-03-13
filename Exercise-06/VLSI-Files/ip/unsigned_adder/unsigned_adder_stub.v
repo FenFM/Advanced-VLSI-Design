@@ -2,13 +2,13 @@
 // Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 // --------------------------------------------------------------------------------
 // Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
-// Date        : Sun Mar  9 13:28:16 2025
+// Date        : Thu Mar 13 00:14:19 2025
 // Host        : Crawler-E30 running 64-bit major release  (build 9200)
 // Command     : write_verilog -force -mode synth_stub -rename_top unsigned_adder -prefix
 //               unsigned_adder_ unsigned_adder_stub.v
 // Design      : unsigned_adder
 // Purpose     : Stub declaration of top-level module interface
-// Device      : xc7z010iclg225-1L
+// Device      : xc7z020clg484-1
 // --------------------------------------------------------------------------------
 
 // This empty module with port declaration file causes synthesis tools to infer a black box for IP.

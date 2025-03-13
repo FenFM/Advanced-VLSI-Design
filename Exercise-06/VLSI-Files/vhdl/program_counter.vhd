@@ -94,7 +94,7 @@ begin
 --    s_adder_two <= std_logic_vector(signed(s_pc_counter_reg(1)) + signed(i_immediate));
 
 
-    reg : process ( clk, rst )
+    reg : process ( clk, rst, i_enable )
     begin
         if rst = '1' then
             r.pc_counter <= (others => '0');
@@ -105,7 +105,7 @@ begin
     end process reg;
 
 
-    comb : process ( r, i_mux_signal, i_alu_zero_flag, s_adder_one, s_adder_two, i_jalr_value )
+    comb : process ( r, i_mux_signal, i_alu_zero_flag, s_adder_one, s_adder_two_reg(0), i_jalr_value )
         variable v : alu;
     begin
         v := r;

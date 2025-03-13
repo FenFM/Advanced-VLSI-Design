@@ -12,8 +12,8 @@ use work.misc.ALL;
 
 entity cpu is
     port(
-        clk_100 : in std_logic;
-        rst     : in std_logic;
+        clk : in std_logic;
+        rst : in std_logic;
 
         i_instruction_memory_write_data : in  std_logic_vector( C_BIT_WIDTH-1 downto 0 );
         i_instruction_memory_write_addr : in  std_logic_vector( log2(C_IM_MEM_SIZE)-1 downto 0 );
@@ -28,7 +28,7 @@ end entity cpu;
 
 
 architecture structure of cpu is
-    signal clk : std_logic;
+--    signal clk : std_logic;
     -- signals for the program counter
     signal s_pc_jump          : std_logic;
     signal s_pc_adder_one_reg : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -115,11 +115,11 @@ architecture structure of cpu is
 
 
 begin
-    BUFG_inst : BUFG
-    port map (
-       O  =>  clk, -- 1-bit output: Clock output.
-       I  =>  clk_100  -- 1-bit input: Clock input.
-    );
+--    BUFG_inst : BUFG
+--    port map (
+--       O  =>  clk, -- 1-bit output: Clock output.
+--       I  =>  clk_100  -- 1-bit input: Clock input.
+--    );
 
     CU : entity work.control_unit
     port map(
@@ -313,6 +313,7 @@ begin
     )
     port map (
         clk            =>  clk,
+        rst            =>  rst,
         i_write_data   =>  s_register_write_data,
         i_write_addr   =>  s_register_file_write_addr,
         i_write_wren   =>  s_register_file_write_wren_3,
@@ -324,6 +325,8 @@ begin
     s_register_file_read_a_addr <= s_instruction_memory_read_data_reg_1( 19 downto 15 );
     s_register_file_read_b_addr <= s_instruction_memory_read_data_reg_1( 24 downto 20 );
     s_register_file_write_addr  <= s_instruction_memory_read_data_reg_4( 11 downto  7 );
+    s_register_file_read_a_data_reg <= s_register_file_read_a_data;
+    s_register_file_read_b_data_reg <= s_register_file_read_b_data;
     o_register_file_read_a_data <= s_register_file_read_a_data;
     o_register_file_read_b_data <= s_register_file_read_b_data;
 
@@ -358,8 +361,8 @@ begin
         o_instruction_memory_read_data_reg_3  =>  s_instruction_memory_read_data_reg_3,
         o_instruction_memory_read_data_reg_4  =>  s_instruction_memory_read_data_reg_4,
         o_instruction_memory_read_data_reg_5  =>  s_instruction_memory_read_data_reg_5,
-        o_register_file_read_a_data_reg       =>  s_register_file_read_a_data_reg,
-        o_register_file_read_b_data_reg       =>  s_register_file_read_b_data_reg,
+--        o_register_file_read_a_data_reg       =>  s_register_file_read_a_data_reg,
+--        o_register_file_read_b_data_reg       =>  s_register_file_read_b_data_reg,
         o_immediate_reg                       =>  s_immediate_reg,
         o_alu_result_reg_1                    =>  s_alu_result_reg_1,
         o_alu_result_reg_2                    =>  s_alu_result_reg_2,

@@ -30,8 +30,6 @@ architecture behav of memory is
 
 	signal s_mem_write_addr : integer range 0 to mem_size-1;
 	signal s_mem_read_addr  : integer range 0 to mem_size-1;
-
-	signal s_read_data_reg  : std_logic_vector( word_size-1 downto 0 );
 	
 	signal tb_read_data     : std_logic_vector( word_size-1 downto 0 );
 
@@ -41,24 +39,20 @@ begin
 	s_mem_read_addr  <= to_integer( unsigned( i_read_addr  ));
 
 
-	writing : process( clk, i_write_wren, s_mem_write_addr, i_write_data )
+	in_out : process( clk, s_data_reg_vec, i_write_wren, i_read_rden, i_write_data, s_mem_read_addr, s_mem_write_addr )
 	begin
-		if rising_edge( clk ) and i_write_wren = '1' then
-			s_data_reg_vec( s_mem_write_addr ) <= i_write_data;
+        if rising_edge( clk ) then
+            if i_write_wren = '1' then
+                s_data_reg_vec( s_mem_write_addr ) <= i_write_data;
+            end if;
+            
+           if i_read_rden = '1' then
+               o_read_data <= s_data_reg_vec( s_mem_read_addr );
+           end if;
 		end if;
-	end process writing;
+	end process in_out;
 
-
-	reading : process( clk, i_read_rden, s_mem_read_addr, s_data_reg_vec )
-	begin
-	   if rising_edge(clk) and i_read_rden = '1' then
-	       s_read_data_reg <= s_data_reg_vec( s_mem_read_addr );
-	   end if;
-	end process reading;
-    o_read_data <= s_read_data_reg;
-    
     tb_read_data <= s_data_reg_vec( s_mem_read_addr );
-
 
 
 end behav;

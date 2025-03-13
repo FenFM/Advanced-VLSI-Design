@@ -70,7 +70,7 @@ begin
     );
    
     
-    process( valid, validu, res, resu )
+    process( valid, validu, res, resu, zero, zerou )
     begin
         if valid = '1'  and zero = "0" then
             divs <= res( 63 downto 32 );

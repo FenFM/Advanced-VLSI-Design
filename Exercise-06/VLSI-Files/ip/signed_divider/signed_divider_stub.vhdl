@@ -2,13 +2,13 @@
 -- Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2024.1 (win64) Build 5076996 Wed May 22 18:37:14 MDT 2024
--- Date        : Sun Mar  9 10:53:10 2025
+-- Date        : Thu Mar 13 00:16:07 2025
 -- Host        : Crawler-E30 running 64-bit major release  (build 9200)
--- Command     : write_vhdl -force -mode synth_stub -rename_top signed_divider -prefix
---               signed_divider_ signed_divider_stub.vhdl
+-- Command     : write_vhdl -force -mode synth_stub
+--               c:/Users/fenja/Projekte/Advanced-VLSI-Design/Exercise-06/VLSI-Files/ip/signed_divider/signed_divider_stub.vhdl
 -- Design      : signed_divider
 -- Purpose     : Stub declaration of top-level module interface
--- Device      : xc7z010iclg225-1L
+-- Device      : xc7z020clg484-1
 -- --------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
