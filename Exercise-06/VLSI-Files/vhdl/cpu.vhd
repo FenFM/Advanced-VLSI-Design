@@ -28,7 +28,6 @@ end entity cpu;
 
 
 architecture structure of cpu is
---    signal clk : std_logic;
     -- signals for the program counter
     signal s_pc_jump          : std_logic;
     signal s_pc_adder_one_reg : std_logic_vector( C_BIT_WIDTH-1 downto 0 );
@@ -112,15 +111,12 @@ architecture structure of cpu is
     signal s_control_unit_mux_src_2 : std_logic;
     signal s_pc_read_enable         : std_logic;
     signal s_im_mux_src             : std_logic;
+    
+    signal s_dm_align_input_src : std_logic_vector( 2 downto 0 );
+    signal s_data_memory_write_data_aligned : std_logic_vector( 31 downto 0 );
 
 
 begin
---    BUFG_inst : BUFG
---    port map (
---       O  =>  clk, -- 1-bit output: Clock output.
---       I  =>  clk_100  -- 1-bit input: Clock input.
---    );
-
     CU : entity work.control_unit
     port map(
         clk                 =>  clk,
@@ -204,8 +200,8 @@ begin
         i_instruction      =>  s_instruction_memory_read_data_reg_2,
         i_alu_instruction  =>  s_acu_operation,
         o_alu_operation    =>  s_alu_operation,
-        o_alu_align        =>  s_alu_align_input_a_src,
-        o_dm_align         =>  s_dm_align_output_src,
+        o_dm_in_align      =>  s_dm_align_input_src,
+        o_dm_out_align     =>  s_dm_align_output_src,
         o_inverse_zero     =>  s_inverse_zero
     );
 
@@ -231,16 +227,7 @@ begin
         d  =>  s_register_write_data_reg,        -- alu result from 3 ops ago
         o  =>  s_alu_forwarding_mux_b_data
     );
-    
-    -- aligns the input for LOAD and STORE operations
-    ALU_IN_A : entity work.inout_align
-    generic map( C_BIT_WIDTH )
-    port map(
-        control  =>  s_alu_align_input_a_src,
-        din      =>  s_alu_forwarding_mux_a_data,
-        dout     =>  s_alu_operand_a
-    );
-    
+       
     ALU_MUX_B : entity work.mux_switch_2
     generic map( C_BIT_WIDTH )
     port map (
@@ -253,7 +240,7 @@ begin
     ALU : entity work.alu
     generic map ( C_BIT_WIDTH )
     port map (
-        i_operand_a      =>  s_alu_operand_a,
+        i_operand_a      =>  s_alu_forwarding_mux_a_data,
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_alu_operation,
         i_inverse_zero   =>  s_inverse_zero,
@@ -277,7 +264,15 @@ begin
         o_mux_a_src  =>  s_forwarding_mux_a_src,
         o_mux_b_src  =>  s_forwarding_mux_b_src
     );
+    
 
+    DM_IM : entity work.inout_align
+    generic map( C_BIT_WIDTH )
+    port map(
+        control  =>  s_dm_align_input_src,
+        din      =>  s_alu_forwarding_mux_b_reg,
+        dout     =>  s_data_memory_write_data_aligned
+    );
 
     DM : entity work.memory
     generic map(
@@ -286,7 +281,7 @@ begin
     )
     port map (
         clk           =>  clk,
-        i_write_data  =>  s_alu_forwarding_mux_b_reg,        
+        i_write_data  =>  s_data_memory_write_data_aligned,        
         i_write_addr  =>  s_alu_result_reg_1( log2(C_DM_MEM_SIZE)-1 downto 0 ), 
         i_write_wren  =>  s_data_memory_write_wren,
         o_read_data   =>  s_data_memory_read_data,       

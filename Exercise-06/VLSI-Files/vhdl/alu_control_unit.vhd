@@ -10,21 +10,20 @@ entity alu_control_unit is
         i_instruction     : in  std_logic_vector( 31 downto 0 );
         i_alu_instruction : in  std_logic_vector(  1 downto 0 );
         o_alu_operation   : out std_logic_vector(  4 downto 0 );
-        o_alu_align       : out std_logic_vector(  2 downto 0 );
-        o_dm_align        : out std_logic_vector(  2 downto 0 );
+        o_dm_in_align     : out std_logic_vector(  2 downto 0 );
+        o_dm_out_align    : out std_logic_vector(  2 downto 0 );
         o_inverse_zero    : out std_logic
     );
 end alu_control_unit;
 
 
 architecture behavior of alu_control_unit is
-    signal s_align     : std_logic_vector ( 2 downto 0 );
-    signal s_align_reg : std_logic_vector ( 2 downto 0 );
+    signal s_align       : std_logic_vector ( 2 downto 0 );
+    signal s_align_reg_0 : std_logic_vector ( 2 downto 0 );
+    signal s_align_reg_1 : std_logic_vector ( 2 downto 0 );
 
 
 begin
-    o_alu_align <= s_align;
-
     ALU_OP : process( i_instruction, i_alu_instruction )
     begin
         o_inverse_zero <= '0';
@@ -115,9 +114,12 @@ begin
     shift_register : process( clk )
     begin
         if rising_edge( clk ) then
-            o_dm_align  <= s_align_reg;
-            s_align_reg <= s_align;
+            s_align_reg_1 <= s_align_reg_0;
+            s_align_reg_0 <= s_align;
         end if;
     end process shift_register;
+    
+    o_dm_in_align  <= s_align_reg_0;
+    o_dm_out_align <= s_align_reg_1;
 
 end behavior;
