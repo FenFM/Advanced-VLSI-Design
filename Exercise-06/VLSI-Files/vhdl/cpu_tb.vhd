@@ -24,17 +24,13 @@ architecture behav of cpu_tb is
 	
 	type program_mem is array( C_IM_MEM_SIZE downto 0 ) of std_logic_vector( 31 downto 0 );
 	constant program : program_mem := (
-	   0  => x"00000013",  -- nop
-	   1  => x"00000013",  -- nop
---	   1  => x"00e000ef",  -- jal  x1, 14
-	   2  => x"00200113",  -- addi x2, x0, 2
-	   3  => x"00300193",  -- addi x3, x0, 3
-	   4  => x"00400213",  -- addi x4, x0, 4
-	   5  => x"00500293",  -- addi x5, x0, 5
-	   6  => x"00600313",  -- addi x6, x0, 6
-	   7  => x"00700393",  -- addi x7, x0, 7
-	   8  => x"00800413",  -- addi x8, x0, 8
-	   9  => x"00310533",  -- add, x10, x2, x3
+	   0  => x"3e800093",  -- nop
+	   1  => x"0100036f",
+--	   1  => x"7d008113",  -- nop
+	   2  => x"c1808193",  -- addi x2, x0, 2
+	   3  => x"83008213",  -- addi x3, x0, 3
+	   4  => x"3e808293",  -- addi x4, x0, 4
+	   5  => x"3e820293",
 	   
 	   others => ( others => '0' )
 	);	
