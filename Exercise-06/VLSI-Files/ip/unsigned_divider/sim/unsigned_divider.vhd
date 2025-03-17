@@ -141,7 +141,7 @@ BEGIN
       ALGORITHM_TYPE => 1,
       DIVISOR_WIDTH => 32,
       DIVIDEND_WIDTH => 32,
-      SIGNED_B => 0,
+      SIGNED_B => 1,
       DIVCLK_SEL => 1,
       FRACTIONAL_B => 0,
       FRACTIONAL_WIDTH => 32,

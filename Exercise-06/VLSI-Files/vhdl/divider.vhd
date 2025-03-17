@@ -5,6 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity divider is
     port(
+        clk      : in  std_logic;
         dividend : in  std_logic_vector( 31 downto 0 );
         divisor  : in  std_logic_vector( 31 downto 0 );
         divs     : out std_logic_vector( 31 downto 0 );
@@ -27,6 +28,7 @@ architecture behavior of divider is
             s_axis_divisor_tvalid  : in  std_logic;
             s_axis_dividend_tdata  : in  std_logic_vector( 31 downto 0 );
             s_axis_dividend_tvalid : in  std_logic;
+--            aclk                   : in  std_logic;
             m_axis_dout_tdata      : out std_logic_vector( 63 downto 0 );
             m_axis_dout_tuser      : out std_logic_vector(  0 downto 0 );
             m_axis_dout_tvalid     : out std_logic
@@ -39,6 +41,7 @@ architecture behavior of divider is
             s_axis_divisor_tvalid  : in  std_logic;
             s_axis_dividend_tdata  : in  std_logic_vector( 31 downto 0 );
             s_axis_dividend_tvalid : in  std_logic;
+--            aclk                   : in  std_logic;
             m_axis_dout_tdata      : out std_logic_vector( 63 downto 0 );
             m_axis_dout_tuser      : out std_logic_vector(  0 downto 0 );
             m_axis_dout_tvalid     : out std_logic
@@ -53,6 +56,7 @@ begin
         s_axis_divisor_tvalid   =>  '1',
         s_axis_dividend_tdata   =>  dividend,
         s_axis_dividend_tvalid  =>  '1',
+--        aclk                    =>  clk,
         m_axis_dout_tdata       =>  res,
         m_axis_dout_tuser       =>  zero,
         m_axis_dout_tvalid      =>  valid
@@ -64,6 +68,7 @@ begin
         s_axis_divisor_tvalid   =>  '1',
         s_axis_dividend_tdata   =>  dividend,
         s_axis_dividend_tvalid  =>  '1',
+--        aclk                    =>  clk,
         m_axis_dout_tdata       =>  resu,
         m_axis_dout_tuser       =>  zerou,
         m_axis_dout_tvalid      =>  validu

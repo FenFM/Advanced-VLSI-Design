@@ -44,31 +44,31 @@ architecture behavior of multiplier is
 
 
 begin
-    signed_multiplier_ins : signed_multiplier
-    port map(
-        A  =>  a,
-        B  =>  b,
-        P  =>  res
-    );
+--    signed_multiplier_ins : signed_multiplier
+--    port map(
+--        A  =>  a,
+--        B  =>  b,
+--        P  =>  res
+--    );
 
-    unsigned_multiplier_ins : unsigned_multiplier
-    port map(
-        A  =>  a,
-        B  =>  b,
-        P  =>  resu
-    );
+--    unsigned_multiplier_ins : unsigned_multiplier
+--    port map(
+--        A  =>  a,
+--        B  =>  b,
+--        P  =>  resu
+--    );
 
-    un_signed_multiplier_ins : un_signed_multiplier
-    port map(
-        A  =>  a,
-        B  =>  b,
-        P  =>  ressu
-    );
+--    un_signed_multiplier_ins : un_signed_multiplier
+--    port map(
+--        A  =>  a,
+--        B  =>  b,
+--        P  =>  ressu
+--    );
 
 
---    res   <= std_logic_vector(  signed(a) * signed(b));
---    resu  <= std_logic_vector(unsigned(a) * unsigned(b));
---    ressu <= ( others => '0' );
+    res   <= std_logic_vector(  signed(a) * signed(b));
+    resu  <= std_logic_vector(unsigned(a) * unsigned(b));
+    ressu <= res;
 
     mul    <= res  ( 31 downto  0 );
     mulh   <= res  ( 63 downto 32 );

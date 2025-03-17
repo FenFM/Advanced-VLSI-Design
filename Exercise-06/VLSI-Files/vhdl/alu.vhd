@@ -7,6 +7,8 @@ use work.isa_riscv.ALL;
 entity alu is
 	generic ( bit_width : integer := 32 );
 	port (
+        clk             : in std_logic;   
+	
         i_inverse_zero  : in std_logic;
         i_alu_bypass    : in std_logic;
 
@@ -40,7 +42,8 @@ architecture behavior of alu is
     signal std_b_cut  : std_logic_vector( 4 downto 0 );
     signal sll_uint_b : integer range 0 to 31;
     
-    signal add_src : std_logic;
+    signal add_src     : std_logic;
+    signal s_zero_flag : std_logic;
 
     signal add_res  : std_logic_vector( bit_width-1 downto 0 );
     signal and_res  : std_logic_vector( bit_width-1 downto 0 );
@@ -74,23 +77,23 @@ begin
     sll_uint_b <= to_integer( unsigned( std_b_cut ));
 
 
-    -- addition and subtraction
-    signed_adder_ins : signed_adder
-    port map( 
-        A    =>  i_operand_a, 
-        B    =>  i_operand_b, 
-        ADD  =>  add_src,
-        S    =>  add_res 
-    );
+--    -- addition and subtraction
+--    signed_adder_ins : signed_adder
+--    port map( 
+--        A    =>  i_operand_a, 
+--        B    =>  i_operand_b, 
+--        ADD  =>  add_src,
+--        S    =>  add_res 
+--    );
     
     -- add and sub only for testbench
---    process( add_src, i_operand_a, i_operand_b )
---    begin
---        case add_src is
---            when '0'     =>  add_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
---            when others  =>  add_res <= std_logic_vector(signed(i_operand_a) + signed(i_operand_b));
---        end case;
---    end process;
+    process( add_src, i_operand_a, i_operand_b )
+    begin
+        case add_src is
+            when '0'     =>  add_res <= std_logic_vector(signed(i_operand_a) - signed(i_operand_b));
+            when others  =>  add_res <= std_logic_vector(signed(i_operand_a) + signed(i_operand_b));
+        end case;
+    end process;
      
     -- overflow flag
     overflow_detection : process( add_src, add_res )
@@ -102,7 +105,7 @@ begin
     end process overflow_detection;
     
     -- zero flag
-    o_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
+    s_zero_flag <= ( not ( or s_result )) xor i_inverse_zero;
 
     
     -- and
@@ -158,23 +161,36 @@ begin
         mulhu   =>  mulhu_res,
         mulhsu  =>  mulhsu_res
     );
+    
+--    mul_res    <= ( others => '0' );
+--    mulh_res   <= ( others => '0' );
+--    mulhu_res  <= ( others => '0' );
+--    mulhsu_res <= ( others => '0' );
+    
 
 
     -- division : dividend/divisor  -  rs1/rs2
-    divider_ins : entity work.divider
-    port map(
-        dividend  =>  i_operand_a,
-        divisor   =>  i_operand_b,
-        divs      =>  div_res,
-        rems      =>  rem_res,
-        divu      =>  divu_res,
-        remu      =>  remu_res
-    );
+--    divider_ins : entity work.divider
+--    port map(
+--        clk       =>  clk,
+--        dividend  =>  i_operand_a,
+--        divisor   =>  i_operand_b,
+--        divs      =>  div_res,
+--        rems      =>  rem_res,
+--        divu      =>  divu_res,
+--        remu      =>  remu_res
+--    );
+
+    div_res  <= ( others =>'0' );
+    rem_res  <= ( others =>'0' );
+    divu_res <= ( others =>'0' );
+    remu_res <= ( others =>'0' );
 
 
     operation_mux_switch : process( all )
     begin
-        add_src <= '1';
+        add_src     <= '1';
+        o_zero_flag <= s_zero_flag;
         case i_operation is
             when opcode_ADD     =>  s_result <= add_res;
             when opcode_SUB     =>  s_result <= add_res;
@@ -188,13 +204,21 @@ begin
             when opcode_SLT     =>  s_result <= slt_res;
             when opcode_SLTU    =>  s_result <= sltu_res;
             when opcode_MUL     =>  s_result <= mul_res;
+                                    --o_zero_flag <= '0';
             when opcode_MULH    =>  s_result <= mulh_res;
+                                    --o_zero_flag <= '0';
             when opcode_MULHSU  =>  s_result <= mulhsu_res;
+                                    --o_zero_flag <= '0';
             when opcode_MULHU   =>  s_result <= mulhu_res;
+                                    --o_zero_flag <= '0';
             when opcode_DIV     =>  s_result <= div_res;
+                                    --o_zero_flag <= '0';
             when opcode_DIVU    =>  s_result <= divu_res;
+                                    --o_zero_flag <= '0';
             when opcode_REM     =>  s_result <= rem_res;
+                                    --o_zero_flag <= '0';
             when opcode_REMU    =>  s_result <= remu_res;
+                                    --o_zero_flag <= '0';
             when others         =>  s_result <= ( others => '0' );
         end case;
 

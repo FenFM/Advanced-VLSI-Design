@@ -240,6 +240,7 @@ begin
     ALU : entity work.alu
     generic map ( C_BIT_WIDTH )
     port map (
+        clk              =>  clk,
         i_operand_a      =>  s_alu_forwarding_mux_a_data,
         i_operand_b      =>  s_alu_operand_b,
         i_operation      =>  s_alu_operation,
